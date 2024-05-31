@@ -1,0 +1,105 @@
+{
+    "name": "simple_etl",
+    "build": {
+        "dockerfile": "./Dockerfile"
+    },
+    "postAttachCommand": "/poetry_specific_venv/bin/poetry install && /poetry_specific_venv/bin/mypy --install-types --non-interactive && /poetry_specific_venv/bin/pre-commit install",
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        // "ghcr.io/mikaello/devcontainer-features/modern-shell-utils:1": {},
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12"
+        },
+        "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "installOhMyZshConfig": true,
+            "upgradePackages": true,
+            "username": "vscode",
+            "userUid": "1000",
+            "userGid": "1000",
+            "nonFreePackages": false
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.tabSize": 4,
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "terminal.integrated.profiles.linux": {
+                    "zsh": {
+                        "path": "zsh"
+                    }
+                },
+                // General
+                "extensions.ignoreRecommendations": true,
+                // Editor
+                "editor.formatOnSave": true,
+                "diffEditor.codeLens": true,
+                "search.useGlobalIgnoreFiles": true,
+                "files.autoSave": "afterDelay",
+                "editor.defaultFormatter": "ms-python.black-formatter",
+                "files.watcherExclude": {
+                    "**/__pycache__/**": true
+                },
+                "files.exclude": {
+                    "**/__pycache__": true
+                },
+                "python.defaultInterpreterPath": "/poetry_specific_venv/bin/python",
+                "python.languageServer": "Pylance",
+                // Linting
+                "pylint.interpreter": [
+                    "/poetry_specific_venv/bin/python"
+                ],
+                "flake8.interpreter": [
+                    "/poetry_specific_venv/bin/python"
+                ],
+                "mypy-type-checker.interpreter": [
+                    "/poetry_specific_venv/bin/python"
+                ],
+                // Formatting
+                "black-formatter.args": [],
+                "black-formatter.interpreter": [
+                    "/poetry_specific_venv/bin/python"
+                ],
+                "isort.args": [
+                    "--profile",
+                    "black"
+                ],
+                "isort.interpreter": [
+                    "/poetry_specific_venv/bin/python"
+                ],
+                // Analysis
+                "python.analysis.autoFormatStrings": true,
+                "python.analysis.autoImportCompletions": true,
+                "python.analysis.completeFunctionParens": true,
+                "python.analysis.diagnosticMode": "workspace",
+                "python.analysis.inlayHints.callArgumentNames": "partial",
+                // Testing
+                "python.testing.pytestEnabled": true,
+                "python.testing.pytestPath": "/poetry_specific_venv/bin/pytest",
+                "python.analysis.inlayHints.pytestParameters": true,
+                "python.testing.unittestEnabled": false,
+                "python.testing.nosetestsEnabled": false,
+                "python.testing.autoTestDiscoverOnSaveEnabled": true
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "editorconfig.editorconfig",
+                "ms-python.python",
+                "ms-python.pylint",
+                "ms-python.flake8",
+                "ms-python.isort",
+                "ms-python.black-formatter",
+                "ms-python.mypy-type-checker",
+                "ms-python.vscode-pylance",
+                "neptunedesign.vs-sequential-number",
+                "hediet.vscode-drawio",
+                "tamasfe.even-better-toml"
+            ]
+        }
+    }
+}
+}
