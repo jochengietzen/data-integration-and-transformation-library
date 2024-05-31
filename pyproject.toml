@@ -2,9 +2,7 @@
 name = "data-integration-and-transformation-library"
 version = "0.1.0"
 description = "A library that aims to simplify etl/elt generation for standard use cases"
-authors = [
-    {name = "Jochen Gietzen", email = "jochen.gietzen@gmail.com"}
-]
+authors = ["Jochen Gietzen <jochen.gietzen@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "ditl", from="src"}]
