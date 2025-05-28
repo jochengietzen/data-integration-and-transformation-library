@@ -1,0 +1,101 @@
+{
+    "name": "simple_etl",
+    "build": {
+        "dockerfile": "./Dockerfile",
+        "args": {}
+    },
+    "remoteEnv": {},
+    "remoteUser": "vscode",
+    "postAttachCommand": "just init",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "configureZshAsDefaultShell": true,
+            "installOhMyZsh": true,
+            "installOhMyZshConfig": true,
+            "upgradePackages": true,
+            "nonFreePackages": false
+        }
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+    "workspaceFolder": "/workspace",
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.tabSize": 4,
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "terminal.integrated.profiles.linux": {
+                    "zsh": {
+                        "path": "zsh"
+                    }
+                },
+                // General
+                "extensions.ignoreRecommendations": true,
+                // Editor
+                "editor.formatOnSave": true,
+                "diffEditor.codeLens": true,
+                "search.useGlobalIgnoreFiles": true,
+                "files.autoSave": "afterDelay",
+                "editor.defaultFormatter": "ms-python.black-formatter",
+                "files.watcherExclude": {
+                    "**/__pycache__/**": true
+                },
+                "files.exclude": {
+                    "**/__pycache__": true
+                },
+                "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+                "python.languageServer": "Pylance",
+                // Linting
+                "pylint.interpreter": [
+                    "/workspace/.venv/bin/python"
+                ],
+                "flake8.interpreter": [
+                    "/workspace/.venv/bin/python"
+                ],
+                "mypy-type-checker.interpreter": [
+                    "/workspace/.venv/bin/python"
+                ],
+                // Formatting
+                "black-formatter.args": [],
+                "black-formatter.interpreter": [
+                    "/workspace/.venv/bin/python"
+                ],
+                "isort.args": [
+                    "--profile",
+                    "black"
+                ],
+                "isort.interpreter": [
+                    "/workspace/.venv/bin/python"
+                ],
+                // Analysis
+                "python.analysis.autoFormatStrings": true,
+                "python.analysis.autoImportCompletions": true,
+                "python.analysis.completeFunctionParens": true,
+                "python.analysis.diagnosticMode": "workspace",
+                "python.analysis.inlayHints.callArgumentNames": "partial",
+                "python.analysis.typeCheckingMode": "strict",
+                // Testing
+                "python.testing.pytestEnabled": true,
+                "python.testing.pytestPath": "/workspace/.venv/bin/pytest",
+                "python.analysis.inlayHints.pytestParameters": true,
+                "python.testing.unittestEnabled": false,
+                "python.testing.nosetestsEnabled": false,
+                "python.testing.autoTestDiscoverOnSaveEnabled": true
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "editorconfig.editorconfig",
+                "ms-python.python",
+                "ms-python.pylint",
+                "ms-python.mypy-type-checker",
+                "ms-python.vscode-pylance",
+                "neptunedesign.vs-sequential-number",
+                "tamasfe.even-better-toml",
+                "pomdtr.excalidraw-editor"
+            ]
+        }
+    }
+}
