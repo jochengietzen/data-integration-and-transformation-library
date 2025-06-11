@@ -43,5 +43,13 @@ check:
     uv run pylint src/ tests/
     uv run mypy src/
 
+ssh-fix:
+    #!/bin/zsh
+    set -euxo pipefail
+    rm -rf /home/vscode/.ssh
+    mkdir -p /home/vscode/.ssh
+    cp /tmp/.ssh/* /home/vscode/.ssh
+    chmod 600 /home/vscode/.ssh/*
+
 unit-tests:
     export TZ="UTC"; uv run pytest --cov=vistafetch --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
