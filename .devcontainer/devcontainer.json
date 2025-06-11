@@ -1,5 +1,5 @@
 {
-    "name": "simple_etl",
+    "name": "ditl",
     "build": {
         "dockerfile": "./Dockerfile",
         "args": {}

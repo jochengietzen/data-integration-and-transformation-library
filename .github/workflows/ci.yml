@@ -1,0 +1,40 @@
+name: 'ci' 
+on:
+  pull_request:
+
+jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v4
+
+      - name: Run style & code checks
+        uses: devcontainers/ci@v0.3
+        with:
+          cacheFrom: ghcr.io/jochengietzen/ditl-devcontainer
+          push: never
+          runCmd: just check
+  
+  unit-tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+         python: ["3.10", "3.11", "3.12", "3.13" ]
+          os: [ ubuntu-latest, macos-latest, windows-latest ]
+    defaults:
+      run:
+          shell: bash
+          
+    steps:
+      - name: Checkout (GitHub)
+        uses: actions/checkout@v4
+
+      - name: Run unit-tests
+        uses: devcontainers/ci@v0.3
+        with:
+          cacheFrom: ghcr.io/jochengietzen/ditl-devcontainer
+          push: never
+          runCmd: just unit-tests

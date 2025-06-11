@@ -37,3 +37,11 @@ init: init_system_files
     uv venv
     uv sync --all-groups
     pre-commit install
+
+check:
+    uv run ruff check src/ tests/
+    uv run pylint src/ tests/
+    uv run mypy src/
+
+unit-tests:
+    export TZ="UTC"; uv run pytest --cov=vistafetch --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
