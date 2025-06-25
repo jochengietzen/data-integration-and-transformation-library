@@ -52,4 +52,4 @@ ssh-fix:
     chmod 600 /home/vscode/.ssh/*
 
 unit-tests:
-    export TZ="UTC"; uv run pytest --cov=vistafetch --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
+    export TZ="UTC"; uv run pytest --cov=ditl --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
