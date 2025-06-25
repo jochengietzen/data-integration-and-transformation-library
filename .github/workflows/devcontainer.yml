@@ -1,5 +1,6 @@
 name: "build devcontainers image"
 on: 
+  push:
   workflow_dispatch:
 
 jobs:
