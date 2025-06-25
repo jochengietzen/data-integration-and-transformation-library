@@ -21,15 +21,12 @@ jobs:
         with:
           types: |
             feat
-            fix
             docs
-            style
+            style 
             refactor
             perf
             test
-            deps
+            build
             ci
-            chore
-            revert
           scopes: |
             \#[0-9]+
