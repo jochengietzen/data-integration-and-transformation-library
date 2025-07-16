@@ -4,7 +4,9 @@ default:
 init:
     #!/bin/zsh
     set -euxo pipefail
-    cp /tmp/.zshrc /home/vscode/.zshrc 
+    git config --global --add safe.directory '*'
+    cp /tmp/.zshrc /home/vscode/.zshrc
+    rm -rf .venv
     uv venv
     uv sync --all-groups
     pre-commit install
