@@ -20,7 +20,7 @@
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
     "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind"
     ],
     "customizations": {
         "vscode": {
@@ -39,7 +39,7 @@
                 "diffEditor.codeLens": true,
                 "search.useGlobalIgnoreFiles": true,
                 "files.autoSave": "afterDelay",
-                "editor.defaultFormatter": "ms-python.black-formatter",
+                "editor.defaultFormatter": "charliermarsh.ruff",
                 "files.watcherExclude": {
                     "**/__pycache__/**": true
                 },
@@ -94,7 +94,8 @@
                 "ms-python.vscode-pylance",
                 "neptunedesign.vs-sequential-number",
                 "tamasfe.even-better-toml",
-                "pomdtr.excalidraw-editor"
+                "pomdtr.excalidraw-editor",
+                "charliermarsh.ruff"
             ]
         }
     }

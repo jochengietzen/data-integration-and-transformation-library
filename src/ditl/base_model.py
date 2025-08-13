@@ -15,4 +15,3 @@ class BaseModel(_BaseModel):
         """
         with open(path, "r", encoding=encoding) as f:
             return cls(**yaml.full_load(f))
-    
