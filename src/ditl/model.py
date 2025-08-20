@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar, Optional
 from pydantic import Field, RootModel, model_validator
 
+from ditl import base_model
 from ditl.base_model import BaseModel
 
 
@@ -41,7 +42,7 @@ DataTypeType = TypeVar("DataTypeType", bound=DataType)
 class Column(BaseModel, Generic[DataTypeType]):
     name: str = Field(..., pattern=r"^[a-zA-Z0-9-_]+$")
     data_type: DataTypeType
-    constraints: list[Constraint] = Field(default_factory=list)
+    constraints: list[Constraint]   = Field(default_factory=list)
     expectations: list[ColumnExpectation] = Field(default_factory=list)
     generation: Generation
     description: str | None = None
@@ -52,8 +53,7 @@ class Column(BaseModel, Generic[DataTypeType]):
 ColumnType = TypeVar("ColumnType", bound=Column)
 
 
-class Columns(RootModel, Generic[ColumnType]):
-    root: dict[str, ColumnType]
+class Columns(RootModel[dict[str, Column[Any]]]):
 
     @model_validator(mode="before")
     @classmethod
@@ -66,18 +66,18 @@ class Columns(RootModel, Generic[ColumnType]):
         return value
 
 
-class ForeignKey(BaseModel, Generic[ColumnType]):
+class ForeignKey(BaseModel):
     table: "Table"
-    columns: list[ColumnType]
+    columns: list[Column]
 
 
 TablePathType = TypeVar("TablePathType", bound=TablePath)
 TableExpectationType = TypeVar("TableExpectationType", bound=TableExpectation)
 
 
-class Table(BaseModel, Generic[ColumnType, TableExpectationType, TablePathType]):
+class Table(BaseModel, Generic[TableExpectationType, TablePathType]):
     path: TablePathType
-    columns: Columns[ColumnType]
+    columns: Columns
     description: str
     # Assumption: on table-level we only have expectations,
     # there is no equivalent to constraints on column level

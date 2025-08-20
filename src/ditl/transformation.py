@@ -1,22 +1,24 @@
 import inspect
-from re import S
-from turtle import st
 from typing import Any, Callable
-from ditl.exceptions import InitiliazationMissingError
+
+from ditl.model import BaseModel
+from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
 from ditl.model import Table
 
 
-class Transformation:
-    pass
+class Transformation(BaseModel):
+    name: str
+    func: Callable
+    table_models: dict[str, Table]
 
 
-class EnvironmentConfig:
-    pass
+class EnvironmentConfig(BaseModel):
+    """Information to staging environment: connection, settings"""
 
 
-class RuntimeConfig:
-    pass
-
+class RuntimeConfig(BaseModel):
+    """Possibility to pass runtime specific: storage environments, client Ids"""
+    # TODO: make environment & runtime configs dynamic typeVars for transformationManager
 
 class TransformationManager:
     def __init__(self) -> None:
@@ -38,8 +40,13 @@ class TransformationManager:
                 f"Configurations missing for initialization: {','.join(missing_init)}"
             )
 
-    def register_transformation(self, name_: str, **kwargs: dict[str, Any]) -> Callable:
+    def register_transformation(self, **kwargs: dict[str, Any]) -> Callable:
         def decorator(func: Callable) -> Callable:
+
+            func_name = kwargs.get("name_", func.__name__)
+            if func_name in self._registered_transformations:
+                raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
+            
             argspec = inspect.getfullargspec(func=func)
             expected_argspec = {}  # TODO: tbd
 
@@ -51,9 +58,11 @@ class TransformationManager:
                 if name in kwargs and isinstance(kwargs.get(name), Table)
             }
 
-            # TODO: 
+            transformation = Transformation(name=func_name, func=func, table_models=table_models)
 
-            self._registered_transformations[name_] = transformation
+            self._registered_transformations[func_name] = transformation
             return func
 
         return decorator
+    
+manager = TransformationManager()

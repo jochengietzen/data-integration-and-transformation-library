@@ -6,3 +6,6 @@ class ProgrammingError(Exception):
 
 class InitiliazationMissingError(Exception):
     """Indicates an invalid initilization state"""
+
+class DuplicateTransformationName(Exception):
+    """Indicates a duplicated transformation name in the context of the tansformation manager"""
