@@ -1,2 +1,0 @@
-ditl
-examples

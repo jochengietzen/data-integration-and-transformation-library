@@ -1,8 +1,8 @@
 from ditl.transformation import manager
-from examples.models import foo
+from examples.models.foo import foo
 from typing import Any
 
 
-@manager.register_transformation(foo=foo)
+@manager.register_transformation(output_table_model=foo, foo=foo)
 def sample_transformation(foo: Any):
-    pass
+    return foo

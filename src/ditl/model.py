@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar, Optional
+from pandas import DataFrame
 from pydantic import Field, RootModel, model_validator
 
 from ditl import base_model
@@ -42,7 +43,7 @@ DataTypeType = TypeVar("DataTypeType", bound=DataType)
 class Column(BaseModel, Generic[DataTypeType]):
     name: str = Field(..., pattern=r"^[a-zA-Z0-9-_]+$")
     data_type: DataTypeType
-    constraints: list[Constraint]   = Field(default_factory=list)
+    constraints: list[Constraint] = Field(default_factory=list)
     expectations: list[ColumnExpectation] = Field(default_factory=list)
     generation: Generation
     description: str | None = None
@@ -50,11 +51,7 @@ class Column(BaseModel, Generic[DataTypeType]):
     foreign_key: Optional["ForeignKey"] = None
 
 
-ColumnType = TypeVar("ColumnType", bound=Column)
-
-
 class Columns(RootModel[dict[str, Column[Any]]]):
-
     @model_validator(mode="before")
     @classmethod
     def validate_keys(cls, value: Any) -> Any:
@@ -82,3 +79,6 @@ class Table(BaseModel, Generic[TableExpectationType, TablePathType]):
     # Assumption: on table-level we only have expectations,
     # there is no equivalent to constraints on column level
     expectations: list[TableExpectationType] = Field(default_factory=list)
+
+    def read(self, *args, **kwargs) -> DataFrame:
+        return DataFrame({"biz": "a.b.c".split(".")})

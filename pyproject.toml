@@ -1,5 +1,5 @@
 [project]
-name = "data-integration-and-transformation-library"
+name = "ditl"
 version = "0.1.0"
 description = "A library that aims to simplify etl/elt generation for standard use cases"
 authors = [
@@ -15,6 +15,9 @@ dependencies = [
     "pydantic>=2.11.5",
     "pyyaml>=6.0.2",
 ]
+
+[tool.uv]
+package = true
 
 [tool.uv.build-backend]
 module-name = ["ditl", "examples"]
@@ -71,5 +74,3 @@ dev = [
 types = [
     "types-pyyaml>=6.0.12.20250516",
 ]
-
-
