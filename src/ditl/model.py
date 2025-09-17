@@ -61,6 +61,10 @@ class Columns(RootModel[dict[str, Column[Any]]]):
             if "," in key:
                 raise ValueError(f"Key '{key}' contains commas which are not allowed.")
         return value
+    
+    @property
+    def schema(self) -> Schema:
+        pass
 
 
 class ForeignKey(BaseModel):
@@ -70,6 +74,42 @@ class ForeignKey(BaseModel):
 
 TablePathType = TypeVar("TablePathType", bound=TablePath)
 TableExpectationType = TypeVar("TableExpectationType", bound=TableExpectation)
+
+class Schema:
+    # provides schema for a given instance of Columns
+    # Compostition Approach
+
+    @classmethod
+    def from_engine_schema(cls, schema: Any) -> "Schema":
+        pass
+        
+    def to_engine_schema(self) -> Any:
+        pass
+
+    def __
+    # TODO: decide whether we want to use equal and equalish (maybe a @ b, a ~ b, a ^ b) as dunder methods
+    # or inplace arithmethic |=
+
+    # -> tendendy: we don't use dunder methods
+
+class DataFrameWrapper:
+    # Composition Approach
+    # Registration of utilized functions
+    # Plugin functionality?
+
+    def __init__(self, data_frame: Any) -> None:
+        self.data_frame = data_frame
+
+    @classmethod
+    def ensure_is_wrapper(cls, data_frame: Any) -> "DataFrameWrapper":
+        if isinstance(data_frame, DataFrameWrapper):
+            return data_frame
+        return cls.from_data_frame(data_frame)
+    
+    @classmethod
+    def from_data_frame(cls, data_frame: Any) -> "DataFrameWrapper":
+        return cls(data_frame=data_frame)
+
 
 
 class Table(BaseModel, Generic[TableExpectationType, TablePathType]):
@@ -82,3 +122,34 @@ class Table(BaseModel, Generic[TableExpectationType, TablePathType]):
 
     def read(self, *args, **kwargs) -> DataFrame:
         return DataFrame({"biz": "a.b.c".split(".")})
+    
+    def _verify_schema(self, data_frame_wrapper: DataFrameWrapper) -> None:
+        pass
+        
+    def _cast(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
+        pass
+    
+    def validate(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
+        
+        self._verify_schema(data_frame_wrapper)
+
+        return self._cast(data_frame_wrapper)
+    
+
+class SourceTable(ABC):
+
+    @abstractmethod
+    def ingest(self, *args, **kwargs) -> DataFrameWrapper:
+        pass
+
+    def __ingest__(self, data_frame_wrapper: DataFrameWrapper, table_model: Table):
+
+        data_frame_wrapper = DataFrameWrapper.ensure_is_wrapper(data_frame_wrapper)
+
+        t
+
+        table_model.write(data_frame_wrapper)
+
+
+
+
