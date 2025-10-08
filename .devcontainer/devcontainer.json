@@ -8,7 +8,7 @@
         "VIRTUAL_ENV": "/python_venv"
     },
     "remoteUser": "vscode",
-    "postAttachCommand": "just init",
+    "postCreateCommand": "just init",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
@@ -97,7 +97,11 @@
                 "neptunedesign.vs-sequential-number",
                 "tamasfe.even-better-toml",
                 "pomdtr.excalidraw-editor",
-                "charliermarsh.ruff"
+                "charliermarsh.ruff",
+                "ms-toolsai.jupyter",
+                "ms-toolsai.vscode-jupyter-cell-tags",
+                "ms-toolsai.jupyter-keymap",
+                "ms-toolsai.vscode-jupyter-slideshow"
             ]
         }
     }
