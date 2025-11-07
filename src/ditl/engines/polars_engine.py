@@ -1,32 +1,75 @@
-from typing import Type, Any
+from typing import ClassVar, Type, Any
 import polars as pl
 from ditl.engines.base import Engine
-from ditl.model import Schema, SchemaField
+from ditl.model import FloatType, IntegerType, Schema, SchemaField, StringType
 
 
 class PolarsEngine(Engine):
-    engine_identifier: str = "polars"
-    internal_schema_type: Type[pl.Schema] = pl.Schema
+    engine_identifier: ClassVar[str] = "polars"
+    internal_schema_type: ClassVar[Type[pl.Schema]] = pl.Schema
 
-    @staticmethod
+    @classmethod
     def _from_engine_schema(cls, schema: Any) -> Schema:
+        print(schema)
+        print([(key, value) for key, value in schema.items()])
         return Schema(
             [
-                # TODO: needs refinement of type_ to reflect a DataType => DataType also needs to work with registration process
-                SchemaField(name=key, type_=value, nullable=True)
-                for key, value in schema.to_python().items()
+                SchemaField(
+                    # Currently the type_ is an instance of the datatype model. Not sure if it should be the class instead
+                    name=key,
+                    type_=cls.registered_types[value](),
+                    nullable=True,
+                )
+                for key, value in schema.items()
             ]
         )
 
-    def setup(self):
+    @classmethod
+    def _to_engine_schema(cls, schema: Schema) -> pl.Schema:
+        return pl.Schema(
+            {
+                schema_field.name: schema_field.type_.to_engine_type(
+                    engine_identifier=cls.engine_identifier
+                )
+                for schema_field in schema.root
+            }
+        )
+
+    @classmethod
+    def setup(cls):
         Schema.register_from_engine_schema(
-            engine=self,
-            engine_schema_type=self.internal_schema_type,
-            func=self._from_engine_schema,
+            engine_identifier=cls.engine_identifier,
+            engine_schema_type=cls.internal_schema_type,
+            from_method=cls._from_engine_schema,
+            to_method=cls._to_engine_schema,
+        )
+        cls.register_data_type(
+            data_type=IntegerType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pl.Int64,
+                from_method=lambda x: IntegerType(),
+                to_method=lambda x: pl.Int64(),
+            )
+        )
+        cls.register_data_type(
+            data_type=FloatType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pl.Float64,
+                from_method=lambda x: FloatType(),
+                to_method=lambda x: pl.Float64(),
+            )
+        )
+        cls.register_data_type(
+            data_type=StringType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pl.String,
+                from_method=lambda x: StringType(),
+                to_method=lambda x: pl.String(),
+            )
         )
 
 
-PolarsEngine().setup()
+PolarsEngine.setup()
 
 if __name__ == "__main__":
     df = pl.DataFrame(
@@ -37,10 +80,11 @@ if __name__ == "__main__":
         }
     )
 
-    print(df)
+    # print(df)
     print(df.schema)
-    print(df.schema.to_python())
-    print(dir(df.schema))
-    print(isinstance(df.schema, PolarsEngine().internal_schema_type))
-
-    print(Schema.from_engine_schema(df.schema))
+    # print(df.schema.to_python())
+    # print(dir(df.schema))
+    # print(isinstance(df.schema, PolarsEngine().internal_schema_type))
+    schema = Schema.from_engine_schema(df.schema)
+    print(schema)
+    print(schema.to_engine_schema(engine_identifier=PolarsEngine.engine_identifier))

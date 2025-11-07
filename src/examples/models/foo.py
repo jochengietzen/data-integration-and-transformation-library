@@ -1,4 +1,4 @@
-from typing import Any, Literal, Type
+from typing import Any, Type
 from ditl.model import (
     Column,
     DataType,

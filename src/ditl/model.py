@@ -1,21 +1,20 @@
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from typing import (
     Any,
     Callable,
     ClassVar,
     Generic,
+    NamedTuple,
     Type,
     TypeVar,
     Optional,
     Union,
-    overload,
 )
 from pandas import DataFrame
 from pydantic import Field, RootModel, model_validator
 
-from ditl import base_model
 from ditl.base_model import BaseModel
-from ditl.engines.base import Engine
 
 
 class TablePath(BaseModel, ABC):
@@ -44,7 +43,62 @@ class Constraint(BaseModel):
     pass
 
 
+class FromToMethod(NamedTuple):
+    from_method: Callable[[Any], "DataType"]
+    to_method: Callable[["DataType"], Any]
+
+
 class DataType(BaseModel):
+    _from_and_to_engine_methods: ClassVar[
+        dict[str, dict[str, FromToMethod["DataType"]]]
+    ] = defaultdict(dict)
+    _engine_type_to_engine_identifier: ClassVar[dict[str, dict[Any, str]]] = (
+        defaultdict(dict)
+    )
+    _engine_identifier_to_engine_type: ClassVar[dict[str, dict[str, Any]]] = (
+        defaultdict(dict)
+    )
+
+    @classmethod
+    def register_from_and_to_methods(
+        cls,
+        engine_identifier: str,
+        engine_type: Any,
+        from_method: Callable[[Any], "DataType"],
+        to_method: Callable[["DataType"], Any],
+    ) -> Type["DataType"]:
+        cls._from_and_to_engine_methods[cls.__name__][engine_identifier] = FromToMethod(
+            from_method=from_method, to_method=to_method
+        )
+        cls._engine_type_to_engine_identifier[cls.__name__][engine_type] = (
+            engine_identifier
+        )
+        cls._engine_identifier_to_engine_type[cls.__name__][engine_identifier] = (
+            engine_type
+        )
+        return cls
+
+    @classmethod
+    def to_engine_type(cls, engine_identifier: str) -> Any:
+        type_ = cls._engine_identifier_to_engine_type[cls.__name__].get(
+            engine_identifier, None
+        )
+        if type_ is None:
+            raise RuntimeError(
+                f"The data type {cls.__name__} has no engine {engine_identifier} registered"
+            )
+        return type_
+
+
+class IntegerType(DataType):
+    pass
+
+
+class FloatType(DataType):
+    pass
+
+
+class StringType(DataType):
     pass
 
 
@@ -80,27 +134,39 @@ class Schema(RootModel[list[Union[SchemaStruct, SchemaField]]]):
     _from_engine_methods: ClassVar[
         dict[str, tuple[Type[Any], Callable[[Any, Any], "Schema"]]]
     ] = {}
+    _to_engine_methods: ClassVar[
+        dict[str, tuple[Type[Any], Callable[["Schema"], Any]]]
+    ] = {}
     # provides schema for a given instance of Columns
     # Compostition Approach
 
     @classmethod
     def register_from_engine_schema(
         cls,
-        engine: Engine,
+        engine_identifier: str,
         engine_schema_type: Type[Any],
-        func: Callable[[Any, Any], "Schema"],
+        from_method: Callable[[Any, Any], "Schema"],
+        to_method: Callable[["Schema"], Any],
     ):
-        cls._from_engine_methods[engine.engine_identifier] = (engine_schema_type, func)
+        if cls._from_engine_methods is None:
+            cls._from_engine_methods = {}
+        cls._from_engine_methods[engine_identifier] = (engine_schema_type, from_method)
+        cls._to_engine_methods[engine_identifier] = to_method
 
     @classmethod
     def from_engine_schema(cls, schema: Any) -> "Schema":
         for schema_type, func in cls._from_engine_methods.values():
             if isinstance(schema, schema_type):
-                return func(cls=cls, schema=schema)
+                return func(schema=schema)
         raise RuntimeError(f"Engine for type {type(schema)} not defined!")
 
-    def to_engine_schema(self) -> Any:
-        pass
+    def to_engine_schema(self, engine_identifier: str) -> Any:
+        func = self._to_engine_methods.get(engine_identifier, None)
+        if func is None:
+            raise RuntimeError(
+                f"Engine {engine_identifier} has no to engine schema defined!"
+            )
+        return func(schema=self)
 
     # def __
     # TODO: decide whether we want to use equal and equalish (maybe a @ b, a ~ b, a ^ b) as dunder methods

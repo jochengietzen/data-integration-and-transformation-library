@@ -18,7 +18,7 @@ repos:
         name: ruff_check
         language: python
         types: [ python ]
-        entry: ruff check src/ tests/
+        entry: ruff check --fix src/ tests/
         verbose: true
 
       # - id: mypy
