@@ -3,7 +3,7 @@ from typing import Any, Callable
 
 from ditl.model import BaseModel
 from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
-from ditl.model import Table
+from ditl.models.table import Table
 
 
 class Transformation(BaseModel):

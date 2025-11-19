@@ -1,7 +1,13 @@
-from typing import ClassVar, Type, Any
+from pathlib import Path
+from typing import IO, ClassVar, Type, Any, TypeGuard
 import polars as pl
 from ditl.engines.base import Engine
-from ditl.model import FloatType, IntegerType, Schema, SchemaField, StringType
+from ditl.models.base import FloatType, IntegerType, StringType
+from ditl.models.base import DataFrameWrapper, Schema, SchemaField
+
+
+def polars_frame(frame: Any) -> TypeGuard[pl.DataFrame]:
+    return isinstance(frame, pl.DataFrame)
 
 
 class PolarsEngine(Engine):
@@ -36,6 +42,26 @@ class PolarsEngine(Engine):
         )
 
     @classmethod
+    def _read_csv(cls, source: str, *args: Any, **kwargs: Any) -> DataFrameWrapper:
+        return DataFrameWrapper(data_frame=pl.read_csv(source, *args, **kwargs))
+
+    @classmethod
+    def _write_csv(
+        cls,
+        *args: Any,
+        data_frame: DataFrameWrapper,
+        file: str | Path | IO[str] | IO[bytes] | None = None,
+        **kwargs: Any,
+    ) -> None:
+        frame: pl.DataFrame = data_frame.data_frame
+        if not polars_frame(frame):
+            raise RuntimeError(
+                f"The data_frame Wrapper does not hold a polars data frame, but {type(data_frame.data_frame)}!"
+            )
+
+        return frame.write_csv(file, *args, **kwargs)
+
+    @classmethod
     def setup(cls):
         Schema.register_from_engine_schema(
             engine_identifier=cls.engine_identifier,
@@ -68,6 +94,9 @@ class PolarsEngine(Engine):
             )
         )
 
+        cls.register_read_method("csv", method=cls._read_csv)
+        cls.register_write_method("csv", method=cls._write_csv)
+
 
 PolarsEngine.setup()
 
@@ -88,3 +117,21 @@ if __name__ == "__main__":
     schema = Schema.from_engine_schema(df.schema)
     print(schema)
     print(schema.to_engine_schema(engine_identifier=PolarsEngine.engine_identifier))
+
+    df: pl.DataFrame = PolarsEngine.read(
+        method_identifier="csv",
+        source="/workspace/data/testfile.csv",
+    ).data_frame
+    print(Schema.from_engine_schema(df.schema))
+    print(df)
+    df = df.with_columns((df["foo"] + df["bar"]).alias("test"))
+    PolarsEngine.write(
+        method_identifier="csv",
+        data_frame=DataFrameWrapper.ensure_is_wrapper(df),
+        file="/workspace/data/output.csv",
+    )
+    DataFrameWrapper.ensure_is_wrapper(df).write(
+        engine=PolarsEngine,
+        method_identifier="csv",
+        file="/workspace/data/output_2.csv",
+    )

@@ -1,13 +1,12 @@
 from typing import Any, Type
 from ditl.model import (
-    Column,
     DataType,
     Generation,
-    Table,
     TableExpectation,
     TablePath,
-    Columns,
 )
+from ditl.models.base import Column, Columns
+from ditl.models.table import Table
 
 
 class StringType(DataType):
