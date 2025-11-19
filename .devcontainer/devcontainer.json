@@ -5,7 +5,7 @@
         "args": {}
     },
     "remoteEnv": {
-        "VIRTUAL_ENV": "/python_venv"
+        "VIRTUAL_ENV": "/workspace/.venv"
     },
     "remoteUser": "vscode",
     "postCreateCommand": "just init",
@@ -48,29 +48,29 @@
                 "files.exclude": {
                     "**/__pycache__": true
                 },
-                "python.defaultInterpreterPath": "/python_venv/bin/python",
+                "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
                 "python.languageServer": "Pylance",
                 // Linting
                 "pylint.interpreter": [
-                    "/python_venv/bin/python"
+                    "/workspace/.venv/bin/python"
                 ],
                 "flake8.interpreter": [
-                    "/python_venv/bin/python"
+                    "/workspace/.venv/bin/python"
                 ],
                 "mypy-type-checker.interpreter": [
-                    "/python_venv/bin/python"
+                    "/workspace/.venv/bin/python"
                 ],
                 // Formatting
                 "black-formatter.args": [],
                 "black-formatter.interpreter": [
-                    "/python_venv/bin/python"
+                    "/workspace/.venv/bin/python"
                 ],
                 "isort.args": [
                     "--profile",
                     "black"
                 ],
                 "isort.interpreter": [
-                    "/python_venv/bin/python"
+                    "/workspace/.venv/bin/python"
                 ],
                 // Analysis
                 "python.analysis.autoFormatStrings": true,
@@ -81,7 +81,7 @@
                 "python.analysis.typeCheckingMode": "strict",
                 // Testing
                 "python.testing.pytestEnabled": true,
-                "python.testing.pytestPath": "/python_venv/bin/pytest",
+                "python.testing.pytestPath": "/workspace/.venv/bin/pytest",
                 "python.analysis.inlayHints.pytestParameters": true,
                 "python.testing.unittestEnabled": false,
                 "python.testing.nosetestsEnabled": false,
