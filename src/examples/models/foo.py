@@ -1,5 +1,5 @@
 from typing import Any, Type
-from ditl.model import (
+from ditl.models.base import (
     DataType,
     Generation,
     TableExpectation,
@@ -26,7 +26,7 @@ class MyTableExpectation(TableExpectation):
     pass
 
 
-class MyTable(Table[MyTableExpectation, MyTablePath]):
+class MyTable(Table):
     pass
 
 

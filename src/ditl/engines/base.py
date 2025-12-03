@@ -16,6 +16,9 @@ class WriteMethod(Protocol):
     ) -> None: ...
 
 
+# TODO: Think about plugin functionality
+
+
 class Engine(BaseModel):
     """"""
 

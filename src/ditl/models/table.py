@@ -79,6 +79,7 @@ class SourceTable(ABC):
 
     def __ingest__(self, data_frame_wrapper: DataFrameWrapper, table_model: Table):
         data_frame_wrapper = DataFrameWrapper.ensure_is_wrapper(
-            data_frame=data_frame_wrapper)
+            data_frame=data_frame_wrapper
+        )
 
         table_model.write(data_frame_wrapper)
