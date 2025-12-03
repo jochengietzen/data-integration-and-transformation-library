@@ -16,7 +16,9 @@ from typing import (
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
+    from ditl.models.table import Table
     from ditl.engines.base import Engine
 
 
@@ -121,12 +123,12 @@ class SchemaStruct(BaseModel):
     nullable: bool
 
 
-class Column(BaseModel, Generic[DataTypeType]):
+class Column(BaseModel):
     name: str = Field(..., pattern=r"^[a-zA-Z0-9-_]+$")
     data_type: DataTypeType
     constraints: list[Constraint] = Field(default_factory=list)
     expectations: list[ColumnExpectation] = Field(default_factory=list)
-    generation: Generation
+    generation: Generation | None = None
     description: str | None = None
     is_primary_key: bool = False
     is_nullable: bool = False
@@ -175,7 +177,7 @@ class Schema(RootModel[list[Union[SchemaStruct, SchemaField]]]):
 # TODO: Try to make it work with complex types (Array, Map, Variant)
 
 
-class Columns(RootModel[dict[str, Column[Any]]]):
+class Columns(RootModel[dict[str, Column]]):
     @model_validator(mode="before")
     @classmethod
     def validate_keys(cls, value: Any) -> Any:
@@ -204,7 +206,7 @@ class ForeignKey(BaseModel):
     columns: list[Column]
 
 
-class EngineReadType(Enum):
+class EngineFileType(Enum):
     CSV = "csv"
     JSON = "json"
     DELTA = "delta"

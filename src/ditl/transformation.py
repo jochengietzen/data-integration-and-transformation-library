@@ -1,7 +1,7 @@
 import inspect
 from typing import Any, Callable
 
-from ditl.model import BaseModel
+from ditl.models.base import BaseModel, DataFrameWrapper
 from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
 from ditl.models.table import Table
 
@@ -12,14 +12,17 @@ class Transformation(BaseModel):
     input_table_models: dict[str, Table]
     output_table_model: Table
 
-    def execute(self):
+    def execute(self) -> DataFrameWrapper:
         input_frames = {}
         for name, table in self.input_table_models.items():
             input_frames[name] = table.read()
 
         result = self.func(**input_frames)
 
-        return result
+        return DataFrameWrapper.ensure_is_wrapper(data_frame=result)
+
+    def save_output_table(self, result: DataFrameWrapper) -> None:
+        self.output_table_model.write(data_frame_wrapper=result)
 
 
 class EnvironmentConfig(BaseModel):

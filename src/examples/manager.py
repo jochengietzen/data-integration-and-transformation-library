@@ -1,4 +1,11 @@
 from ditl.transformation import manager
 
-print(manager._registered_transformations)
-print(manager._registered_transformations["sample_transformation"].execute())
+import examples.transformations.youtube
+
+# print(manager._registered_transformations)
+result = manager._registered_transformations["youtube_channel_overview"].execute(
+)
+print(result.data_frame)
+manager._registered_transformations["youtube_channel_overview"].save_output_table(
+    result=result
+)
