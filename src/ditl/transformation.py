@@ -1,7 +1,13 @@
 import inspect
-from typing import Any, Callable
+from typing import Any, Callable, Type
 
 from ditl.models.base import BaseModel, DataFrameWrapper
+from ditl.config import (
+    EnvironmentConfig,
+    EnvironmentConfigType,
+    RuntimeConfig,
+    RuntimeConfigType,
+)
 from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
 from ditl.models.table import Table
 
@@ -12,36 +18,86 @@ class Transformation(BaseModel):
     input_table_models: dict[str, Table]
     output_table_model: Table
 
+    runtime_config: RuntimeConfig | None = None
+    environment_config: EnvironmentConfig | None = None
+
     def execute(self) -> DataFrameWrapper:
+        if self.runtime_config is None:
+            raise InitiliazationMissingError(
+                "The runtime config was never initialised/loaded!"
+            )
+        if self.environment_config is None:
+            raise InitiliazationMissingError(
+                "The runtime config was never initialised/loaded!"
+            )
         input_frames = {}
         for name, table in self.input_table_models.items():
-            input_frames[name] = table.read()
+            input_frames[name] = table.read(
+                runtime_config=self.runtime_config,
+                environment_config=self.environment_config,
+            )
 
         result = self.func(**input_frames)
 
         return DataFrameWrapper.ensure_is_wrapper(data_frame=result)
 
     def save_output_table(self, result: DataFrameWrapper) -> None:
-        self.output_table_model.write(data_frame_wrapper=result)
-
-
-class EnvironmentConfig(BaseModel):
-    """Information to staging environment: connection, settings"""
-
-
-class RuntimeConfig(BaseModel):
-    """Possibility to pass runtime specific: storage environments, client Ids"""
-
-    # TODO: make environment & runtime configs dynamic typeVars for transformationManager
+        if self.runtime_config is None:
+            raise InitiliazationMissingError(
+                "The runtime config was never initialised/loaded!"
+            )
+        if self.environment_config is None:
+            raise InitiliazationMissingError(
+                "The runtime config was never initialised/loaded!"
+            )
+        self.output_table_model.write(
+            runtime_config=self.runtime_config,
+            environment_config=self.environment_config,
+            data_frame_wrapper=result,
+        )
 
 
 class TransformationManager:
-    def __init__(self) -> None:
+    def __init__(
+        self,
+    ) -> None:
         self._registered_transformations: dict[str, Transformation] = {}
 
         # initialization stage
         self._runtime_config: RuntimeConfig | None = None
         self._environment_config: EnvironmentConfig | None = None
+
+    def load_runtime_config(
+        self,
+        *args: Any,
+        runtime_class_type: Type[RuntimeConfigType],
+        situation_identifier: str,
+        **kwargs: Any,
+    ) -> "TransformationManager":
+        self._runtime_config = runtime_class_type.load(
+            *args, situation_identifier=situation_identifier, **kwargs
+        )
+        for transformation in self._registered_transformations.values():
+            transformation.runtime_config = self._runtime_config
+        return self
+
+    def load_environment_config(
+        self,
+        *args: Any,
+        environment_class_type: Type[EnvironmentConfigType],
+        situation_identifier: str,
+        **kwargs: Any,
+    ) -> "TransformationManager":
+        self._environment_config = environment_class_type.load(
+            *args, situation_identifier=situation_identifier, **kwargs
+        )
+        for transformation in self._registered_transformations.values():
+            transformation.environment_config = self._environment_config
+        return self
+
+    def load_all_transformations(self, package_path: str) -> None:
+        # TODO: implement
+        pass
 
     def _check_initialization_state(self) -> None:
         missing_init: list[str] = []

@@ -7,8 +7,10 @@ from ditl.models.base import (
     StringType,
     TablePath,
 )
+from ditl.config import RuntimeConfig, EnvironmentConfig
 from ditl.models.base import Column, Columns
 from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
+from examples.config.youtube import MyEnvironmentConfig
 
 
 class YoutubeTablePath(TablePath):
@@ -16,8 +18,14 @@ class YoutubeTablePath(TablePath):
     time: str
     name: str
 
-    def full_path(self, *args: Any, **kwargs: dict[str, Any]) -> str:
-        return f"/workspace/data/{self.name}_{self.date}_{self.time}.csv"
+    def full_path(
+        self,
+        *args: Any,
+        runtime_config: RuntimeConfig,
+        environment_config: MyEnvironmentConfig,
+        **kwargs: dict[str, Any],
+    ) -> str:
+        return f"/workspace/data/{environment_config.env}/{self.name}_{self.date}_{self.time}.csv"
 
 
 class YoutubeTable(Table):
@@ -31,16 +39,39 @@ class YoutubeTable(Table):
         write_type=EngineFileType.CSV,
     )
 
-    def read(self, *args, **kwargs) -> DataFrameWrapper:
-        return super().read(*args, source=self.path.full_path(), **kwargs)
+    def read(
+        self,
+        *args,
+        runtime_config: RuntimeConfig,
+        environment_config: EnvironmentConfig,
+        **kwargs,
+    ) -> DataFrameWrapper:
+        return super().read(
+            *args,
+            runtime_config=runtime_config,
+            environment_config=environment_config,
+            source=self.path.full_path(
+                runtime_config=runtime_config, environment_config=environment_config
+            ),
+            **kwargs,
+        )
 
     def write(
-        self, *args, data_frame_wrapper: DataFrameWrapper, **kwargs
+        self,
+        *args,
+        runtime_config: RuntimeConfig,
+        environment_config: EnvironmentConfig,
+        data_frame_wrapper: DataFrameWrapper,
+        **kwargs,
     ) -> "YoutubeTable":
         return super().write(
             *args,
+            runtime_config=runtime_config,
+            environment_config=environment_config,
             data_frame_wrapper=data_frame_wrapper,
-            file=self.path.full_path(),
+            file=self.path.full_path(
+                runtime_config=runtime_config, environment_config=environment_config
+            ),
             **kwargs,
         )
 

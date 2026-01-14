@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, ClassVar, Protocol, Type, TypeVar
+from typing import Any, ClassVar, Type, TypeVar, Protocol
 
 from ditl.base_model import BaseModel
 from ditl.models.base import DataType

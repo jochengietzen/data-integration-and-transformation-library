@@ -17,6 +17,8 @@ from typing import (
 from typing import TYPE_CHECKING
 
 
+from ditl.config import EnvironmentConfigType, RuntimeConfigType
+
 if TYPE_CHECKING:
     from ditl.models.table import Table
     from ditl.engines.base import Engine
@@ -24,7 +26,13 @@ if TYPE_CHECKING:
 
 class TablePath(BaseModel, ABC):
     @abstractmethod
-    def full_path(self, *args: Any, **kwargs: dict[str, Any]) -> str:
+    def full_path(
+        self,
+        runtime_config: RuntimeConfigType,
+        environment_config: EnvironmentConfigType,
+        *args: Any,
+        **kwargs: dict[str, Any],
+    ) -> str:
         pass
 
 

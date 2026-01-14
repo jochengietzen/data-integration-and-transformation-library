@@ -1,5 +1,9 @@
 from abc import ABC, abstractmethod
 from ditl.base_model import BaseModel
+from ditl.config import (
+    EnvironmentConfigType,
+    RuntimeConfigType,
+)
 from ditl.engines.base import EngineType
 from ditl.models.base import DataFrameWrapper, TableExpectationType, TablePathType
 from ditl.models.base import Columns
@@ -38,7 +42,13 @@ class Table(BaseModel):
     # Possibliy we do not need the generic type.
     expectations: list[TableExpectationType] = Field(default_factory=list)
 
-    def read(self, *args, **kwargs) -> DataFrameWrapper:
+    def read(
+        self,
+        *args: Any,
+        runtime_config: RuntimeConfigType,
+        environment_config: EnvironmentConfigType,
+        **kwargs: Any,
+    ) -> DataFrameWrapper:
         args_ = self.engine_read_settings.args + list(args)
         method_identifier = self.engine_read_settings.read_type.value
         return self.engine_read_settings.engine.read(
@@ -47,7 +57,14 @@ class Table(BaseModel):
             **(self.engine_read_settings.kwargs | kwargs),
         )
 
-    def write(self, *args, data_frame_wrapper: DataFrameWrapper, **kwargs) -> "Table":
+    def write(
+        self,
+        *args: Any,
+        runtime_config: RuntimeConfigType,
+        environment_config: EnvironmentConfigType,
+        data_frame_wrapper: DataFrameWrapper,
+        **kwargs: Any,
+    ) -> "Table":
         args_ = self.engine_write_settings.args + list(args)
         method_identifier = self.engine_write_settings.write_type.value
         self.engine_write_settings.engine.write(
