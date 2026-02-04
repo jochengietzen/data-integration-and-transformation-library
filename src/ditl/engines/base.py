@@ -1,8 +1,9 @@
+from abc import abstractclassmethod, abstractmethod
 from collections import defaultdict
 from typing import Any, ClassVar, Type, TypeVar, Protocol
 
 from ditl.base_model import BaseModel
-from ditl.models.base import DataType
+from ditl.models.base import DataType, Schema
 from ditl.models.base import DataFrameWrapper
 
 
@@ -86,6 +87,21 @@ class Engine(BaseModel):
     def register_write_method(cls, method_identifier: str, method: WriteMethod) -> None:
         # TODO: log warning when overwriting existing function!
         cls.registered_write_methods[cls.engine_identifier][method_identifier] = method
+
+    @classmethod
+    @abstractmethod
+    def _from_engine_schema(cls, schema: Any) -> Schema:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def _to_engine_schema(cls, schema: Schema) -> Any:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> DataFrameWrapper:
+        pass
 
 
 EngineType = TypeVar("EngineType", bound=Engine)
