@@ -1,4 +1,3 @@
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -53,9 +52,21 @@ class FakerStringType(FakerType):
 
 
 class FakerIntType(FakerType):
-    def __init__(self, min_val: int, max_val: int, generation_id: str | None = None, reuse_percentage_min: float = 0.3, reuse_percentage_max: float = 0.8, allow_duplicate_values: bool = False):
-        super().__init__(generation_id, reuse_percentage_min,
-                         reuse_percentage_max, allow_duplicate_values)
+    def __init__(
+        self,
+        min_val: int,
+        max_val: int,
+        generation_id: str | None = None,
+        reuse_percentage_min: float = 0.3,
+        reuse_percentage_max: float = 0.8,
+        allow_duplicate_values: bool = False,
+    ):
+        super().__init__(
+            generation_id,
+            reuse_percentage_min,
+            reuse_percentage_max,
+            allow_duplicate_values,
+        )
         self.min_val = min_val
         self.max_val = max_val
 

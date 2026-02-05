@@ -18,7 +18,7 @@ from ditl.models.base import EngineFileType
 
 
 class EngineReadSettings(BaseModel):
-    engine: Type[EngineType]
+    engine: type[EngineType]
     read_type: EngineFileType
     args: list[Any] = Field(default_factory=list)
     kwargs: dict[str, Any] = Field(default_factory=dict)

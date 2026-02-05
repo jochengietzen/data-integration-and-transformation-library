@@ -142,11 +142,9 @@ class Column(BaseModel):
 
 class Schema(RootModel[list[Union[SchemaStruct, SchemaField]]]):
     _from_engine_methods: ClassVar[
-        dict[str, tuple[Type[Any], Callable[[Any, Any], "Schema"]]]
+        dict[str, tuple[Type[Any], Callable[[Any], "Schema"]]]
     ] = {}
-    _to_engine_methods: ClassVar[
-        dict[str, tuple[Type[Any], Callable[["Schema"], Any]]]
-    ] = {}
+    _to_engine_methods: ClassVar[dict[str, Callable[["Schema"], Any]]] = {}
     # provides schema for a given instance of Columns
     # Compostition Approach
 
@@ -155,13 +153,12 @@ class Schema(RootModel[list[Union[SchemaStruct, SchemaField]]]):
         cls,
         engine_identifier: str,
         engine_schema_type: Type[Any],
-        from_method: Callable[[Any, Any], "Schema"],
+        from_method: Callable[[Any], "Schema"],
         to_method: Callable[["Schema"], Any],
     ):
         if cls._from_engine_methods is None:
             cls._from_engine_methods = {}
-        cls._from_engine_methods[engine_identifier] = (
-            engine_schema_type, from_method)
+        cls._from_engine_methods[engine_identifier] = (engine_schema_type, from_method)
         cls._to_engine_methods[engine_identifier] = to_method
 
     @classmethod
@@ -191,8 +188,7 @@ class Columns(RootModel[dict[str, Column]]):
             raise ValueError("Columns need to be provided as dictionary.")
         for key in value.keys():
             if "," in key:
-                raise ValueError(
-                    f"Key '{key}' contains commas which are not allowed.")
+                raise ValueError(f"Key '{key}' contains commas which are not allowed.")
         return value
 
     def get_schema(self, by_name: bool = False) -> Schema:
