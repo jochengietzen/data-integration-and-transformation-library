@@ -4,6 +4,7 @@ default:
 init:
     #!/bin/zsh
     set -euxo pipefail
+    if [ -f /tmp/.gitconfig ]; then rm -rf /home/vscode/.gitconfig && cp /tmp/.gitconfig /home/vscode/.gitconfig; fi
     git config --global --add safe.directory '*'
     git config --global core.autocrlf input
     git config --global core.eol lf

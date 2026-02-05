@@ -29,6 +29,12 @@
             "target": "/home/vscode/.ssh",
             "type": "bind",
             "consistency": "cached"
+        },
+        {
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig",
+            "target": "/tmp/.gitconfig",
+            "type": "bind",
+            "consistency": "cached"
         }
     ],
     "customizations": {
