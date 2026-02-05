@@ -4,6 +4,7 @@ import polars as pl
 from ditl.engines.base import Engine
 from ditl.models.base import FloatType, IntegerType, StringType
 from ditl.models.base import DataFrameWrapper, Schema, SchemaField
+from ditl.utils import columnar_dictionary_to_records
 
 
 def polars_frame(frame: Any) -> TypeGuard[pl.DataFrame]:
@@ -60,6 +61,15 @@ class PolarsEngine(Engine):
             )
 
         return frame.write_csv(file, *args, **kwargs)
+
+    @classmethod
+    def dataframe_from_faker_columnar(
+        cls, data: dict[str, list[Any]], schema: Schema
+    ) -> DataFrameWrapper:
+        records = columnar_dictionary_to_records(values=data)
+        return DataFrameWrapper.from_data_frame(
+            pl.from_records(data=records, schema=cls._to_engine_schema(schema=schema))
+        )
 
     @classmethod
     def setup(cls):

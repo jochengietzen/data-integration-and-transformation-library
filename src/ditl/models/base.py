@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING
 
 
 from ditl.config import EnvironmentConfigType, RuntimeConfigType
+from ditl.models.generation import Generation
 
 if TYPE_CHECKING:
     from ditl.models.table import Table
@@ -34,10 +35,6 @@ class TablePath(BaseModel, ABC):
         **kwargs: dict[str, Any],
     ) -> str:
         pass
-
-
-class Generation(BaseModel):
-    """Generation of dummy/fake data (Faker etc.)"""
 
 
 class Expectation(BaseModel):
@@ -163,7 +160,8 @@ class Schema(RootModel[list[Union[SchemaStruct, SchemaField]]]):
     ):
         if cls._from_engine_methods is None:
             cls._from_engine_methods = {}
-        cls._from_engine_methods[engine_identifier] = (engine_schema_type, from_method)
+        cls._from_engine_methods[engine_identifier] = (
+            engine_schema_type, from_method)
         cls._to_engine_methods[engine_identifier] = to_method
 
     @classmethod
@@ -193,7 +191,8 @@ class Columns(RootModel[dict[str, Column]]):
             raise ValueError("Columns need to be provided as dictionary.")
         for key in value.keys():
             if "," in key:
-                raise ValueError(f"Key '{key}' contains commas which are not allowed.")
+                raise ValueError(
+                    f"Key '{key}' contains commas which are not allowed.")
         return value
 
     def get_schema(self, by_name: bool = False) -> Schema:

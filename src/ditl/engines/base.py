@@ -1,4 +1,4 @@
-from abc import abstractclassmethod, abstractmethod
+from abc import abstractmethod
 from collections import defaultdict
 from typing import Any, ClassVar, Type, TypeVar, Protocol
 
@@ -100,7 +100,9 @@ class Engine(BaseModel):
 
     @classmethod
     @abstractmethod
-    def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> DataFrameWrapper:
+    def dataframe_from_faker_columnar(
+        cls, data: dict[str, list[Any]], schema: Schema
+    ) -> DataFrameWrapper:
         pass
 
 

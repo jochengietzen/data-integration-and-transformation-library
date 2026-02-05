@@ -8,10 +8,14 @@ FROM mcr.microsoft.com/vscode/devcontainers/python:3.10-bullseye
 
 ARG venv_path=/python_venv
 
-    
-    
+
+
 COPY ./.zshrc /tmp/.zshrc
 COPY --from=uv --chown=root: /uv /uvx /bin/
+
+# Remove broken Yarn repo
+RUN rm -f /etc/apt/sources.list.d/yarn.list \
+    && rm -f /usr/share/keyrings/yarnkey.gpg
 
 RUN apt-get update && apt-get install -y sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers

@@ -1,7 +1,7 @@
 from typing import Any, Type
+from ditl.models.generation import Generation
 from ditl.models.base import (
     DataType,
-    Generation,
     TableExpectation,
     TablePath,
 )

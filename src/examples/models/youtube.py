@@ -1,5 +1,6 @@
 from typing import Any
 from ditl.engines.polars_engine import PolarsEngine
+from ditl.models.generation import Generation
 from ditl.models.base import (
     DataFrameWrapper,
     EngineFileType,
@@ -10,6 +11,7 @@ from ditl.models.base import (
 from ditl.config import RuntimeConfig, EnvironmentConfig
 from ditl.models.base import Column, Columns
 from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
+from ditl.testing.faker_type import FakerIntType, FakerStringType
 from examples.config.youtube import MyEnvironmentConfig
 
 
@@ -85,16 +87,24 @@ tech_channels = YoutubeTable(
     columns=Columns(
         root=dict(
             channel_id=Column(
-                name="channel_id", data_type=StringType(), is_primary_key=True
+                name="channel_id", data_type=StringType(), is_primary_key=True, generation=Generation(faker_type=FakerStringType())
             ),
-            channel_name=Column(name="channel_name", data_type=StringType()),
-            description=Column(name="description", data_type=StringType()),
-            subscribers=Column(name="subscribers", data_type=IntegerType()),
-            total_views=Column(name="total_views", data_type=IntegerType()),
-            total_videos=Column(name="total_videos", data_type=IntegerType()),
-            created_date=Column(name="created_date", data_type=StringType()),
-            country=Column(name="country", data_type=StringType()),
-            scraped_at=Column(name="scraped_at", data_type=StringType()),
+            channel_name=Column(name="channel_name", data_type=StringType(
+            ), generation=Generation(faker_type=FakerStringType())),
+            description=Column(name="description", data_type=StringType(
+            ), generation=Generation(faker_type=FakerStringType())),
+            subscribers=Column(name="subscribers", data_type=IntegerType(
+            ), generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100))),
+            total_views=Column(name="total_views", data_type=IntegerType(
+            ), generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100))),
+            total_videos=Column(name="total_videos", data_type=IntegerType(
+            ), generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100))),
+            created_date=Column(name="created_date", data_type=StringType(
+            ), generation=Generation(faker_type=FakerStringType())),
+            country=Column(name="country", data_type=StringType(),
+                           generation=Generation(faker_type=FakerStringType())),
+            scraped_at=Column(name="scraped_at", data_type=StringType(
+            ), generation=Generation(faker_type=FakerStringType())),
         )
     ),
     description="Youtube tech channels",
@@ -130,15 +140,18 @@ tech_videos = YoutubeTable(
 
 
 tech_channel_overview = YoutubeTable(
-    path=YoutubeTablePath(name="youtube_channels_overview", date="1", time="2"),
+    path=YoutubeTablePath(
+        name="youtube_channels_overview", date="1", time="2"),
     columns=Columns(
         root=dict(
             channel_id=Column(
                 name="channel_id", data_type=StringType(), is_primary_key=True
             ),
             channel_name=Column(name="channel_name", data_type=StringType()),
-            channel_views=Column(name="channel_views", data_type=IntegerType()),
-            channel_duration=Column(name="channel_duration", data_type=IntegerType()),
+            channel_views=Column(name="channel_views",
+                                 data_type=IntegerType()),
+            channel_duration=Column(
+                name="channel_duration", data_type=IntegerType()),
         )
     ),
     description="Overview over the tech channels",
