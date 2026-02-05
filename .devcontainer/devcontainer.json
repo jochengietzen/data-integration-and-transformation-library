@@ -4,11 +4,13 @@
         "dockerfile": "./Dockerfile",
         "args": {}
     },
-    "remoteEnv": {
+    "containerEnv": {
+        "PYTHONPATH": "/workspace/src:${containerEnv:PYTHONPATH}",
         "VIRTUAL_ENV": "/workspace/.venv"
     },
     "remoteUser": "vscode",
     "postCreateCommand": "just init",
+    "waitFor": "postCreateCommand",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
@@ -22,7 +24,12 @@
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
     "mounts": [
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind"
+        {
+            "source": "${localEnv:HOME}${localEnv:USERPROFILE}/.ssh",
+            "target": "/home/vscode/.ssh",
+            "type": "bind",
+            "consistency": "cached"
+        }
     ],
     "customizations": {
         "vscode": {
@@ -50,6 +57,8 @@
                 },
                 "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
                 "python.languageServer": "Pylance",
+                "python.terminal.activateEnvironment": true,
+                "python.terminal.activateEnvInCurrentTerminal": true,
                 // Linting
                 "pylint.interpreter": [
                     "/workspace/.venv/bin/python"
@@ -73,12 +82,25 @@
                     "/workspace/.venv/bin/python"
                 ],
                 // Analysis
+                "python.analysis.extraPaths": [
+                    "/workspace/src"
+                ],
+                "python.analysis.include": [
+                    "src/**"
+                ],
+                "python.analysis.exclude": [
+                    "**/__pycache__",
+                    ".venv/**",
+                    ".git/**"
+                ],
+                "python.analysis.autoSearchPaths": true,
                 "python.analysis.autoFormatStrings": true,
                 "python.analysis.autoImportCompletions": true,
                 "python.analysis.completeFunctionParens": true,
                 "python.analysis.diagnosticMode": "workspace",
                 "python.analysis.inlayHints.callArgumentNames": "partial",
                 "python.analysis.typeCheckingMode": "strict",
+                "python.analysis.useLibraryCodeForTypes": true,
                 // Testing
                 "python.testing.pytestEnabled": true,
                 "python.testing.pytestPath": "/workspace/.venv/bin/pytest",

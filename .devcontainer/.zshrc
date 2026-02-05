@@ -100,4 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-source /workspace/.venv/bin/activate
+# Activate virtual environment if it exists
+if [ -f /workspace/.venv/bin/activate ]; then
+    source /workspace/.venv/bin/activate
+fi
