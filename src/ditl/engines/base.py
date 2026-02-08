@@ -1,10 +1,9 @@
 from abc import abstractmethod
 from collections import defaultdict
-from typing import Any, ClassVar, Type, TypeVar, Protocol
+from typing import Any, ClassVar, Protocol, TypeVar
 
 from ditl.base_model import BaseModel
-from ditl.models.base import DataType, Schema
-from ditl.models.base import DataFrameWrapper
+from ditl.models.base import DataFrameWrapper, DataType, Schema
 
 
 class ReadMethod(Protocol):
@@ -30,8 +29,8 @@ class Engine(BaseModel):
     # - read
     # - write
     engine_identifier: ClassVar[str]
-    internal_schema_type: ClassVar[Type[Any]]
-    registered_types: ClassVar[dict[Any, DataType]] = {}
+    internal_schema_type: ClassVar[type[Any]]
+    registered_types: ClassVar[dict[Any, type[DataType]]] = {}
     registered_read_methods: ClassVar[dict[str, dict[str, ReadMethod]]] = defaultdict(
         dict
     )
@@ -40,7 +39,7 @@ class Engine(BaseModel):
     )
 
     @classmethod
-    def register_data_type(cls, data_type: Type[DataType]):
+    def register_data_type(cls, data_type: type[DataType]):
         cls.registered_types[
             data_type._engine_identifier_to_engine_type[data_type.__name__][
                 cls.engine_identifier

@@ -87,24 +87,51 @@ tech_channels = YoutubeTable(
     columns=Columns(
         root=dict(
             channel_id=Column(
-                name="channel_id", data_type=StringType(), is_primary_key=True, generation=Generation(faker_type=FakerStringType())
+                name="channel_id",
+                data_type=StringType(),
+                is_primary_key=True,
+                generation=Generation(faker_type=FakerStringType()),
             ),
-            channel_name=Column(name="channel_name", data_type=StringType(
-            ), generation=Generation(faker_type=FakerStringType())),
-            description=Column(name="description", data_type=StringType(
-            ), generation=Generation(faker_type=FakerStringType())),
-            subscribers=Column(name="subscribers", data_type=IntegerType(
-            ), generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100))),
-            total_views=Column(name="total_views", data_type=IntegerType(
-            ), generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100))),
-            total_videos=Column(name="total_videos", data_type=IntegerType(
-            ), generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100))),
-            created_date=Column(name="created_date", data_type=StringType(
-            ), generation=Generation(faker_type=FakerStringType())),
-            country=Column(name="country", data_type=StringType(),
-                           generation=Generation(faker_type=FakerStringType())),
-            scraped_at=Column(name="scraped_at", data_type=StringType(
-            ), generation=Generation(faker_type=FakerStringType())),
+            channel_name=Column(
+                name="channel_name",
+                data_type=StringType(),
+                generation=Generation(faker_type=FakerStringType()),
+            ),
+            description=Column(
+                name="description",
+                data_type=StringType(),
+                generation=Generation(faker_type=FakerStringType()),
+            ),
+            subscribers=Column(
+                name="subscribers",
+                data_type=IntegerType(),
+                generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100)),
+            ),
+            total_views=Column(
+                name="total_views",
+                data_type=IntegerType(),
+                generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100)),
+            ),
+            total_videos=Column(
+                name="total_videos",
+                data_type=IntegerType(),
+                generation=Generation(faker_type=FakerIntType(min_val=10, max_val=100)),
+            ),
+            created_date=Column(
+                name="created_date",
+                data_type=StringType(),
+                generation=Generation(faker_type=FakerStringType()),
+            ),
+            country=Column(
+                name="country",
+                data_type=StringType(),
+                generation=Generation(faker_type=FakerStringType()),
+            ),
+            scraped_at=Column(
+                name="scraped_at",
+                data_type=StringType(),
+                generation=Generation(faker_type=FakerStringType()),
+            ),
         )
     ),
     description="Youtube tech channels",
@@ -140,18 +167,15 @@ tech_videos = YoutubeTable(
 
 
 tech_channel_overview = YoutubeTable(
-    path=YoutubeTablePath(
-        name="youtube_channels_overview", date="1", time="2"),
+    path=YoutubeTablePath(name="youtube_channels_overview", date="1", time="2"),
     columns=Columns(
         root=dict(
             channel_id=Column(
                 name="channel_id", data_type=StringType(), is_primary_key=True
             ),
             channel_name=Column(name="channel_name", data_type=StringType()),
-            channel_views=Column(name="channel_views",
-                                 data_type=IntegerType()),
-            channel_duration=Column(
-                name="channel_duration", data_type=IntegerType()),
+            channel_views=Column(name="channel_views", data_type=IntegerType()),
+            channel_duration=Column(name="channel_duration", data_type=IntegerType()),
         )
     ),
     description="Overview over the tech channels",

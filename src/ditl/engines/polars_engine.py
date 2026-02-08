@@ -60,7 +60,7 @@ class PolarsEngine(Engine):
                 f"The data_frame Wrapper does not hold a polars data frame, but {type(data_frame.data_frame)}!"
             )
 
-        return frame.write_csv(file, *args, **kwargs)
+        frame.write_csv(file, *args, **kwargs)
 
     @classmethod
     def dataframe_from_faker_columnar(
@@ -109,39 +109,3 @@ class PolarsEngine(Engine):
 
 
 PolarsEngine.setup()
-
-if __name__ == "__main__":
-    df = pl.DataFrame(
-        {
-            "foo": [1, 2, 3],
-            "bar": [6.0, 7.0, 8.0],
-            "ham": ["a", "b", "c"],
-        }
-    )
-
-    # print(df)
-    print(df.schema)
-    # print(df.schema.to_python())
-    # print(dir(df.schema))
-    # print(isinstance(df.schema, PolarsEngine().internal_schema_type))
-    schema = Schema.from_engine_schema(df.schema)
-    print(schema)
-    print(schema.to_engine_schema(engine_identifier=PolarsEngine.engine_identifier))
-
-    df: pl.DataFrame = PolarsEngine.read(
-        method_identifier="csv",
-        source="/workspace/data/testfile.csv",
-    ).data_frame
-    print(Schema.from_engine_schema(df.schema))
-    print(df)
-    df = df.with_columns((df["foo"] + df["bar"]).alias("test"))
-    PolarsEngine.write(
-        method_identifier="csv",
-        data_frame=DataFrameWrapper.ensure_is_wrapper(df),
-        file="/workspace/data/output.csv",
-    )
-    DataFrameWrapper.ensure_is_wrapper(df).write(
-        engine=PolarsEngine,
-        method_identifier="csv",
-        file="/workspace/data/output_2.csv",
-    )

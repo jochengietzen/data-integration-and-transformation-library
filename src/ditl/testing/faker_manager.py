@@ -6,6 +6,7 @@ import math
 from ditl.engines.base import Engine
 from ditl.models.base import DataFrameWrapper
 from ditl.models.table import Table
+
 # from ditl.engines.polars_engine import PolarsEngine
 # from ditl.models.base import DataFrameWrapper, IntegerType, Schema, SchemaField, StringType
 # from ditl.testing.faker_type import FakerIDType, FakerIntType, FakerType
@@ -28,12 +29,17 @@ class FakerManager:
             self.non_key_generation_registry[faker_type.generation_id] = []
         return self
 
-    def generate(self, table: Table, engine: Engine, n_values: int = 100) -> DataFrameWrapper:
+    def generate(
+        self, table: Table, engine: Engine, n_values: int = 100
+    ) -> DataFrameWrapper:
         schema = table.columns.get_schema()
-        columns = {key: col.generation.faker_type for key,
-                   col in table.columns.root.items()}
-        return engine.dataframe_from_faker_columnar(data=self._generate_for_columns(
-            columns=columns, n_values=n_values), schema=schema)
+        columns = {
+            key: col.generation.faker_type for key, col in table.columns.root.items()
+        }
+        return engine.dataframe_from_faker_columnar(
+            data=self._generate_for_columns(columns=columns, n_values=n_values),
+            schema=schema,
+        )
 
     def _generate_for_columns(
         self, columns: dict[str, "FakerType"], n_values: int = 100
@@ -47,8 +53,7 @@ class FakerManager:
                 continue
 
             if faker_type.generation_id not in self.non_key_generation_registry:
-                self.non_key_generation_registry[faker_type.generation_id] = set(
-                )
+                self.non_key_generation_registry[faker_type.generation_id] = set()
             current_set = self.non_key_generation_registry[faker_type.generation_id]
             while len(current_set) < n_values:
                 current_set.add(faker_type(faker_=self.faker.unique))
