@@ -1,20 +1,20 @@
 from abc import ABC, abstractmethod
+from typing import Any, TypeVar
+
+from pydantic import Field
+
 from ditl.base_model import BaseModel
 from ditl.config import (
     EnvironmentConfigType,
     RuntimeConfigType,
 )
 from ditl.engines.base import EngineType
-from ditl.models.base import DataFrameWrapper, TableExpectationType, TablePathType
-from ditl.models.base import Columns
+from ditl.models.base import Columns, EngineFileType, TablePath
+from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.expectations import RowLevelTableExpectation
 
-
-from pydantic import Field
-
-
-from typing import Any, Type
-
-from ditl.models.base import EngineFileType
+TablePathType = TypeVar("TablePathType", bound=TablePath)
+TableExpectationType = TypeVar("TableExpectationType", bound=RowLevelTableExpectation)
 
 
 class EngineReadSettings(BaseModel):
@@ -25,7 +25,7 @@ class EngineReadSettings(BaseModel):
 
 
 class EngineWriteSettings(BaseModel):
-    engine: Type[EngineType]
+    engine: type[EngineType]
     write_type: EngineFileType
     args: list[Any] = Field(default_factory=list)
     kwargs: dict[str, Any] = Field(default_factory=dict)
@@ -81,9 +81,7 @@ class Table(BaseModel):
     def _cast(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
         pass
 
-    def validate_table_schema(
-        self, data_frame_wrapper: DataFrameWrapper
-    ) -> DataFrameWrapper:
+    def validate_table_schema(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
         self._verify_schema(data_frame_wrapper)
 
         return self._cast(data_frame_wrapper)
@@ -95,8 +93,6 @@ class SourceTable(ABC):
         pass
 
     def __ingest__(self, data_frame_wrapper: DataFrameWrapper, table_model: Table):
-        data_frame_wrapper = DataFrameWrapper.ensure_is_wrapper(
-            data_frame=data_frame_wrapper
-        )
+        data_frame_wrapper = DataFrameWrapper.ensure_is_wrapper(data_frame=data_frame_wrapper)
 
         table_model.write(data_frame_wrapper)

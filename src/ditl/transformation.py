@@ -1,7 +1,7 @@
 import inspect
-from typing import Any, Callable, Type
+from collections.abc import Callable
+from typing import Any
 
-from ditl.models.base import BaseModel, DataFrameWrapper
 from ditl.config import (
     EnvironmentConfig,
     EnvironmentConfigType,
@@ -9,6 +9,9 @@ from ditl.config import (
     RuntimeConfigType,
 )
 from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
+from ditl.graph import Lineage
+from ditl.models.base import BaseModel
+from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.table import Table
 
 
@@ -18,18 +21,16 @@ class Transformation(BaseModel):
     input_table_models: dict[str, Table]
     output_table_model: Table
 
+    graph_label: str = "default"
+
     runtime_config: RuntimeConfig | None = None
     environment_config: EnvironmentConfig | None = None
 
     def execute(self) -> DataFrameWrapper:
         if self.runtime_config is None:
-            raise InitiliazationMissingError(
-                "The runtime config was never initialised/loaded!"
-            )
+            raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         if self.environment_config is None:
-            raise InitiliazationMissingError(
-                "The runtime config was never initialised/loaded!"
-            )
+            raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         input_frames = {}
         for name, table in self.input_table_models.items():
             input_frames[name] = table.read(
@@ -43,13 +44,9 @@ class Transformation(BaseModel):
 
     def save_output_table(self, result: DataFrameWrapper) -> None:
         if self.runtime_config is None:
-            raise InitiliazationMissingError(
-                "The runtime config was never initialised/loaded!"
-            )
+            raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         if self.environment_config is None:
-            raise InitiliazationMissingError(
-                "The runtime config was never initialised/loaded!"
-            )
+            raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         self.output_table_model.write(
             runtime_config=self.runtime_config,
             environment_config=self.environment_config,
@@ -70,13 +67,11 @@ class TransformationManager:
     def load_runtime_config(
         self,
         *args: Any,
-        runtime_class_type: Type[RuntimeConfigType],
+        runtime_class_type: type[RuntimeConfigType],
         situation_identifier: str,
         **kwargs: Any,
     ) -> "TransformationManager":
-        self._runtime_config = runtime_class_type.load(
-            *args, situation_identifier=situation_identifier, **kwargs
-        )
+        self._runtime_config = runtime_class_type.load(*args, situation_identifier=situation_identifier, **kwargs)
         for transformation in self._registered_transformations.values():
             transformation.runtime_config = self._runtime_config
         return self
@@ -84,7 +79,7 @@ class TransformationManager:
     def load_environment_config(
         self,
         *args: Any,
-        environment_class_type: Type[EnvironmentConfigType],
+        environment_class_type: type[EnvironmentConfigType],
         situation_identifier: str,
         **kwargs: Any,
     ) -> "TransformationManager":
@@ -107,9 +102,7 @@ class TransformationManager:
             missing_init.append("environment_config")
 
         if missing_init:
-            raise InitiliazationMissingError(
-                f"Configurations missing for initialization: {','.join(missing_init)}"
-            )
+            raise InitiliazationMissingError(f"Configurations missing for initialization: {','.join(missing_init)}")
 
     def register_transformation(
         self,
@@ -120,9 +113,7 @@ class TransformationManager:
         def decorator(func: Callable) -> Callable:
             func_name = name_ or func.__name__
             if func_name in self._registered_transformations:
-                raise DuplicateTransformationName(
-                    f"The function '{func_name}' is already registered."
-                )
+                raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
 
             argspec = inspect.getfullargspec(func=func)
             expected_argspec = {}  # TODO: tbd
@@ -146,6 +137,10 @@ class TransformationManager:
             return func
 
         return decorator
+
+    @property
+    def lineage(self) -> Lineage:
+        return Lineage().add_transformations(transformations=self._registered_transformations)
 
 
 manager = TransformationManager()

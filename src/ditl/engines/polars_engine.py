@@ -1,9 +1,11 @@
 from pathlib import Path
-from typing import IO, ClassVar, Type, Any, TypeGuard
+from typing import IO, Any, ClassVar, TypeGuard
+
 import polars as pl
+
 from ditl.engines.base import Engine
-from ditl.models.base import FloatType, IntegerType, StringType
-from ditl.models.base import DataFrameWrapper, Schema, SchemaField
+from ditl.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.utils import columnar_dictionary_to_records
 
 
@@ -13,7 +15,7 @@ def polars_frame(frame: Any) -> TypeGuard[pl.DataFrame]:
 
 class PolarsEngine(Engine):
     engine_identifier: ClassVar[str] = "polars"
-    internal_schema_type: ClassVar[Type[pl.Schema]] = pl.Schema
+    internal_schema_type: ClassVar[type[pl.Schema]] = pl.Schema
 
     @classmethod
     def _from_engine_schema(cls, schema: Any) -> Schema:
@@ -35,9 +37,7 @@ class PolarsEngine(Engine):
     def _to_engine_schema(cls, schema: Schema) -> pl.Schema:
         return pl.Schema(
             {
-                schema_field.name: schema_field.type_.to_engine_type(
-                    engine_identifier=cls.engine_identifier
-                )
+                schema_field.name: schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier)
                 for schema_field in schema.root
             }
         )
@@ -63,9 +63,7 @@ class PolarsEngine(Engine):
         frame.write_csv(file, *args, **kwargs)
 
     @classmethod
-    def dataframe_from_faker_columnar(
-        cls, data: dict[str, list[Any]], schema: Schema
-    ) -> DataFrameWrapper:
+    def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> DataFrameWrapper:
         records = columnar_dictionary_to_records(values=data)
         return DataFrameWrapper.from_data_frame(
             pl.from_records(data=records, schema=cls._to_engine_schema(schema=schema))

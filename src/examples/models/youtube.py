@@ -1,15 +1,17 @@
 from typing import Any
+
+from ditl.config import EnvironmentConfig, RuntimeConfig
 from ditl.engines.polars_engine import PolarsEngine
-from ditl.models.generation import Generation
 from ditl.models.base import (
-    DataFrameWrapper,
+    Column,
+    Columns,
     EngineFileType,
     IntegerType,
     StringType,
     TablePath,
 )
-from ditl.config import RuntimeConfig, EnvironmentConfig
-from ditl.models.base import Column, Columns
+from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.generation import Generation
 from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
 from ditl.testing.faker_type import FakerIntType, FakerStringType
 from examples.config.youtube import MyEnvironmentConfig
@@ -52,9 +54,7 @@ class YoutubeTable(Table):
             *args,
             runtime_config=runtime_config,
             environment_config=environment_config,
-            source=self.path.full_path(
-                runtime_config=runtime_config, environment_config=environment_config
-            ),
+            source=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
             **kwargs,
         )
 
@@ -71,9 +71,7 @@ class YoutubeTable(Table):
             runtime_config=runtime_config,
             environment_config=environment_config,
             data_frame_wrapper=data_frame_wrapper,
-            file=self.path.full_path(
-                runtime_config=runtime_config, environment_config=environment_config
-            ),
+            file=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
             **kwargs,
         )
 
@@ -146,9 +144,7 @@ tech_videos = YoutubeTable(
     ),
     columns=Columns(
         root=dict(
-            video_id=Column(
-                name="video_id", data_type=StringType(), is_primary_key=True
-            ),
+            video_id=Column(name="video_id", data_type=StringType(), is_primary_key=True),
             title=Column(name="title", data_type=StringType()),
             published_at=Column(name="published_at", data_type=StringType()),
             views=Column(name="views", data_type=IntegerType()),
@@ -170,9 +166,20 @@ tech_channel_overview = YoutubeTable(
     path=YoutubeTablePath(name="youtube_channels_overview", date="1", time="2"),
     columns=Columns(
         root=dict(
-            channel_id=Column(
-                name="channel_id", data_type=StringType(), is_primary_key=True
-            ),
+            channel_id=Column(name="channel_id", data_type=StringType(), is_primary_key=True),
+            channel_name=Column(name="channel_name", data_type=StringType()),
+            channel_views=Column(name="channel_views", data_type=IntegerType()),
+            channel_duration=Column(name="channel_duration", data_type=IntegerType()),
+        )
+    ),
+    description="Overview over the tech channels",
+)
+
+tech_channel_overview_2 = YoutubeTable(
+    path=YoutubeTablePath(name="youtube_channels_overview_2", date="1", time="2"),
+    columns=Columns(
+        root=dict(
+            channel_id=Column(name="channel_id", data_type=StringType(), is_primary_key=True),
             channel_name=Column(name="channel_name", data_type=StringType()),
             channel_views=Column(name="channel_views", data_type=IntegerType()),
             channel_duration=Column(name="channel_duration", data_type=IntegerType()),

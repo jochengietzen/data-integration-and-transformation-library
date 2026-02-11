@@ -1,20 +1,22 @@
-from typing import Any, Type
-from ditl.models.generation import Generation
+from typing import Any
+
 from ditl.models.base import (
+    Column,
+    Columns,
     DataType,
-    TableExpectation,
     TablePath,
 )
-from ditl.models.base import Column, Columns
+from ditl.models.expectations import TableExpectation
+from ditl.models.generation import Generation
 from ditl.models.table import Table
 
 
 class StringType(DataType):
-    python_type: Type[str] = str
+    python_type: type[str] = str
 
 
 class IntegerType(DataType):
-    python_type: Type[int] = int
+    python_type: type[int] = int
 
 
 class MyTablePath(TablePath):
@@ -30,18 +32,14 @@ class MyTable(Table):
     pass
 
 
-foo_col = Column[StringType](
-    name="foo", data_type=StringType(), generation=Generation()
-)
+foo_col = Column[StringType](name="foo", data_type=StringType(), generation=Generation())
 
 foo = MyTable(
     path=MyTablePath(),
     columns=Columns(
         root={
             "biz": foo_col,
-            "baz": Column[IntegerType](
-                name="baz", data_type=IntegerType(), generation=Generation()
-            ),
+            "baz": Column[IntegerType](name="baz", data_type=IntegerType(), generation=Generation()),
         }
     ),
     description="A simple model",

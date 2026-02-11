@@ -1,7 +1,8 @@
-from ditl.models.base import DataFrameWrapper
-from ditl.transformation import manager
-from examples.models.youtube import tech_channel_overview, tech_channels, tech_videos
 import polars as pl
+
+from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.transformation import manager
+from examples.models.youtube import tech_channel_overview, tech_channel_overview_2, tech_channels, tech_videos
 
 
 @manager.register_transformation(
@@ -9,12 +10,8 @@ import polars as pl
     tech_videos=tech_videos,
     tech_channels=tech_channels,
 )
-def youtube_channel_overview(
-    tech_videos: DataFrameWrapper, tech_channels: DataFrameWrapper
-):
-    tech_channel_overview = tech_channels.data_frame.join(
-        tech_videos.data_frame, on="channel_id", how="left"
-    )
+def youtube_channel_overview(tech_videos: DataFrameWrapper, tech_channels: DataFrameWrapper):
+    tech_channel_overview = tech_channels.data_frame.join(tech_videos.data_frame, on="channel_id", how="left")
     tech_channel_overview = (
         tech_channel_overview.group_by("channel_id")
         .agg(
@@ -27,4 +24,13 @@ def youtube_channel_overview(
             how="inner",
         )
     )
+    return tech_channel_overview
+
+
+@manager.register_transformation(
+    output_table_model=tech_channel_overview_2,
+    tech_videos=tech_videos,
+    tech_channel_overview=tech_channel_overview,
+)
+def youtube_channel_overview_2(tech_videos: DataFrameWrapper, tech_channel_overview: DataFrameWrapper):
     return tech_channel_overview

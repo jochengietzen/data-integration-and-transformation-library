@@ -13,5 +13,5 @@ class BaseModel(_BaseModel):
         :param encoding: Encoding of the file
         returns: Model
         """
-        with open(path, "r", encoding=encoding) as f:
+        with open(path, encoding=encoding) as f:
             return cls(**yaml.full_load(f))

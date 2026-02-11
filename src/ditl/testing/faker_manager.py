@@ -1,10 +1,11 @@
-import random
-from typing import Any, Set
-from faker import Faker
 import math
+import random
+from typing import Any
+
+from faker import Faker
 
 from ditl.engines.base import Engine
-from ditl.models.base import DataFrameWrapper
+from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.table import Table
 
 # from ditl.engines.polars_engine import PolarsEngine
@@ -16,40 +17,29 @@ from ditl.testing.faker_type import FakerType
 class FakerManager:
     def __init__(self, faker: Faker | None = None) -> None:
         self.faker = Faker() if faker is None else faker
-        self.primary_key_generation_registry: dict[str, Set] = {}
-        self.non_key_generation_registry: dict[str, Set] = {}
+        self.primary_key_generation_registry: dict[str, set] = {}
+        self.non_key_generation_registry: dict[str, set] = {}
         # TODO: Make sure, that primary key generates the most values!
         # TODO: Maybe provide a possibility to generate corrupt foreign key values
 
     def register_faker_type(self, faker_type: "FakerType") -> "FakerManager":
-        if (
-            faker_type.generation_id is not None
-            and faker_type.generation_id not in self.non_key_generation_registry
-        ):
+        if faker_type.generation_id is not None and faker_type.generation_id not in self.non_key_generation_registry:
             self.non_key_generation_registry[faker_type.generation_id] = []
         return self
 
-    def generate(
-        self, table: Table, engine: Engine, n_values: int = 100
-    ) -> DataFrameWrapper:
+    def generate(self, table: Table, engine: Engine, n_values: int = 100) -> DataFrameWrapper:
         schema = table.columns.get_schema()
-        columns = {
-            key: col.generation.faker_type for key, col in table.columns.root.items()
-        }
+        columns = {key: col.generation.faker_type for key, col in table.columns.root.items()}
         return engine.dataframe_from_faker_columnar(
             data=self._generate_for_columns(columns=columns, n_values=n_values),
             schema=schema,
         )
 
-    def _generate_for_columns(
-        self, columns: dict[str, "FakerType"], n_values: int = 100
-    ) -> dict[str, list[Any]]:
+    def _generate_for_columns(self, columns: dict[str, "FakerType"], n_values: int = 100) -> dict[str, list[Any]]:
         result = {}
         for column, faker_type in columns.items():
             if faker_type.generation_id is None:
-                result[column] = [
-                    faker_type(faker_=self.faker) for _ in range(n_values)
-                ]
+                result[column] = [faker_type(faker_=self.faker) for _ in range(n_values)]
                 continue
 
             if faker_type.generation_id not in self.non_key_generation_registry:
@@ -66,18 +56,10 @@ class FakerManager:
                 / 100
             )
 
-            rand_func = (
-                random.choices if faker_type.allow_duplicate_values else random.sample
-            )
-            result[column] = rand_func(
-                population=list(current_set), k=math.ceil(n_values * percentage)
-            )
+            rand_func = random.choices if faker_type.allow_duplicate_values else random.sample
+            result[column] = rand_func(population=list(current_set), k=math.ceil(n_values * percentage))
             result[column] += [
-                faker_type(
-                    faker_=self.faker
-                    if faker_type.allow_duplicate_values
-                    else self.faker.unique
-                )
+                faker_type(faker_=self.faker if faker_type.allow_duplicate_values else self.faker.unique)
                 for _ in range(math.floor(n_values * (1 - percentage)))
             ]
             random.shuffle(result[column])

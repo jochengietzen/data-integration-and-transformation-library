@@ -1,13 +1,13 @@
+import json
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ditl.testing.faker_manager import FakerManager
 
-from faker import Faker
-
-
 from abc import abstractmethod
 from typing import Any
+
+from faker import Faker
 
 
 class FakerType:
@@ -20,14 +20,10 @@ class FakerType:
     ):
         self.generation_id = generation_id
         self.reuse_percentage_min = (
-            reuse_percentage_min
-            if reuse_percentage_min <= 1 and reuse_percentage_min >= 0
-            else 0
+            reuse_percentage_min if reuse_percentage_min <= 1 and reuse_percentage_min >= 0 else 0
         )
         self.reuse_percentage_max = (
-            reuse_percentage_max
-            if reuse_percentage_max <= 1 and reuse_percentage_max >= 0
-            else 1
+            reuse_percentage_max if reuse_percentage_max <= 1 and reuse_percentage_max >= 0 else 1
         )
         self.allow_duplicate_values = allow_duplicate_values
         if self.reuse_percentage_min > self.reuse_percentage_max:
@@ -39,6 +35,20 @@ class FakerType:
     @abstractmethod
     def __call__(self, *, faker_: Faker, **kwds: Any) -> Any:
         pass
+
+    @property
+    def _properties(self) -> dict[str, Any]:
+        return {
+            k: v
+            for k, v in self.__dict__.items()
+            if k in ["generation_id", "reuse_percentage_min", "reuse_percentage_max", "allow_duplicate_values"]
+        }
+
+    def toJson(self):
+        return json.dumps(self._properties)
+
+    def __hash__(self) -> int:
+        return hash(self.toJson())
 
 
 class FakerTextType(FakerType):

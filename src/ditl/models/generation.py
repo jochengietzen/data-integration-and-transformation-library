@@ -1,4 +1,5 @@
 from pydantic import ConfigDict
+
 from ditl.base_model import BaseModel
 from ditl.testing.faker_type import FakerType
 
