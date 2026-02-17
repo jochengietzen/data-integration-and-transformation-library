@@ -95,7 +95,9 @@ class TransformationManager:
     def load_all_transformations(self, module_name: str) -> None:
         transformation_package = importlib.import_module(module_name)
         for loader, module_name, _ in pkgutil.walk_packages(path=transformation_package.__path__):
-            loader.find_module(module_name).load_module(module_name)  # type: ignore
+            spec = loader.find_spec(module_name)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
 
     def _check_initialization_state(self) -> None:
         missing_init: list[str] = []

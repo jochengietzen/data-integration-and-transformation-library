@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "ditl",
+    "pytest>=9.0.2",
 ]
 
 [tool.uv]
