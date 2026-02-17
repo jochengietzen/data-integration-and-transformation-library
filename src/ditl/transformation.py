@@ -1,4 +1,6 @@
+import importlib
 import inspect
+import pkgutil
 from collections.abc import Callable
 from typing import Any
 
@@ -90,9 +92,10 @@ class TransformationManager:
             transformation.environment_config = self._environment_config
         return self
 
-    def load_all_transformations(self, package_path: str) -> None:
-        # TODO: implement
-        pass
+    def load_all_transformations(self, module_name: str) -> None:
+        transformation_package = importlib.import_module(module_name)
+        for loader, module_name, _ in pkgutil.walk_packages(path=transformation_package.__path__):
+            loader.find_module(module_name).load_module(module_name)  # type: ignore
 
     def _check_initialization_state(self) -> None:
         missing_init: list[str] = []
@@ -131,6 +134,8 @@ class TransformationManager:
                 func=func,
                 input_table_models=table_models,
                 output_table_model=output_table_model,
+                runtime_config=self._runtime_config,
+                environment_config=self._environment_config,
             )
 
             self._registered_transformations[func_name] = transformation

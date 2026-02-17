@@ -14,7 +14,8 @@ from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.generation import Generation
 from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
 from ditl.testing.faker_type import FakerIntType, FakerStringType
-from examples.config.youtube import MyEnvironmentConfig
+
+from ..config import MyEnvironmentConfig
 
 
 class YoutubeTablePath(TablePath):

@@ -1,0 +1,19 @@
+[project]
+name = "ditl_polars_example"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "ditl",
+]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+ditl = { path = "../../" }
+
+[tool.uv.build-backend]
+module-name = ["ditl_polars_example"]
+module-root = "src"

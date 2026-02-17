@@ -2,7 +2,8 @@ import polars as pl
 
 from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.transformation import manager
-from examples.models.youtube import tech_channel_overview, tech_channel_overview_2, tech_channels, tech_videos
+
+from ..models.youtube import tech_channel_overview, tech_channel_overview_2, tech_channels, tech_videos
 
 
 @manager.register_transformation(
