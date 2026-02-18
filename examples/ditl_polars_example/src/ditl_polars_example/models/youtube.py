@@ -1,7 +1,5 @@
 from typing import Any
 
-from ditl_polars_example.config import MyEnvironmentConfig
-
 from ditl.config import EnvironmentConfig, RuntimeConfig
 from ditl.engines.polars_engine import PolarsEngine
 from ditl.models.base import (
@@ -16,6 +14,7 @@ from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.generation import Generation
 from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
 from ditl.testing.faker_type import FakerIntType, FakerStringType
+from ditl_polars_example.config import MyEnvironmentConfig
 
 
 class YoutubeTablePath(TablePath):
@@ -77,7 +76,11 @@ class YoutubeTable(Table):
         )
 
 
-tech_channels = YoutubeTable(
+class ReadTable(YoutubeTable):
+    pass
+
+
+tech_channels = ReadTable(
     path=YoutubeTablePath(
         name="youtube_tech_channels",
         date="20251120",
@@ -211,6 +214,8 @@ tech_videos = YoutubeTable(
     description="Youtube tech videos",
 )
 
+tech_channel_overview_3 = tech_videos.model_copy()
+tech_channel_overview_3.path = YoutubeTablePath(name="youtube_channels_overview_3", date="1", time="2")
 
 tech_channel_overview = YoutubeTable(
     path=YoutubeTablePath(name="youtube_channels_overview", date="1", time="2"),

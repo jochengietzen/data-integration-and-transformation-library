@@ -1,13 +1,14 @@
 import polars as pl
-from ditl_polars_example.models.youtube import (
-    tech_channel_overview,
-    tech_channel_overview_2,
-    tech_channels,
-    tech_videos,
-)
 
 from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.transformation import manager
+from ditl_polars_example.models.youtube import (
+    tech_channel_overview,
+    tech_channel_overview_2,
+    tech_channel_overview_3,
+    tech_channels,
+    tech_videos,
+)
 
 
 @manager.register_transformation(
@@ -62,3 +63,11 @@ def youtube_channel_overview(tech_videos: DataFrameWrapper, tech_channels: DataF
 )
 def youtube_channel_overview_2(tech_videos: DataFrameWrapper, tech_channel_overview: DataFrameWrapper):
     return tech_channel_overview
+
+
+@manager.register_transformation(
+    output_table_model=tech_channel_overview_3,
+    tech_videos=tech_videos,
+)
+def youtube_channel_overview_3(tech_videos: DataFrameWrapper):
+    return tech_videos
