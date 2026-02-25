@@ -88,8 +88,18 @@ class Engine(BaseModel):
 
     @classmethod
     @abstractmethod
+    def cast(cls, schema: Schema, data_frame_wrapper: "DataFrameWrapper") -> "DataFrameWrapper":
+        pass
+
+    @classmethod
+    @abstractmethod
     def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> "DataFrameWrapper":
         pass
+
+    # TODO: Add transformation from one engine to the other (handover of data between enignes)
+    # TODO: Add check whether the engine_read_settings and engine_write_settings have
+    # engines, that actually have implemented the transfer from one to the other.
+    # Only read => write direction seems to be required for now.
 
 
 EngineType = TypeVar("EngineType", bound=Engine)

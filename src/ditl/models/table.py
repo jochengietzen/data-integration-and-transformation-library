@@ -51,11 +51,13 @@ class Table(BaseModel):
     ) -> DataFrameWrapper:
         args_ = self.engine_read_settings.args + list(args)
         method_identifier = self.engine_read_settings.read_type.value
-        return self.engine_read_settings.engine.read(
+        dfw = self.engine_read_settings.engine.read(
             *args_,
             method_identifier=method_identifier,
             **(self.engine_read_settings.kwargs | kwargs),
         )
+        dfw.schema = self.columns.get_schema()
+        return dfw
 
     def write(
         self,

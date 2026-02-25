@@ -36,11 +36,16 @@ class PolarsEngine(Engine):
     @classmethod
     def _to_engine_schema(cls, schema: Schema) -> pl.Schema:
         return pl.Schema(
-            {
+            schema={
                 schema_field.name: schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier)
                 for schema_field in schema.root
             }
         )
+
+    @classmethod
+    def cast(cls, schema: Schema, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
+        data_frame: pl.DataFrame = data_frame_wrapper.data_frame
+        return DataFrameWrapper(data_frame=data_frame.cast(cls._to_engine_schema(schema=schema)), schema=schema)
 
     @classmethod
     def _read_csv(cls, source: str, *args: Any, **kwargs: Any) -> DataFrameWrapper:

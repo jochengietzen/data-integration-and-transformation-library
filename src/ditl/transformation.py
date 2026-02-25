@@ -39,6 +39,10 @@ class Transformation(BaseModel):
                 runtime_config=self.runtime_config,
                 environment_config=self.environment_config,
             )
+            # TODO: Maybe we want to cast the tables before handing them down.
+            # If so, we might need to switch from input_table_models str to Table and utilise
+            # str to InputTableInstructions instead. Then we could decide on a per TableInstruction
+            # basis if we cast or not.
 
         result = self.func(**input_frames)
 
