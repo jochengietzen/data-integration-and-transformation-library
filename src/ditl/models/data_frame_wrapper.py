@@ -16,6 +16,9 @@ class DataFrameWrapper:
         self.data_frame = data_frame
         self.schema = schema
 
+    def create_with_new_data(self, data_frame: Any) -> "DataFrameWrapper":
+        return DataFrameWrapper(data_frame=data_frame, schema=self.schema)
+
     @classmethod
     def ensure_is_wrapper(cls, data_frame: Any) -> "DataFrameWrapper":
         if isinstance(data_frame, cls):
@@ -51,6 +54,6 @@ DataFrameType = TypeVar("DataFrameType")
 
 
 class TypedDataFrameWrapper(DataFrameWrapper, Generic[DataFrameType]):
-    def __init__(self, data_frame: DataFrameType) -> None:
-        super().__init__(data_frame)
+    def __init__(self, data_frame: DataFrameType, schema: Optional["Schema"] = None) -> None:
+        super().__init__(data_frame=data_frame, schema=schema)
         self.data_frame: DataFrameType = data_frame

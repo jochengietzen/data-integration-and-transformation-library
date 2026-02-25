@@ -45,7 +45,7 @@ class PolarsEngine(Engine):
     @classmethod
     def cast(cls, schema: Schema, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
         data_frame: pl.DataFrame = data_frame_wrapper.data_frame
-        return DataFrameWrapper(data_frame=data_frame.cast(cls._to_engine_schema(schema=schema)), schema=schema)
+        return data_frame_wrapper.create_with_new_data(data_frame=data_frame.cast(cls._to_engine_schema(schema=schema)))
 
     @classmethod
     def _read_csv(cls, source: str, *args: Any, **kwargs: Any) -> DataFrameWrapper:
