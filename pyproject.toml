@@ -22,8 +22,14 @@ dependencies = [
 package = true
 
 [tool.uv.build-backend]
-module-name = ["ditl", "examples"]
+module-name = ["ditl"]
 module-root = "src"
+
+[tool.uv.workspace]
+members = [
+    "examples/*",
+    "plugins/engines/*",
+]
 
 [tool.mypy]
 exclude = [

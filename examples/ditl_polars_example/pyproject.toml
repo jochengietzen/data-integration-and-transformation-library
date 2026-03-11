@@ -13,7 +13,7 @@ dependencies = [
 package = true
 
 [tool.uv.sources]
-ditl = { path = "../../" }
+ditl = { workspace = true }
 
 [tool.uv.build-backend]
 module-name = ["ditl_polars_example"]

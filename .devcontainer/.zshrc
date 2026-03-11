@@ -104,3 +104,5 @@ source $ZSH/oh-my-zsh.sh
 if [ -f /workspace/.venv/bin/activate ]; then
     source /workspace/.venv/bin/activate
 fi
+
+alias venv_switch='deactivate && source .venv/bin/activate'

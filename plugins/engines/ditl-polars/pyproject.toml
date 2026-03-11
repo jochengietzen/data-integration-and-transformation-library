@@ -1,0 +1,27 @@
+[project]
+name = "ditl-polars"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Tim", email = "bossenti@posteo.de" }
+]
+requires-python = ">=3.10"
+dependencies = ["ditl"]
+
+[tool.uv]
+package = true
+
+[tool.uv.sources]
+ditl = { workspace = true }
+
+[project.scripts]
+ditl-polars = "ditl_polars:main"
+
+[tool.uv.build-backend]
+module-name = ["ditl_polars"]
+module-root = "src"
+
+[build-system]
+requires = ["uv_build>=0.8.12,<0.9.0"]
+build-backend = "uv_build"
