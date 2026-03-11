@@ -26,6 +26,6 @@ class ParameterizedTest(NamedTuple):
 def parametrize_for_tests(manager: TransformationManager) -> Generator[ParameterizedTest]:
     for name, transformation in manager._registered_transformations.items():
         input_models = {}
-        for model_name, model in transformation.input_table_models.items():
-            input_models[model_name] = GenerateFixture(name=model_name, model=model)
+        for model_name, input_table_model in transformation.input_table_models.items():
+            input_models[model_name] = GenerateFixture(name=model_name, model=input_table_model.table)
         yield ParameterizedTest(name=name, transformation=transformation, input_models=input_models)

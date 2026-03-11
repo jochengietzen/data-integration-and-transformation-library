@@ -59,8 +59,8 @@ class Lineage:
             t = TransformationNode(transformation=transformation)
             output_node = TableNode(table=transformation.output_table_model)
             self.graph.add_edge(t, output_node, key=t.transformation.graph_label)
-            for input_model in transformation.input_table_models.values():
-                input_node = TableNode(table=input_model)
+            for input_model_instruction in transformation.input_table_models.values():
+                input_node = TableNode(table=input_model_instruction.table)
                 self.graph.add_edge(input_node, t, key=t.transformation.graph_label)
         return self
 
@@ -102,7 +102,9 @@ class Lineage:
             if isinstance(node, TransformationNode):
                 yield LineageTransformationElement(
                     name=node.transformation.name,
-                    input_models=node.transformation.input_table_models,
+                    input_models={
+                        key: table_model.table for key, table_model in node.transformation.input_table_models.items()
+                    },
                     depends_on_transformations=sorted(
                         [n.transformation.name for n, _ in g.in_edges(node) if isinstance(n, TransformationNode)]
                     ),

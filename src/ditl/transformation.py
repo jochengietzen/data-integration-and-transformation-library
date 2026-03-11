@@ -17,10 +17,15 @@ from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.table import Table
 
 
+class InputTableInstruction(BaseModel):
+    table: Table
+    cast_before_injection: bool = True
+
+
 class Transformation(BaseModel):
     name: str
     func: Callable
-    input_table_models: dict[str, Table]
+    input_table_models: dict[str, InputTableInstruction]
     output_table_model: Table
 
     graph_label: str = "default"
@@ -33,16 +38,16 @@ class Transformation(BaseModel):
             raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         if self.environment_config is None:
             raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
-        input_frames = {}
-        for name, table in self.input_table_models.items():
+        input_frames: dict[str, DataFrameWrapper] = {}
+        for name, table_instruction in self.input_table_models.items():
+            table = table_instruction.table
             input_frames[name] = table.read(
                 runtime_config=self.runtime_config,
                 environment_config=self.environment_config,
             )
-            # TODO: Maybe we want to cast the tables before handing them down.
-            # If so, we might need to switch from input_table_models str to Table and utilise
-            # str to InputTableInstructions instead. Then we could decide on a per TableInstruction
-            # basis if we cast or not.
+
+            if table_instruction.cast_before_injection:
+                input_frames[name] = input_frames[name].cast(engine=table.engine_read_settings.engine)
 
         result = self.func(**input_frames)
 
@@ -117,7 +122,7 @@ class TransformationManager:
         self,
         output_table_model: Table,
         name_: str | None = None,
-        **kwargs: dict[str, Any],
+        **kwargs: Any,
     ) -> Callable:
         def decorator(func: Callable) -> Callable:
             func_name = name_ or func.__name__
@@ -129,10 +134,14 @@ class TransformationManager:
 
             # TODO: compare argspec and expected_argspec
 
-            table_models = {
-                name: kwargs.get(name)
+            table_models: dict[str, InputTableInstruction] = {
+                name: kwargs[name]
                 for name in argspec.args
-                if name in kwargs and isinstance(kwargs.get(name), Table)
+                if name in kwargs and kwargs[name] is not None and isinstance(kwargs[name], InputTableInstruction)
+            } | {
+                name: InputTableInstruction(table=kwargs[name])
+                for name in argspec.args
+                if name in kwargs and kwargs[name] is not None and isinstance(kwargs[name], Table)
             }
 
             transformation = Transformation(

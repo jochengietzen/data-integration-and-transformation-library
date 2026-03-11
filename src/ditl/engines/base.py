@@ -100,6 +100,7 @@ class Engine(BaseModel):
     # TODO: Add check whether the engine_read_settings and engine_write_settings have
     # engines, that actually have implemented the transfer from one to the other.
     # Only read => write direction seems to be required for now.
+    # TODO: Prompt Primer -> Prompt Erzeugung für Claude etc.
 
 
 EngineType = TypeVar("EngineType", bound=Engine)
