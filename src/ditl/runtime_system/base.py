@@ -5,5 +5,5 @@ from ditl.graph import Lineage
 
 class BaseRuntimeSystem:
     @abstractmethod
-    def generate(self, lineage: Lineage) -> None:
+    def generate(self, lineage: Lineage, source_table_type: type | None = None) -> None:
         pass

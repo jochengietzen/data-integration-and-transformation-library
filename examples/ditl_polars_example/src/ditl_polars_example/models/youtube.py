@@ -1,7 +1,8 @@
 from typing import Any
 
+from ditl_engine_polars.engine import PolarsEngine
+
 from ditl.config import EnvironmentConfig, RuntimeConfig
-from ditl.engines.polars_engine import PolarsEngine
 from ditl.models.base import (
     Column,
     Columns,

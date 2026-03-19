@@ -19,8 +19,6 @@ class PolarsEngine(Engine):
 
     @classmethod
     def _from_engine_schema(cls, schema: Any) -> Schema:
-        print(schema)
-        print([(key, value) for key, value in schema.items()])
         return Schema(
             [
                 SchemaField(

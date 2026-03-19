@@ -1,13 +1,17 @@
 [project]
-name = "ditl-polars"
+name = "ditl-engine-polars"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "Tim", email = "bossenti@posteo.de" }
+    {name = "Tim Bossenmaier", email="bossenti@posteo.de"},
+    {name = "Jochen Gietzen", email="jochen.gietzen@gmail.com"}
 ]
 requires-python = ">=3.10"
-dependencies = ["ditl"]
+dependencies = [
+    "ditl",
+    "polars>=1.34.0",
+]
 
 [tool.uv]
 package = true
@@ -16,10 +20,10 @@ package = true
 ditl = { workspace = true }
 
 [project.scripts]
-ditl-polars = "ditl_polars:main"
+ditl-engine-polars = "ditl_engine_polars:main"
 
 [tool.uv.build-backend]
-module-name = ["ditl_polars"]
+module-name = ["ditl_engine_polars"]
 module-root = "src"
 
 [build-system]

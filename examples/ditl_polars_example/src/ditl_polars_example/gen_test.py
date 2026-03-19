@@ -1,6 +1,7 @@
 import time
 
-from ditl.engines.polars_engine import PolarsEngine
+from ditl_engine_polars.engine import PolarsEngine
+
 from ditl.testing.faker_manager import FakerManager
 from ditl_polars_example.models.youtube import tech_channels
 

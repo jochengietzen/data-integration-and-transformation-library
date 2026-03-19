@@ -1,6 +1,6 @@
 import polars as pl
+from ditl_engine_polars.engine import PolarsEngine
 
-from ditl.engines.polars_engine import PolarsEngine
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
 from ditl.models.data_frame_wrapper import DataFrameWrapper
 

@@ -1,7 +1,7 @@
 import pytest
+from ditl_engine_polars.engine import PolarsEngine
 
 from ditl.engines.base import Engine
-from ditl.engines.polars_engine import PolarsEngine
 from ditl.testing.faker_manager import FakerManager
 
 

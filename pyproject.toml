@@ -12,8 +12,6 @@ requires-python = ">=3.10"
 dependencies = [
     "faker>=40.1.2",
     "networkx>=3.4.2",
-    "pandas>=2.3.1",
-    "polars>=1.34.0",
     "pydantic>=2.11.5",
     "pyyaml>=6.0.2",
 ]
@@ -29,6 +27,7 @@ module-root = "src"
 members = [
     "examples/*",
     "plugins/engines/*",
+    "plugins/runtime_systems/databricks/asset_bundle_jobs",
 ]
 
 [tool.mypy]
