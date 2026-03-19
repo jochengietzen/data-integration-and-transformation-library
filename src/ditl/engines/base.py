@@ -17,9 +17,6 @@ class WriteMethod(Protocol):
     def __call__(self, *args: Any, data_frame: "DataFrameWrapper", **kwargs: Any) -> None: ...
 
 
-# TODO: Think about plugin functionality
-
-
 class Engine(BaseModel):
     """"""
 
