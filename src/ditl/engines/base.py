@@ -98,6 +98,7 @@ class Engine(BaseModel):
     # engines, that actually have implemented the transfer from one to the other.
     # Only read => write direction seems to be required for now.
     # TODO: Prompt Primer -> Prompt Erzeugung für Claude etc.
+    # TODO: provide standard functionalities like merge, upsert for engines
 
 
 EngineType = TypeVar("EngineType", bound=Engine)

@@ -8,7 +8,7 @@ authors = [
 ]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     "faker>=40.1.2",
     "networkx>=3.4.2",
@@ -42,7 +42,7 @@ fail-under = 10
 ignore-patterns = ["^\\.#"]
 jobs = 1
 persistent = true
-py-version = "3.11"
+py-version = "3.13"
 suggestion-mode = true
 
 [tool.pylint.basic]
