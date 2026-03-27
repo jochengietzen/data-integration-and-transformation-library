@@ -1,6 +1,6 @@
 from typing import Any
 
-from ditl_engine_pandas.engine import PandasEngine
+from ditl_polars_example.config import MyEnvironmentConfig
 
 from ditl.config import EnvironmentConfig, RuntimeConfig
 from ditl.models.base import (
@@ -15,7 +15,6 @@ from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.generation import Generation
 from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
 from ditl.testing.faker_type import FakerIntType, FakerStringType
-from ditl_polars_example.config import MyEnvironmentConfig
 
 
 class YoutubeTablePath(TablePath):

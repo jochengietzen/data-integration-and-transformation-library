@@ -1,5 +1,6 @@
-from ditl.transformation import manager
 from ditl_polars_example.config import MyEnvironmentConfig, MyRuntimeConfig
+
+from ditl.transformation import manager
 
 manager.load_runtime_config(runtime_class_type=MyRuntimeConfig, situation_identifier="local")
 manager.load_environment_config(

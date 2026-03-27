@@ -1,7 +1,4 @@
 import pandas as pd
-
-from ditl.models.data_frame_wrapper import DataFrameWrapper
-from ditl.transformation import manager
 from ditl_polars_example.models.youtube import (
     tech_channel_overview,
     tech_channel_overview_2,
@@ -9,6 +6,9 @@ from ditl_polars_example.models.youtube import (
     tech_channels,
     tech_videos,
 )
+
+from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.transformation import manager
 
 
 @manager.register_transformation(
