@@ -52,6 +52,7 @@ class Transformation(BaseModel):
 
         result = self.func(**input_frames)
 
+        # TODO: Add selects for schema + cast?
         return DataFrameWrapper.ensure_is_wrapper(data_frame=result)
 
     def save_output_table(self, result: DataFrameWrapper) -> None:

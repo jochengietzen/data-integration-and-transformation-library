@@ -12,42 +12,61 @@ class DataFrameWrapper:
     # Registration of utilized functions
     # Plugin functionality?
 
-    def __init__(self, data_frame: Any, schema: Optional["Schema"] = None) -> None:
+    def __init__(
+        self, data_frame: Any, schema: Optional["Schema"] = None, engine: Union["Engine", type["Engine"]] | None = None
+    ) -> None:
         self.data_frame = data_frame
         self.schema = schema
+        self.engine = engine
 
     def create_with_new_data(self, data_frame: Any) -> "DataFrameWrapper":
-        return DataFrameWrapper(data_frame=data_frame, schema=self.schema)
+        return DataFrameWrapper(data_frame=data_frame, schema=self.schema, engine=self.engine)
 
     @classmethod
-    def ensure_is_wrapper(cls, data_frame: Any) -> "DataFrameWrapper":
+    def ensure_is_wrapper(
+        cls, data_frame: Any, schema: Optional["Schema"] = None, engine: Union["Engine", type["Engine"]] | None = None
+    ) -> "DataFrameWrapper":
         if isinstance(data_frame, cls):
             return data_frame
-        return cls.from_data_frame(data_frame)
+        return cls.from_data_frame(data_frame=data_frame, schema=schema, engine=engine)
 
     @classmethod
-    def from_data_frame(cls, data_frame: Any) -> "DataFrameWrapper":
-        return cls(data_frame=data_frame)
+    def from_data_frame(
+        cls, data_frame: Any, schema: Optional["Schema"] = None, engine: Union["Engine", type["Engine"]] | None = None
+    ) -> "DataFrameWrapper":
+        return cls(data_frame=data_frame, schema=schema, engine=engine)
 
     def write(
         self,
         *args: Any,
         method_identifier: str,
-        engine: Union["Engine", type["Engine"]],  # fmt: skip
         **kwargs: Any,
     ) -> None:
-        engine.write(
+        if self.engine is None:
+            raise ProgrammingError("Writing requires an engine to be set for the DataFrameWrapper!")
+        self.engine.write(
             *args,
             method_identifier=method_identifier,
-            data_frame=self.cast(engine=engine) if self.schema is not None else self,
+            data_frame=self.cast() if self.schema is not None else self,
             schema=self.schema,
             **kwargs,
         )
 
-    def cast(self, engine: Union["Engine", type["Engine"]]) -> "DataFrameWrapper":
+    def cast(self) -> "DataFrameWrapper":
+        if self.engine is None:
+            raise ProgrammingError("Casting requires an engine to be set for the DataFrameWrapper!")
         if self.schema is None:
             raise ProgrammingError("Cannot cast dataframe, due to missing schema in wrapper.")
-        return engine.cast(schema=self.schema, data_frame_wrapper=self)
+        return self.engine.cast(schema=self.schema, data_frame_wrapper=self)
+
+    def convert_to(self, target_engine: type["Engine"]) -> "DataFrameWrapper":
+        if self.schema is None:
+            raise ProgrammingError("Conversion requires a schema to be set for the DataFrameWrapper!")
+        if self.engine is None:
+            raise ProgrammingError("Conversion requires an engine to be set for the DataFrameWrapper!")
+        return self.engine.convert_to_engine(
+            schema=self.schema, engine_identifier=target_engine.engine_identifier, data_frame_wrapper=self
+        )
 
 
 DataFrameType = TypeVar("DataFrameType")

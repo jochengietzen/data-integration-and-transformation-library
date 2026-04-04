@@ -22,17 +22,18 @@ schema = Schema(
     ]
 )
 
-df_w = DataFrameWrapper(data_frame=df, schema=schema)
+df_w = DataFrameWrapper(data_frame=df, schema=schema, engine=PandasEngine)
 
 print(df)
 df_2 = PandasEngine.cast(schema=schema, data_frame_wrapper=DataFrameWrapper(data_frame=df))
 print(df_2.data_frame.dtypes)
 
 print(df_w.data_frame)
-df_w = df_w.cast(engine=PandasEngine)
+df_w = df_w.cast()
 print(df_w.data_frame)
 
-df_w_polars = PandasEngine.convert_to_engine(schema=schema, engine_identifier="polars", data_frame_wrapper=df_w)
+# df_w_polars = PandasEngine.convert_to_engine(schema=schema, engine_identifier="polars", data_frame_wrapper=df_w)
+df_w_polars = df_w.convert_to(target_engine=PolarsEngine)
 print(df_w_polars.data_frame)
 
 df_w_pandas = PolarsEngine.convert_to_engine(schema=schema, engine_identifier="pandas", data_frame_wrapper=df_w_polars)
