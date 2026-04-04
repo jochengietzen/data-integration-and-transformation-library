@@ -11,6 +11,25 @@ init_system_files:
     git config --global core.eol lf
     if [ -f /tmp/.zshrc ]; then cp /tmp/.zshrc /home/vscode/.zshrc; fi
 
+
+venv-roots := "/workspace/examples /workspace/plugins/engines /workspace/plugins/runtime_systems"
+
+create_sub_venvs:
+    #!/bin/zsh
+    set -euo pipefail
+    for root in {{ venv-roots }}; do
+        if [ ! -d "$root" ]; then
+            echo "Skipping '$root': not a directory"
+            continue
+        fi
+        for folder in "$root"/*/; do
+            [ -d "$folder" ] || continue
+            echo "Creating venv in: $folder"
+            rm -rf "$folder/.venv"
+            python -m venv "$folder/.venv"
+        done
+    done
+
 init: init_system_files
     #!/bin/zsh
     set -euxo pipefail
