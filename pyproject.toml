@@ -28,6 +28,7 @@ members = [
     "examples/*",
     "plugins/engines/*",
     "plugins/runtime_systems/databricks/asset_bundle_jobs",
+    "plugins/engine_conversions/pandas_to_polars",
 ]
 
 [tool.mypy]

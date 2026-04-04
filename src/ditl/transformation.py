@@ -2,6 +2,7 @@ import importlib
 import inspect
 import pkgutil
 from collections.abc import Callable
+from importlib.metadata import entry_points
 from typing import Any
 
 from ditl.config import (
@@ -161,6 +162,18 @@ class TransformationManager:
     @property
     def lineage(self) -> Lineage:
         return Lineage().add_transformations(transformations=self._registered_transformations)
+
+    def load_all_plugins(self) -> None:
+        plugin_groups = [
+            "ditl.engines",
+            "ditl.conversions",
+            "ditl.runtime_systems",
+        ]
+        for group in plugin_groups:
+            print("Loading plugin group", group)
+            for ep in entry_points(group=group):
+                print("Found entry point to load:", ep)
+                ep.load()
 
 
 manager = TransformationManager()

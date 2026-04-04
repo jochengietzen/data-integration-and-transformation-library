@@ -12,7 +12,7 @@ init_system_files:
     if [ -f /tmp/.zshrc ]; then cp /tmp/.zshrc /home/vscode/.zshrc; fi
 
 
-venv-roots := "/workspace/examples /workspace/plugins/engines /workspace/plugins/runtime_systems"
+venv-roots := "/workspace/examples /workspace/plugins/engine_conversions /workspace/plugins/engines /workspace/plugins/runtime_systems"
 
 create_sub_venvs:
     #!/bin/zsh

@@ -1,0 +1,29 @@
+[project]
+name = "ditl-pandas-to-polars"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Jochen Gietzen", email = "jochen.gietzen@gmail.com" },
+    {name = "Tim Bossenmaier", email="bossenti@posteo.de"},
+]
+requires-python = ">=3.13"
+dependencies = [
+    "ditl",
+    "ditl-engine-pandas",
+    "ditl-engine-polars",
+]
+
+
+[project.entry-points."ditl.conversions"]
+ditl_pandas_to_polars = "ditl_pandas_to_polars.conversion"
+
+[build-system]
+requires = ["uv_build>=0.8.12,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+ditl-engine-pandas = { workspace = true }
+ditl-engine-polars = { workspace = true }
+ditl = { workspace = true }
+

@@ -15,6 +15,7 @@ members = [
     "ditl",
     "ditl-engine-pandas",
     "ditl-engine-polars",
+    "ditl-pandas-to-polars",
     "ditl-polars-example",
     "ditl-rs-dbx-asset-bundle-jobs",
 ]
@@ -482,6 +483,23 @@ requires-dist = [
 ]
 
 [[package]]
+name = "ditl-pandas-to-polars"
+version = "0.1.0"
+source = { editable = "plugins/engine_conversions/pandas_to_polars" }
+dependencies = [
+    { name = "ditl" },
+    { name = "ditl-engine-pandas" },
+    { name = "ditl-engine-polars" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ditl", editable = "." },
+    { name = "ditl-engine-pandas", editable = "plugins/engines/pandas" },
+    { name = "ditl-engine-polars", editable = "plugins/engines/polars" },
+]
+
+[[package]]
 name = "ditl-polars-example"
 version = "0.1.0"
 source = { editable = "examples/ditl_polars_example" }
@@ -489,6 +507,7 @@ dependencies = [
     { name = "ditl" },
     { name = "ditl-engine-pandas" },
     { name = "ditl-engine-polars" },
+    { name = "ditl-pandas-to-polars" },
     { name = "ditl-rs-dbx-asset-bundle-jobs" },
     { name = "polars" },
     { name = "pytest" },
@@ -499,6 +518,7 @@ requires-dist = [
     { name = "ditl", editable = "." },
     { name = "ditl-engine-pandas", editable = "plugins/engines/pandas" },
     { name = "ditl-engine-polars", editable = "plugins/engines/polars" },
+    { name = "ditl-pandas-to-polars", editable = "plugins/engine_conversions/pandas_to_polars" },
     { name = "ditl-rs-dbx-asset-bundle-jobs", editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" },
     { name = "polars", specifier = ">=1.34.0" },
     { name = "pytest", specifier = ">=9.0.2" },

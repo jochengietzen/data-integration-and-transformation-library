@@ -1,8 +1,12 @@
 import pandas as pd
 from ditl_engine_pandas.engine import PandasEngine
+from ditl_engine_polars.engine import PolarsEngine
+from ditl_polars_example.manager import manager
 
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
 from ditl.models.data_frame_wrapper import DataFrameWrapper
+
+manager.load_all_plugins()
 
 df = pd.DataFrame(
     {
@@ -27,3 +31,9 @@ print(df_2.data_frame.dtypes)
 print(df_w.data_frame)
 df_w = df_w.cast(engine=PandasEngine)
 print(df_w.data_frame)
+
+df_w_polars = PandasEngine.convert_to_engine(schema=schema, engine_identifier="polars", data_frame_wrapper=df_w)
+print(df_w_polars.data_frame)
+
+df_w_pandas = PolarsEngine.convert_to_engine(schema=schema, engine_identifier="pandas", data_frame_wrapper=df_w_polars)
+print(df_w_pandas.data_frame)
