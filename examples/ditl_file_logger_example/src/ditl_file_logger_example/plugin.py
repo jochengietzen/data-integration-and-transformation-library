@@ -32,5 +32,4 @@ def setup(ditl_logger: logging.Logger) -> None:
     handler.setFormatter(logging.Formatter(fmt=LOG_FORMAT, datefmt=DATE_FORMAT))
 
     ditl_logger.addHandler(handler)
-    ditl_logger.setLevel(logging.DEBUG)
 ### aigen_end
