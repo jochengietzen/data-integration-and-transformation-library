@@ -1,3 +1,3 @@
-from .wrapper import *
+from .wrapper import *  # noqa
 
-DataFrameWrapper.load_all_plugins()
+DataFrameWrapper.load_all_plugins()  # noqa

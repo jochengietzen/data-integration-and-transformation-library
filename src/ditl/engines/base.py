@@ -29,8 +29,6 @@ class ConversionEngineTuple(NamedTuple):
 
 
 class Engine(BaseModel):
-    """"""
-
     # Defines
     # - Schema
     # - DatenTypen
@@ -43,16 +41,22 @@ class Engine(BaseModel):
     registered_read_methods: ClassVar[dict[str, dict[str, ReadMethod]]] = defaultdict(dict)
     registered_write_methods: ClassVar[dict[str, dict[str, WriteMethod]]] = defaultdict(dict)
     # TODO: Switch other registragtion variables to use the named tuple, as well
-    registered_conversion_methods: ClassVar[dict[ConversionEngineTuple, ConversionMethod]] = dict()
+    registered_conversion_methods: ClassVar[dict[ConversionEngineTuple, ConversionMethod]] = {}
 
     @classmethod
     def register_data_type(cls, data_type: type[DataType]):
+        """aigen_start
+        Register a DataType by mapping its engine-native type to the DataType class for this engine.
+        aigen_end"""
         cls.registered_types[data_type._engine_identifier_to_engine_type[data_type.__name__][cls.engine_identifier]] = (
             data_type
         )
 
     @classmethod
     def read(cls, *args: Any, method_identifier: str, **kwargs: Any) -> "DataFrameWrapper":
+        """aigen_start
+        Dispatch a read call to the registered method identified by method_identifier.
+        aigen_end"""
         if method_identifier not in cls.registered_read_methods[cls.engine_identifier]:
             raise NotImplementedError(
                 f"The read method with name '{method_identifier}' "
@@ -68,6 +72,9 @@ class Engine(BaseModel):
         data_frame: "DataFrameWrapper",
         **kwargs: Any,
     ) -> None:
+        """aigen_start
+        Dispatch a write call to the registered method identified by method_identifier.
+        aigen_end"""
         if method_identifier not in cls.registered_write_methods[cls.engine_identifier]:
             raise NotImplementedError(
                 f"The write method with name '{method_identifier}' "
@@ -77,12 +84,18 @@ class Engine(BaseModel):
 
     @classmethod
     def register_read_method(cls, method_identifier: str, method: ReadMethod) -> None:
+        """aigen_start
+        Register a read method under the given identifier for this engine.
+        aigen_end"""
         # TODO: Implement general logger
         # TODO: log warning when overwriting existing function!
         cls.registered_read_methods[cls.engine_identifier][method_identifier] = method
 
     @classmethod
     def register_write_method(cls, method_identifier: str, method: WriteMethod) -> None:
+        """aigen_start
+        Register a write method under the given identifier for this engine.
+        aigen_end"""
         # TODO: log warning when overwriting existing function!
         cls.registered_write_methods[cls.engine_identifier][method_identifier] = method
 
@@ -99,15 +112,22 @@ class Engine(BaseModel):
     @classmethod
     @abstractmethod
     def cast(cls, schema: Schema, data_frame_wrapper: "DataFrameWrapper") -> "DataFrameWrapper":
-        pass
+        """aigen_start
+        Cast the dataframe in the wrapper to the types defined by the given schema.
+        aigen_end"""
 
     @classmethod
     @abstractmethod
     def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> "DataFrameWrapper":
-        pass
+        """aigen_start
+        Build a DataFrameWrapper from a columnar dict of fake data with the given schema.
+        aigen_end"""
 
     @classmethod
     def register_conversion_to_engine(cls, target_engine_identifier: str, func: ConversionMethod):
+        """aigen_start
+        Register a conversion function from this engine to the specified target engine.
+        aigen_end"""
         cls.registered_conversion_methods[
             ConversionEngineTuple(
                 source_engine_identifier=cls.engine_identifier, target_engine_identifier=target_engine_identifier
@@ -119,6 +139,9 @@ class Engine(BaseModel):
     def convert_to_engine(
         cls, schema: Schema, engine_identifier: str, data_frame_wrapper: "DataFrameWrapper"
     ) -> "DataFrameWrapper":
+        """aigen_start
+        Convert the given DataFrameWrapper to a different engine using a registered conversion function.
+        aigen_end"""
         conversion_tuple = ConversionEngineTuple(cls.engine_identifier, engine_identifier)
         func = cls.registered_conversion_methods.get(conversion_tuple)
         if func is None:
@@ -138,4 +161,4 @@ class Engine(BaseModel):
     # TODO: provide standard functionalities like merge, upsert for engines
 
 
-EngineType = TypeVar("EngineType", bound=Engine)
+EngineType = TypeVar("EngineType", bound=Engine)  # pylint: disable=invalid-name

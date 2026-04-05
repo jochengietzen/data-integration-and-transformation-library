@@ -4,6 +4,7 @@ repos:
       - id: print_statement
         name: Check that print is not in the source code
         types: [ python ]
+        exclude: '^examples/'
         entry: 'print\(.*\)'
         language: pygrep
 
@@ -11,6 +12,7 @@ repos:
         name: ruff_fmt
         language: python
         types: [ python ]
+        pass_filenames: false
         entry: ruff format src/ tests/
         verbose: true
 
@@ -18,6 +20,7 @@ repos:
         name: ruff_check
         language: python
         types: [ python ]
+        pass_filenames: false
         entry: ruff check --fix src/ tests/
         verbose: true
 
@@ -32,6 +35,7 @@ repos:
         name: pylint
         language: python
         types: [ python ]
+        pass_filenames: false
         entry: pylint src/ tests/
         verbose: true
 

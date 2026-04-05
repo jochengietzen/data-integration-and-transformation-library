@@ -35,6 +35,9 @@ class Transformation(BaseModel):
     environment_config: EnvironmentConfig | None = None
 
     def execute(self) -> DataFrameWrapper:
+        """aigen_start
+        Execute this transformation by reading all input tables and calling the wrapped function.
+        aigen_end"""
         if self.runtime_config is None:
             raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         if self.environment_config is None:
@@ -56,6 +59,9 @@ class Transformation(BaseModel):
         return DataFrameWrapper.ensure_is_wrapper(data_frame=result)
 
     def save_output_table(self, result: DataFrameWrapper) -> None:
+        """aigen_start
+        Write the transformation result to the configured output table.
+        aigen_end"""
         if self.runtime_config is None:
             raise InitiliazationMissingError("The runtime config was never initialised/loaded!")
         if self.environment_config is None:
@@ -84,6 +90,9 @@ class TransformationManager:
         situation_identifier: str,
         **kwargs: Any,
     ) -> "TransformationManager":
+        """aigen_start
+        Load the runtime configuration and propagate it to all registered transformations.
+        aigen_end"""
         self._runtime_config = runtime_class_type.load(*args, situation_identifier=situation_identifier, **kwargs)
         for transformation in self._registered_transformations.values():
             transformation.runtime_config = self._runtime_config
@@ -96,6 +105,9 @@ class TransformationManager:
         situation_identifier: str,
         **kwargs: Any,
     ) -> "TransformationManager":
+        """aigen_start
+        Load the environment configuration and propagate it to all registered transformations.
+        aigen_end"""
         self._environment_config = environment_class_type.load(
             *args, situation_identifier=situation_identifier, **kwargs
         )
@@ -104,9 +116,12 @@ class TransformationManager:
         return self
 
     def load_all_transformations(self, module_name: str) -> None:
+        """aigen_start
+        Discover and import all transformation modules under the given package name.
+        aigen_end"""
         transformation_package = importlib.import_module(module_name)
-        for loader, module_name, _ in pkgutil.walk_packages(path=transformation_package.__path__):
-            spec = loader.find_spec(module_name)
+        for loader, sub_module_name, _ in pkgutil.walk_packages(path=transformation_package.__path__):
+            spec = loader.find_spec(sub_module_name)
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
 
@@ -126,13 +141,17 @@ class TransformationManager:
         name_: str | None = None,
         **kwargs: Any,
     ) -> Callable:
+        """aigen_start
+        Decorator factory that registers a function as a named transformation with its input/output table models.
+        aigen_end"""
+
         def decorator(func: Callable) -> Callable:
             func_name = name_ or func.__name__
             if func_name in self._registered_transformations:
                 raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
 
             argspec = inspect.getfullargspec(func=func)
-            expected_argspec = {}  # TODO: tbd
+            expected_argspec = {}  # TODO: tbd # pylint: disable=unused-variable # noqa # type: ignore
 
             # TODO: compare argspec and expected_argspec
 
@@ -162,9 +181,15 @@ class TransformationManager:
 
     @property
     def lineage(self) -> Lineage:
+        """aigen_start
+        Build and return the lineage graph from all registered transformations.
+        aigen_end"""
         return Lineage().add_transformations(transformations=self._registered_transformations)
 
     def load_all_plugins(self) -> None:
+        """aigen_start
+        Discover and load all DITL plugins registered via Python entry points.
+        aigen_end"""
         plugin_groups = [
             "ditl.engines",
             "ditl.conversions",

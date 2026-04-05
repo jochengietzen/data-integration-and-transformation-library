@@ -27,10 +27,16 @@ class RowLevelExpectation(BaseModel):
     @classmethod
     @property
     def expectation_identifier(cls) -> str:
+        """aigen_start
+        Return a unique string identifier for this expectation class.
+        aigen_end"""
         return "_".join([cls.__name__, str(id(cls))])
 
     @classmethod
     def register_engine_call(cls, func: Callable[[Any], RowLevelExpectationResult], engine_identifier: str) -> None:
+        """aigen_start
+        Register an engine-specific implementation for this expectation.
+        aigen_end"""
         cls._engine_specific_calls[cls.expectation_identifier][engine_identifier] = func
 
     @abstractmethod

@@ -1,13 +1,11 @@
 import json
-from typing import TYPE_CHECKING
+from abc import abstractmethod
+from typing import TYPE_CHECKING, Any
+
+from faker import Faker
 
 if TYPE_CHECKING:
     from ditl.testing.faker_manager import FakerManager
-
-from abc import abstractmethod
-from typing import Any
-
-from faker import Faker
 
 
 class FakerType:
@@ -19,17 +17,15 @@ class FakerType:
         allow_duplicate_values: bool = False,
     ):
         self.generation_id = generation_id
-        self.reuse_percentage_min = (
-            reuse_percentage_min if reuse_percentage_min <= 1 and reuse_percentage_min >= 0 else 0
-        )
-        self.reuse_percentage_max = (
-            reuse_percentage_max if reuse_percentage_max <= 1 and reuse_percentage_max >= 0 else 1
-        )
+        self.reuse_percentage_min = reuse_percentage_min if 0 <= reuse_percentage_min <= 1 else 0
+        self.reuse_percentage_max = reuse_percentage_max if 0 <= reuse_percentage_max <= 1 else 1
         self.allow_duplicate_values = allow_duplicate_values
-        if self.reuse_percentage_min > self.reuse_percentage_max:
-            self.reuse_percentage_min = self.reuse_percentage_max
+        self.reuse_percentage_min = min(self.reuse_percentage_min, self.reuse_percentage_max)
 
     def register_in_manager(self, manager: "FakerManager") -> Any:
+        """aigen_start
+        Register this FakerType instance in the given FakerManager.
+        aigen_end"""
         manager.register_faker_type(self)
 
     @abstractmethod
@@ -44,11 +40,14 @@ class FakerType:
             if k in ["generation_id", "reuse_percentage_min", "reuse_percentage_max", "allow_duplicate_values"]
         }
 
-    def toJson(self):
+    def to_json(self) -> str:
+        """aigen_start
+        Serialize the FakerType properties to a JSON string.
+        aigen_end"""
         return json.dumps(self._properties)
 
     def __hash__(self) -> int:
-        return hash(self.toJson())
+        return hash(self.to_json())
 
 
 class FakerTextType(FakerType):

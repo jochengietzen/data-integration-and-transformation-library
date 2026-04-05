@@ -32,7 +32,9 @@ class TablePath(BaseModel, ABC):
         *args: Any,
         **kwargs: dict[str, Any],
     ) -> str:
-        pass
+        """aigen_start
+        Return the fully resolved path string for the table given the runtime and environment configuration.
+        aigen_end"""
 
 
 class Constraint(BaseModel):
@@ -57,6 +59,9 @@ class DataType(BaseModel):
         from_method: Callable[[Any], "DataType"],
         to_method: Callable[["DataType"], Any],
     ) -> type["DataType"]:
+        """aigen_start
+        Register bidirectional conversion methods between this DataType and an engine-native type.
+        aigen_end"""
         cls._from_and_to_engine_methods[cls.__name__][engine_identifier] = FromToMethod(
             from_method=from_method, to_method=to_method
         )
@@ -66,6 +71,9 @@ class DataType(BaseModel):
 
     @classmethod
     def to_engine_type(cls, engine_identifier: str) -> Any:
+        """aigen_start
+        Return the engine-native type corresponding to this DataType for the given engine identifier.
+        aigen_end"""
         type_ = cls._engine_identifier_to_engine_type[cls.__name__].get(engine_identifier, None)
         if type_ is None:
             raise RuntimeError(f"The data type {cls.__name__} has no engine {engine_identifier} registered")
@@ -85,7 +93,7 @@ class StringType(DataType):
 
 
 #########
-DataTypeType = TypeVar("DataTypeType", bound=DataType)
+DataTypeType = TypeVar("DataTypeType", bound=DataType)  # pylint: disable=invalid-name
 
 
 class SchemaField(BaseModel):
@@ -126,6 +134,9 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
         from_method: Callable[[Any], "Schema"],
         to_method: Callable[["Schema"], Any],
     ):
+        """aigen_start
+        Register conversion functions between the engine's native schema format and the DITL Schema.
+        aigen_end"""
         if cls._from_engine_methods is None:
             cls._from_engine_methods = {}
         cls._from_engine_methods[engine_identifier] = (engine_schema_type, from_method)
@@ -133,12 +144,18 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
 
     @classmethod
     def from_engine_schema(cls, schema: Any) -> "Schema":
+        """aigen_start
+        Convert an engine-native schema object into a DITL Schema by dispatching on its type.
+        aigen_end"""
         for schema_type, func in cls._from_engine_methods.values():
             if isinstance(schema, schema_type):
                 return func(schema=schema)
         raise RuntimeError(f"Engine for type {type(schema)} not defined!")
 
     def to_engine_schema(self, engine_identifier: str) -> Any:
+        """aigen_start
+        Convert this DITL Schema to the engine-native schema format for the given engine identifier.
+        aigen_end"""
         func = self._to_engine_methods.get(engine_identifier, None)
         if func is None:
             raise RuntimeError(f"Engine {engine_identifier} has no to engine schema defined!")
@@ -154,6 +171,9 @@ class Columns(RootModel[dict[str, Column]]):
     @model_validator(mode="before")
     @classmethod
     def validate_keys(cls, value: Any) -> Any:
+        """aigen_start
+        Validate that column keys are provided as a dictionary and contain no commas.
+        aigen_end"""
         if not isinstance(value, dict):
             raise ValueError("Columns need to be provided as dictionary.")
         for key in value.keys():
@@ -162,6 +182,9 @@ class Columns(RootModel[dict[str, Column]]):
         return value
 
     def get_schema(self, by_name: bool = False) -> Schema:
+        """aigen_start
+        Build and return a Schema from the column definitions, using either column keys or names.
+        aigen_end"""
         return Schema(
             [
                 SchemaField(
