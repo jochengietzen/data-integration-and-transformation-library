@@ -13,6 +13,7 @@ from ditl.config import (
 )
 from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
 from ditl.graph import Lineage
+from ditl.logging import logger
 from ditl.models.base import BaseModel
 from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from ditl.models.table import Table
@@ -196,9 +197,9 @@ class TransformationManager:
             "ditl.runtime_systems",
         ]
         for group in plugin_groups:
-            print("Loading plugin group", group)
+            logger.info("Loading plugin group: %s", group)
             for ep in entry_points(group=group):
-                print("Found entry point to load:", ep)
+                logger.info("Loading entry point: %s", ep)
                 ep.load()
 
 
