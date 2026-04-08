@@ -10,7 +10,7 @@ from ditl.config import (
 )
 from ditl.engines.base import EngineType
 from ditl.models.base import Columns, EngineFileType, TablePath
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from ditl.models.expectations import RowLevelTableExpectation
 
 TablePathType = TypeVar("TablePathType", bound=TablePath)

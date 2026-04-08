@@ -6,7 +6,7 @@ from ditl.base_model import BaseModel
 from ditl.models.base import DataType, Schema
 
 if TYPE_CHECKING:
-    from ditl.models.data_frame_wrapper import DataFrameWrapper
+    from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
 
 class ReadMethod(Protocol):

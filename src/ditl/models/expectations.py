@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import Any, ClassVar
 
 from ditl.base_model import BaseModel
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
 # TODO:
 # We are stuck with how to bring the expectation result into a form, that can be used to

@@ -5,7 +5,7 @@ from typing import Any
 from faker import Faker
 
 from ditl.engines.base import Engine
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from ditl.models.table import Table
 
 # from ditl.engines.polars_engine import PolarsEngine

@@ -14,7 +14,7 @@ from ditl.config import (
 from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
 from ditl.graph import Lineage
 from ditl.models.base import BaseModel
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from ditl.models.table import Table
 
 

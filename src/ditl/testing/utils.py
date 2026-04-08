@@ -2,7 +2,7 @@ from collections.abc import Generator
 from typing import NamedTuple
 
 from ditl.engines.base import Engine
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from ditl.models.table import Table
 from ditl.testing.faker_manager import FakerManager
 from ditl.transformation import Transformation, TransformationManager
