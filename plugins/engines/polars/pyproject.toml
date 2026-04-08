@@ -22,6 +22,10 @@ ditl = { workspace = true }
 [project.scripts]
 ditl-engine-polars = "ditl_engine_polars:main"
 
+[project.entry-points."ditl.wrapper_functions"]
+join = "ditl_engine_polars.functions.join"
+
+
 [tool.uv.build-backend]
 module-name = ["ditl_engine_polars"]
 module-root = "src"
