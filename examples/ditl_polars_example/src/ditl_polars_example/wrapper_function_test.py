@@ -4,7 +4,6 @@ from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
 from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec
 
-DataFrameWrapper.load_all_plugins()
 df = pl.DataFrame(
     {
         "id_1": [1, 2, 3],

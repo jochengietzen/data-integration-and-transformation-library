@@ -118,4 +118,3 @@ class TypedDataFrameWrapper(DataFrameWrapper, Generic[DataFrameType]):
         self.data_frame: DataFrameType = data_frame
 
 
-# DataFrameWrapper.load_all_plugins()

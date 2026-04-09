@@ -1,10 +1,12 @@
 from abc import abstractmethod
 from collections import defaultdict
 from collections.abc import Callable
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from ditl.base_model import BaseModel
-from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
+
+if TYPE_CHECKING:
+    from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
 # TODO:
 # We are stuck with how to bring the expectation result into a form, that can be used to
@@ -32,7 +34,7 @@ class RowLevelExpectation(BaseModel):
         cls._engine_specific_calls[cls.expectation_identifier][engine_identifier] = func
 
     @abstractmethod
-    def __call__(self, *args: Any, data_frame: DataFrameWrapper, **kwds: Any) -> Any:
+    def __call__(self, *args: Any, data_frame: "DataFrameWrapper", **kwds: Any) -> Any:
         pass
 
 
