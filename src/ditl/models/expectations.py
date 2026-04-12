@@ -63,4 +63,4 @@ class RowLevelTableExpectation(RowLevelExpectation):
 # MinMaxExpectation.register_engine_call(MinMaxExpectation.__call__, engine_identifier="polars")
 
 
-# print(id(RowLevelColumnExpectation), dict(RowLevelExpectation._engine_specific_calls))
+# logger.info(id(RowLevelColumnExpectation), dict(RowLevelExpectation._engine_specific_calls))

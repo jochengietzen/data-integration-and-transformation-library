@@ -76,8 +76,6 @@ disable = [
     "missing-class-docstring",
     "missing-module-docstring",
     "too-few-public-methods",
-    "protected-access",
-    "abstract-method",
 ]
 
 [tool.ruff]

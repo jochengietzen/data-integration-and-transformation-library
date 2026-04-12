@@ -9,7 +9,7 @@ class WrapperArgSpec(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-WrapperArgSpecType = TypeVar("WrapperArgSpecType", bound=WrapperArgSpec)
+WrapperArgSpecType = TypeVar("WrapperArgSpecType", bound=WrapperArgSpec)  # pylint: disable=invalid-name
 
 
 class WrapperFunction[WrapperArg: WrapperArgSpecType](BaseModel):

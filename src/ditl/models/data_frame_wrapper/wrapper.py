@@ -2,6 +2,7 @@ from importlib.metadata import entry_points
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, Optional, Protocol, TypeVar, Union, overload
 
 from ditl.exceptions import ProgrammingError
+from ditl.logging import logger
 from ditl.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunction
 
 if TYPE_CHECKING:
@@ -23,7 +24,7 @@ class DataFrameWrapper:
     # Registration of utilized functions
     # Plugin functionality?
 
-    registered_wrapper_functions: ClassVar[dict[EngineSpecificFunctionKey, WrapperFunctionSpec]] = dict()
+    registered_wrapper_functions: ClassVar[dict[EngineSpecificFunctionKey, WrapperFunctionSpec]] = {}
     _loaded_plugins: ClassVar[bool] = False
 
     def __init__(
@@ -106,7 +107,7 @@ class DataFrameWrapper:
     ):
         func_key = EngineSpecificFunctionKey(engine_identifier=engine.engine_identifier, func_name=func_spec.func_name)
         if func_key in cls.registered_wrapper_functions:
-            print(
+            logger.info(
                 f"Warning: the function {func_key.func_name} for engine {func_key.engine_identifier} "
                 f"is already registered. You will overwrite it, with your own function!"
             )
@@ -117,7 +118,7 @@ class DataFrameWrapper:
         if cls._loaded_plugins:
             return
         for ep in entry_points(group="ditl.wrapper_functions"):
-            print("Found entry point to load:", ep)
+            logger.info("Found entry point to load:", ep)
             ep.load()
         for func_key, func in cls.registered_wrapper_functions.items():
             if hasattr(cls, func_key.func_name):
@@ -127,7 +128,7 @@ class DataFrameWrapper:
         cls._loaded_plugins = True
 
 
-DataFrameType = TypeVar("DataFrameType")
+DataFrameType = TypeVar("DataFrameType")  # pylint: disable=invalid-name
 
 
 class TypedDataFrameWrapper[DataFrameT: DataFrameType](DataFrameWrapper):
