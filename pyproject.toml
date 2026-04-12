@@ -75,9 +75,7 @@ disable = [
     "unused-argument",
     "missing-class-docstring",
     "missing-module-docstring",
-    "fixme",
     "too-few-public-methods",
-    "import-outside-toplevel",
     "protected-access",
     "abstract-method",
 ]

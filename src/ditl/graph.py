@@ -136,6 +136,7 @@ class Lineage:
         """aigen_start
         Render the lineage graph visually using matplotlib and networkx layout algorithms.
         aigen_end"""
+        # pylint: disable=import-outside-toplevel
         import itertools as it
 
         import matplotlib.pyplot as plt  # pylint: disable=import-error

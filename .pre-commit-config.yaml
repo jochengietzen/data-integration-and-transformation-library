@@ -5,7 +5,7 @@ repos:
         name: Check that print is not in the source code
         types: [ python ]
         exclude: '^examples/'
-        entry: 'print\(.*\)'
+        entry: '[^#]*print\(.*\)'
         language: pygrep
 
       - id: ruff_fmt
