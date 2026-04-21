@@ -1,8 +1,8 @@
 import polars as pl
 
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
-from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec
+from ditl.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
 
 df = pl.DataFrame(
     {

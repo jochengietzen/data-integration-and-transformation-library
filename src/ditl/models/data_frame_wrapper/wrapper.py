@@ -97,14 +97,13 @@ class DataFrameWrapper:
             raise ProgrammingError("Conversion requires a schema to be set for the DataFrameWrapper!")
         if self.engine is None:
             raise ProgrammingError("Conversion requires an engine to be set for the DataFrameWrapper!")
-        return self.engine.convert_to_engine(
-            schema=self.schema, engine_identifier=target_engine.engine_identifier, data_frame_wrapper=self
-        )
+        return self.engine.convert_to_engine(schema=self.schema, target_engine=target_engine, data_frame_wrapper=self)
 
     @classmethod
     def register_wrapper_function(
         cls, engine: Union["Engine", type["Engine"]], func_spec: WrapperFunction, func: WrapperFunctionSpec
     ):
+        # TODO: Ensure, that all registered functions have the same or compatible arg specs!
         func_key = EngineSpecificFunctionKey(engine_identifier=engine.engine_identifier, func_name=func_spec.func_name)
         if func_key in cls.registered_wrapper_functions:
             logger.info(

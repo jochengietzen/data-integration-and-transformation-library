@@ -4,8 +4,9 @@ from typing import IO, Any, ClassVar, TypeGuard
 import polars as pl
 
 from ditl.engines.base import Engine
+from ditl.engines.ditl_arrow_engine import ArrowEngine
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
 from ditl.utils import columnar_dictionary_to_records
 
 
@@ -70,6 +71,30 @@ class PolarsEngine(Engine):
         records = columnar_dictionary_to_records(values=data)
         return DataFrameWrapper.from_data_frame(
             pl.from_records(data=records, schema=cls._to_engine_schema(schema=schema))
+        )
+
+    @classmethod
+    def convert_to_arrow(
+        cls, schema: Schema, data_frame_wrapper: DataFrameWrapper
+    ) -> TypedDataFrameWrapper[ArrowEngine]:
+        """Converts the engine specific dataframe wrapper to an arrow object"""
+        data_frame: pl.DataFrame = data_frame_wrapper.data_frame
+        return DataFrameWrapper(
+            data_frame=data_frame.to_arrow(),
+            schema=schema,
+            engine=ArrowEngine,
+        )
+
+    @classmethod
+    def convert_from_arrow(
+        cls, schema: Schema, data_frame_wrapper: TypedDataFrameWrapper[ArrowEngine]
+    ) -> DataFrameWrapper:
+        """Converts the engine specific dataframe wrapper to an arrow object"""
+        data_frame: pa.Table = data_frame_wrapper.data_frame
+        return DataFrameWrapper(
+            data_frame=pl.from_arrow(data=data_frame, schema=cls._to_engine_schema(schema=schema)),
+            schema=schema,
+            engine=cls,
         )
 
     @classmethod

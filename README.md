@@ -14,3 +14,6 @@ Wording is hard, and even though we know, that we will clash with some names of 
 ### schema
 The schema is used to define the structure of your data. It contains the name of each column as well as the type of each column. It is comparable to sparks schema of a table/dataframe etc.
 
+# TODOS
+    - TODO: How should we handle DataType registration, when not yet present in ArrowEngine?
+    - TODO: Revisit topic of preloaded DataFrameWrapper vs. manual load or separate module.

@@ -3,10 +3,12 @@ from typing import IO, Any, ClassVar, TypeGuard
 
 import numpy as np
 import pandas as pd
+import pyarrow as pa
 
 from ditl.engines.base import Engine
+from ditl.engines.ditl_arrow_engine import ArrowEngine
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
 
 
 def pandas_frame(frame: Any) -> TypeGuard[pd.DataFrame]:
@@ -78,6 +80,30 @@ class PandasEngine(Engine):
 
         return DataFrameWrapper.from_data_frame(
             pd.DataFrame({key: pd.Series(column, engine_schema[key]) for key, column in data.items()})
+        )
+
+    @classmethod
+    def convert_to_arrow(
+        cls, schema: Schema, data_frame_wrapper: DataFrameWrapper
+    ) -> TypedDataFrameWrapper[ArrowEngine]:
+        """Converts the engine specific dataframe wrapper to an arrow object"""
+        data_frame: pd.DataFrame = data_frame_wrapper.data_frame
+        return DataFrameWrapper(
+            data_frame=pa.Table.from_pandas(data_frame, schema=ArrowEngine._to_engine_schema(schema)),
+            schema=schema,
+            engine=ArrowEngine,
+        )
+
+    @classmethod
+    def convert_from_arrow(
+        cls, schema: Schema, data_frame_wrapper: TypedDataFrameWrapper[ArrowEngine]
+    ) -> DataFrameWrapper:
+        """Converts the engine specific dataframe wrapper to an arrow object"""
+        data_frame: pa.Table = data_frame_wrapper.data_frame
+        return DataFrameWrapper(
+            data_frame=data_frame.to_pandas(),
+            schema=schema,
+            engine=cls,
         )
 
     @classmethod

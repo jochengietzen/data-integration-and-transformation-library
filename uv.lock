@@ -16,8 +16,8 @@ members = [
     "ditl-engine-pandas",
     "ditl-engine-polars",
     "ditl-file-logger-example",
-    "ditl-pandas-to-polars",
     "ditl-polars-example",
+    "ditl-pyarrow",
     "ditl-rs-dbx-asset-bundle-jobs",
 ]
 
@@ -415,6 +415,8 @@ source = { editable = "." }
 dependencies = [
     { name = "faker" },
     { name = "networkx" },
+    { name = "pyarrow" },
+    { name = "pyarrow-stubs" },
     { name = "pydantic" },
     { name = "pyyaml" },
 ]
@@ -436,6 +438,8 @@ types = [
 requires-dist = [
     { name = "faker", specifier = ">=40.1.2" },
     { name = "networkx", specifier = ">=3.4.2" },
+    { name = "pyarrow", specifier = ">=23.0.1" },
+    { name = "pyarrow-stubs", specifier = ">=20.0.0.20251215" },
     { name = "pydantic", specifier = ">=2.11.5" },
     { name = "pyyaml", specifier = ">=6.0.2" },
 ]
@@ -459,6 +463,7 @@ dependencies = [
     { name = "ditl" },
     { name = "pandas" },
     { name = "pyarrow" },
+    { name = "pyarrow-stubs" },
 ]
 
 [package.metadata]
@@ -466,6 +471,7 @@ requires-dist = [
     { name = "ditl", editable = "." },
     { name = "pandas", specifier = ">=3.0" },
     { name = "pyarrow", specifier = ">=23.0.1" },
+    { name = "pyarrow-stubs", specifier = ">=20.0.0.20251215" },
 ]
 
 [[package]]
@@ -495,23 +501,6 @@ dependencies = [
 requires-dist = [{ name = "ditl", editable = "." }]
 
 [[package]]
-name = "ditl-pandas-to-polars"
-version = "0.1.0"
-source = { editable = "plugins/engine_conversions/pandas_to_polars" }
-dependencies = [
-    { name = "ditl" },
-    { name = "ditl-engine-pandas" },
-    { name = "ditl-engine-polars" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "ditl", editable = "." },
-    { name = "ditl-engine-pandas", editable = "plugins/engines/pandas" },
-    { name = "ditl-engine-polars", editable = "plugins/engines/polars" },
-]
-
-[[package]]
 name = "ditl-polars-example"
 version = "0.1.0"
 source = { editable = "examples/ditl_polars_example" }
@@ -519,8 +508,8 @@ dependencies = [
     { name = "ditl" },
     { name = "ditl-engine-pandas" },
     { name = "ditl-engine-polars" },
-    { name = "ditl-pandas-to-polars" },
     { name = "ditl-rs-dbx-asset-bundle-jobs" },
+    { name = "pandas" },
     { name = "polars" },
     { name = "pytest" },
 ]
@@ -530,10 +519,27 @@ requires-dist = [
     { name = "ditl", editable = "." },
     { name = "ditl-engine-pandas", editable = "plugins/engines/pandas" },
     { name = "ditl-engine-polars", editable = "plugins/engines/polars" },
-    { name = "ditl-pandas-to-polars", editable = "plugins/engine_conversions/pandas_to_polars" },
     { name = "ditl-rs-dbx-asset-bundle-jobs", editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" },
+    { name = "pandas", specifier = ">=3.0.1" },
     { name = "polars", specifier = ">=1.34.0" },
     { name = "pytest", specifier = ">=9.0.2" },
+]
+
+[[package]]
+name = "ditl-pyarrow"
+version = "0.1.0"
+source = { editable = "examples/ditl_pyarrow" }
+dependencies = [
+    { name = "ditl" },
+    { name = "pyarrow" },
+    { name = "pyarrow-stubs" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ditl", editable = "." },
+    { name = "pyarrow", specifier = ">=23.0.1" },
+    { name = "pyarrow-stubs", specifier = ">=20.0.0.20251215" },
 ]
 
 [[package]]
@@ -1579,6 +1585,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/88/a3/d2c462d4ef313521eaf2eff04d204ac60775263f1fb08c374b543f79f610/pyarrow-23.0.1-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:46718a220d64677c93bc243af1d44b55998255427588e400677d7192671845c7", size = 48259435, upload-time = "2026-02-16T10:13:49.226Z" },
     { url = "https://files.pythonhosted.org/packages/cc/f1/11a544b8c3d38a759eb3fbb022039117fd633e9a7b19e4841cc3da091915/pyarrow-23.0.1-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:a09f3876e87f48bc2f13583ab551f0379e5dfb83210391e68ace404181a20690", size = 50629149, upload-time = "2026-02-16T10:13:57.238Z" },
     { url = "https://files.pythonhosted.org/packages/50/f2/c0e76a0b451ffdf0cf788932e182758eb7558953f4f27f1aff8e2518b653/pyarrow-23.0.1-cp314-cp314t-win_amd64.whl", hash = "sha256:527e8d899f14bd15b740cd5a54ad56b7f98044955373a17179d5956ddb93d9ce", size = 28365807, upload-time = "2026-02-16T10:14:03.892Z" },
+]
+
+[[package]]
+name = "pyarrow-stubs"
+version = "20.0.0.20251215"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyarrow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/30/16/ca991ada0416dc02c246e4b3c853f35053676eb704c63720ef24547d2d68/pyarrow_stubs-20.0.0.20251215.tar.gz", hash = "sha256:92c1fda4998f0c13e608d8abc7e4b8537e3ef108f6bf42c58e5af97e7d143e75", size = 236578, upload-time = "2025-12-15T06:47:46.187Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/7c/a467f91c6c3aa4c34d5a1dafca9ae4db01b757877577d6b0ae04908a0180/pyarrow_stubs-20.0.0.20251215-py3-none-any.whl", hash = "sha256:0634e70388cd23e7c78e2abbb1989822edc34df2d2ff4fd50a2316dd0cdafd9f", size = 235697, upload-time = "2025-12-15T06:47:44.643Z" },
 ]
 
 [[package]]

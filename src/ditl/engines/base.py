@@ -1,8 +1,9 @@
 from abc import abstractmethod
 from collections import defaultdict
-from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, Protocol, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Protocol, TypeVar
 
 from ditl.base_model import BaseModel
+from ditl.exceptions import ProgrammingError
 from ditl.models.base import DataType, Schema
 
 if TYPE_CHECKING:
@@ -17,15 +18,15 @@ class WriteMethod(Protocol):
     def __call__(self, *args: Any, data_frame: "DataFrameWrapper", **kwargs: Any) -> None: ...
 
 
-class ConversionMethod(Protocol):
-    def __call__(
-        self, *args: Any, data_frame: "DataFrameWrapper", schema: Schema, **kwargs: Any
-    ) -> "DataFrameWrapper": ...
+# class ConversionMethod(Protocol):
+#     def __call__(
+#         self, *args: Any, data_frame: "DataFrameWrapper", schema: Schema, **kwargs: Any
+#     ) -> "DataFrameWrapper": ...
 
 
-class ConversionEngineTuple(NamedTuple):
-    source_engine_identifier: str
-    target_engine_identifier: str
+# class ConversionEngineTuple(NamedTuple):
+#     source_engine_identifier: str
+#     target_engine_identifier: str
 
 
 class Engine(BaseModel):
@@ -41,7 +42,7 @@ class Engine(BaseModel):
     registered_read_methods: ClassVar[dict[str, dict[str, ReadMethod]]] = defaultdict(dict)
     registered_write_methods: ClassVar[dict[str, dict[str, WriteMethod]]] = defaultdict(dict)
     # TODO: Switch other registragtion variables to use the named tuple, as well
-    registered_conversion_methods: ClassVar[dict[ConversionEngineTuple, ConversionMethod]] = {}
+    # registered_conversion_methods: ClassVar[dict[ConversionEngineTuple, ConversionMethod]] = {}
 
     @classmethod
     def register_data_type(cls, data_type: type[DataType]):
@@ -123,36 +124,44 @@ class Engine(BaseModel):
         Build a DataFrameWrapper from a columnar dict of fake data with the given schema.
         aigen_end"""
 
+    # @classmethod
+    # def register_conversion_to_engine(cls, target_engine_identifier: str, func: ConversionMethod):
+    #     """aigen_start
+    #     Register a conversion function from this engine to the specified target engine.
+    #     aigen_end"""
+    #     cls.registered_conversion_methods[
+    #         ConversionEngineTuple(
+    #             source_engine_identifier=cls.engine_identifier, target_engine_identifier=target_engine_identifier
+    #         )
+    #     ] = func
+    #     # TODO: Warning, if tuple already exists and code differs!
+
     @classmethod
-    def register_conversion_to_engine(cls, target_engine_identifier: str, func: ConversionMethod):
-        """aigen_start
-        Register a conversion function from this engine to the specified target engine.
-        aigen_end"""
-        cls.registered_conversion_methods[
-            ConversionEngineTuple(
-                source_engine_identifier=cls.engine_identifier, target_engine_identifier=target_engine_identifier
-            )
-        ] = func
-        # TODO: Warning, if tuple already exists and code differs!
+    @abstractmethod
+    def convert_to_arrow(
+        cls, schema: Schema, data_frame_wrapper: "DataFrameWrapper"
+    ) -> "TypedDataFrameWrapper[ArrowEngine]":
+        """Converts the engine specific dataframe wrapper to an arrow object"""
+
+    @classmethod
+    @abstractmethod
+    def convert_from_arrow(
+        cls, schema: Schema, data_frame_wrapper: "TypedDataFrameWrapper[ArrowEngine]"
+    ) -> "DataFrameWrapper":
+        """Converts the engine specific dataframe wrapper from an arrow dataframe wrapper"""
 
     @classmethod
     def convert_to_engine(
-        cls, schema: Schema, engine_identifier: str, data_frame_wrapper: "DataFrameWrapper"
+        cls, schema: Schema, target_engine: type["Engine"], data_frame_wrapper: "DataFrameWrapper"
     ) -> "DataFrameWrapper":
         """aigen_start
         Convert the given DataFrameWrapper to a different engine using a registered conversion function.
         aigen_end"""
-        conversion_tuple = ConversionEngineTuple(cls.engine_identifier, engine_identifier)
-        func = cls.registered_conversion_methods.get(conversion_tuple)
-        if func is None:
-            raise NotImplementedError(
-                f"The engine {conversion_tuple.source_engine_identifier} "
-                f"has no implementation for the conversion into the engine "
-                f"{conversion_tuple.target_engine_identifier}. "
-                f"Please make sure, to register a conversion function, "
-                f"using the engine's `register_conversion_to_engine` function."
-            )
-        return func(data_frame=data_frame_wrapper, schema=schema)
+        source_engine = data_frame_wrapper.engine
+        if source_engine is None:
+            raise ProgrammingError("Can only convert dataframes that are engine aware!")
+        arrow_wrapper = source_engine.convert_to_arrow(schema=schema, data_frame_wrapper=data_frame_wrapper)
+        return target_engine.convert_from_arrow(schema=schema, data_frame_wrapper=arrow_wrapper)
 
     # TODO: Add check whether the engine_read_settings and engine_write_settings have
     # engines, that actually have implemented the transfer from one to the other.

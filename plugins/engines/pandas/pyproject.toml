@@ -12,6 +12,7 @@ dependencies = [
     "ditl",
     "pandas>=3.0",
     "pyarrow>=23.0.1",
+    "pyarrow-stubs>=20.0.0.20251215",
 ]
 
 [tool.uv]

@@ -4,7 +4,7 @@ from ditl_engine_polars.engine import PolarsEngine
 from ditl_polars_example.manager import manager
 
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
 
 manager.load_all_plugins()
 
@@ -36,5 +36,5 @@ print(df_w.data_frame)
 df_w_polars = df_w.convert_to(target_engine=PolarsEngine)
 print(df_w_polars.data_frame)
 
-df_w_pandas = PolarsEngine.convert_to_engine(schema=schema, engine_identifier="pandas", data_frame_wrapper=df_w_polars)
+df_w_pandas = PolarsEngine.convert_to_engine(schema=schema, target_engine=PandasEngine, data_frame_wrapper=df_w_polars)
 print(df_w_pandas.data_frame)

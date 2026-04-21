@@ -12,6 +12,8 @@ requires-python = ">=3.13"
 dependencies = [
     "faker>=40.1.2",
     "networkx>=3.4.2",
+    "pyarrow>=23.0.1",
+    "pyarrow-stubs>=20.0.0.20251215",
     "pydantic>=2.11.5",
     "pyyaml>=6.0.2",
 ]
@@ -28,7 +30,6 @@ members = [
     "examples/*",
     "plugins/engines/*",
     "plugins/runtime_systems/databricks/asset_bundle_jobs",
-    "plugins/engine_conversions/pandas_to_polars",
 ]
 
 [tool.mypy]
