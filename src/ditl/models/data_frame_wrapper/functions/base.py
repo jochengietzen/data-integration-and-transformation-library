@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from pydantic import ConfigDict
 
@@ -9,9 +9,9 @@ class WrapperArgSpec(BaseModel):
     model_config = ConfigDict(extra="allow")
 
 
-WrapperArgSpecType = TypeVar("WrapperArgSpecType", bound=WrapperArgSpec)
+WrapperArgSpecType = TypeVar("WrapperArgSpecType", bound=WrapperArgSpec)  # pylint: disable=invalid-name
 
 
-class WrapperFunction(BaseModel, Generic[WrapperArgSpecType]):
+class WrapperFunction[WrapperArg: WrapperArgSpecType](BaseModel):
     func_name: str
-    arg_spec: WrapperArgSpecType
+    arg_spec: WrapperArg

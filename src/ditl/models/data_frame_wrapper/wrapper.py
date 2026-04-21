@@ -1,7 +1,8 @@
 from importlib.metadata import entry_points
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, NamedTuple, Optional, Protocol, TypeVar, Union, overload
+from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, Optional, Protocol, TypeVar, Union, overload
 
 from ditl.exceptions import ProgrammingError
+from ditl.logging import logger
 from ditl.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunction
 
 if TYPE_CHECKING:
@@ -23,7 +24,7 @@ class DataFrameWrapper:
     # Registration of utilized functions
     # Plugin functionality?
 
-    registered_wrapper_functions: ClassVar[dict[EngineSpecificFunctionKey, WrapperFunctionSpec]] = dict()
+    registered_wrapper_functions: ClassVar[dict[EngineSpecificFunctionKey, WrapperFunctionSpec]] = {}
     _loaded_plugins: ClassVar[bool] = False
 
     def __init__(
@@ -34,12 +35,18 @@ class DataFrameWrapper:
         self.engine = engine
 
     def create_with_new_data(self, data_frame: Any) -> "DataFrameWrapper":
+        """aigen_start
+        Return a new DataFrameWrapper with updated data but the same schema and engine.
+        aigen_end"""
         return DataFrameWrapper(data_frame=data_frame, schema=self.schema, engine=self.engine)
 
     @classmethod
     def ensure_is_wrapper(
         cls, data_frame: Any, schema: Optional["Schema"] = None, engine: Union["Engine", type["Engine"]] | None = None
     ) -> "DataFrameWrapper":
+        """aigen_start
+        Return the input unchanged if it is already a DataFrameWrapper, otherwise wrap it.
+        aigen_end"""
         if isinstance(data_frame, cls):
             return data_frame
         return cls.from_data_frame(data_frame=data_frame, schema=schema, engine=engine)
@@ -48,6 +55,9 @@ class DataFrameWrapper:
     def from_data_frame(
         cls, data_frame: Any, schema: Optional["Schema"] = None, engine: Union["Engine", type["Engine"]] | None = None
     ) -> "DataFrameWrapper":
+        """aigen_start
+        Construct a DataFrameWrapper from a raw dataframe object.
+        aigen_end"""
         return cls(data_frame=data_frame, schema=schema, engine=engine)
 
     def write(
@@ -56,6 +66,9 @@ class DataFrameWrapper:
         method_identifier: str,
         **kwargs: Any,
     ) -> None:
+        """aigen_start
+        Write the wrapped dataframe using the engine's registered write method.
+        aigen_end"""
         if self.engine is None:
             raise ProgrammingError("Writing requires an engine to be set for the DataFrameWrapper!")
         self.engine.write(
@@ -67,6 +80,9 @@ class DataFrameWrapper:
         )
 
     def cast(self) -> "DataFrameWrapper":
+        """aigen_start
+        Cast the wrapped dataframe to the types defined in the schema using the registered engine.
+        aigen_end"""
         if self.engine is None:
             raise ProgrammingError("Casting requires an engine to be set for the DataFrameWrapper!")
         if self.schema is None:
@@ -74,6 +90,9 @@ class DataFrameWrapper:
         return self.engine.cast(schema=self.schema, data_frame_wrapper=self)
 
     def convert_to(self, target_engine: type["Engine"]) -> "DataFrameWrapper":
+        """aigen_start
+        Convert the wrapped dataframe to a different engine's format.
+        aigen_end"""
         if self.schema is None:
             raise ProgrammingError("Conversion requires a schema to be set for the DataFrameWrapper!")
         if self.engine is None:
@@ -88,7 +107,7 @@ class DataFrameWrapper:
     ):
         func_key = EngineSpecificFunctionKey(engine_identifier=engine.engine_identifier, func_name=func_spec.func_name)
         if func_key in cls.registered_wrapper_functions:
-            print(
+            logger.info(
                 f"Warning: the function {func_key.func_name} for engine {func_key.engine_identifier} "
                 f"is already registered. You will overwrite it, with your own function!"
             )
@@ -99,7 +118,7 @@ class DataFrameWrapper:
         if cls._loaded_plugins:
             return
         for ep in entry_points(group="ditl.wrapper_functions"):
-            print("Found entry point to load:", ep)
+            logger.info("Found entry point to load:", ep)
             ep.load()
         for func_key, func in cls.registered_wrapper_functions.items():
             if hasattr(cls, func_key.func_name):
@@ -109,12 +128,10 @@ class DataFrameWrapper:
         cls._loaded_plugins = True
 
 
-DataFrameType = TypeVar("DataFrameType")
+DataFrameType = TypeVar("DataFrameType")  # pylint: disable=invalid-name
 
 
-class TypedDataFrameWrapper(DataFrameWrapper, Generic[DataFrameType]):
-    def __init__(self, data_frame: DataFrameType, schema: Optional["Schema"] = None) -> None:
+class TypedDataFrameWrapper[DataFrameT: DataFrameType](DataFrameWrapper):
+    def __init__(self, data_frame: DataFrameT, schema: Optional["Schema"] = None) -> None:
         super().__init__(data_frame=data_frame, schema=schema)
-        self.data_frame: DataFrameType = data_frame
-
-
+        self.data_frame: DataFrameT = data_frame

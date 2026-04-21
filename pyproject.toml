@@ -44,7 +44,6 @@ ignore-patterns = ["^\\.#"]
 jobs = 1
 persistent = true
 py-version = "3.13"
-suggestion-mode = true
 
 [tool.pylint.basic]
 argument-naming-style = "snake_case"
@@ -64,11 +63,19 @@ no-docstring-rgx = "^_"
 property-classes = ["abc.abstractproperty"]
 variable-naming-style = "snake_case"
 
+[tool.pylint.design]
+max-args = 7
+max-positional-arguments = 7
+
+[tool.pylint.format]
+max-line-length = 120
+
 [tool.pylint."messages control"]
 disable = [
     "unused-argument",
     "missing-class-docstring",
     "missing-module-docstring",
+    "too-few-public-methods",
 ]
 
 [tool.ruff]

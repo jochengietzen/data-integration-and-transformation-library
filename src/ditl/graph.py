@@ -24,10 +24,16 @@ class Node:
 
     @property
     def data(self) -> str:
+        """aigen_start
+        Return a stable JSON serialization of the node's data dictionary.
+        aigen_end"""
         return json.dumps(self._data, sort_keys=True)
 
     @property
     def label(self) -> str:
+        """aigen_start
+        Return a human-readable label built from the node's data key-value pairs.
+        aigen_end"""
         return "_".join(["-".join(kv) for kv in self._data.items()])
 
 
@@ -55,6 +61,9 @@ class Lineage:
         self.graph = nx.MultiDiGraph()
 
     def add_transformations(self, transformations: dict[str, "Transformation"]) -> "Lineage":
+        """aigen_start
+        Add all given transformations and their table edges to the lineage graph.
+        aigen_end"""
         for transformation in transformations.values():
             t = TransformationNode(transformation=transformation)
             output_node = TableNode(table=transformation.output_table_model)
@@ -65,6 +74,9 @@ class Lineage:
         return self
 
     def iter_source_tables(self, source_table_type: type | None = None) -> Generator["Table"]:
+        """aigen_start
+        Yield all source tables (nodes with no incoming edges), optionally filtered by type.
+        aigen_end"""
         for node in nx.topological_sort(self.graph):
             if isinstance(node, TableNode) and self.graph.in_degree(node) == 0:
                 if source_table_type is not None and not isinstance(node.table, source_table_type):
@@ -72,6 +84,9 @@ class Lineage:
                 yield node.table
 
     def iter_sink_tables(self, sink_table_type: type | None = None) -> Generator["Table"]:
+        """aigen_start
+        Yield all sink tables (nodes with no outgoing edges), optionally filtered by type.
+        aigen_end"""
         for node in nx.topological_sort(self.graph):
             if isinstance(node, TableNode) and self.graph.out_degree(node) == 0:
                 if sink_table_type is not None and not isinstance(node.table, sink_table_type):
@@ -80,6 +95,9 @@ class Lineage:
 
     @property
     def transformations_graph(self) -> nx.MultiDiGraph:
+        """aigen_start
+        Return a derived graph with table nodes removed, leaving only transformation-to-transformation edges.
+        aigen_end"""
         g = self.graph.copy()
 
         nodes = list(g.nodes)
@@ -97,6 +115,9 @@ class Lineage:
         return g
 
     def iter_transformations(self) -> Generator[LineageTransformationElement]:
+        """aigen_start
+        Yield all transformations in topological order with their dependencies.
+        aigen_end"""
         g = self.transformations_graph
         for node in nx.topological_sort(g):
             if isinstance(node, TransformationNode):
@@ -112,9 +133,13 @@ class Lineage:
                 )
 
     def draw(self, graph: nx.MultiDiGraph | None = None):
+        """aigen_start
+        Render the lineage graph visually using matplotlib and networkx layout algorithms.
+        aigen_end"""
+        # pylint: disable=import-outside-toplevel
         import itertools as it
 
-        import matplotlib.pyplot as plt
+        import matplotlib.pyplot as plt  # pylint: disable=import-error
 
         g = self.graph if graph is None else graph
 
@@ -125,7 +150,6 @@ class Lineage:
         fig, ax = plt.subplots()
         connectionstyle = [f"arc3,rad={r}" for r in it.accumulate([0.1] * 4)]
         nx.draw_networkx_nodes(g, pos=pos, ax=ax)
-        print({node.label for node in g.nodes})
         labels = nx.draw_networkx_labels(g, pos=pos, ax=ax, labels={node: node.label for node in g.nodes})
         for _, label in labels.items():
             label.set_rotation(5)

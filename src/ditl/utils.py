@@ -6,6 +6,9 @@ from ditl.exceptions import ProgrammingError
 def columnar_dictionary_to_records(
     values: dict[str, list[Any]],
 ) -> list[dict[str, Any]]:
+    """aigen_start
+    Convert a column-oriented dictionary to a list of row records.
+    aigen_end"""
     lens = {k: len(v) for k, v in values.items()}
     first_len = lens[list(values.keys())[0]]
     if any(lens[k] != first_len for k in lens):

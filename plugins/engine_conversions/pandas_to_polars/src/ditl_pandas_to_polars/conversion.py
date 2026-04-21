@@ -4,6 +4,7 @@ import polars as pl
 from ditl_engine_pandas.engine import PandasEngine
 from ditl_engine_polars.engine import PolarsEngine
 
+from ditl.logging import logger
 from ditl.models.base import Schema
 from ditl.models.data_frame_wrapper import DataFrameWrapper
 
@@ -35,4 +36,4 @@ PolarsEngine.register_conversion_to_engine(
     target_engine_identifier=PandasEngine.engine_identifier, func=_polars_to_pandas
 )
 
-print("Loaded conversion plugin for pandas with polars")
+logger.info("Loaded conversion plugin for pandas with polars")

@@ -1,5 +1,6 @@
 from typing import Any
 
+from ditl_engine_polars.engine import PolarsEngine
 from ditl_polars_example.config import MyEnvironmentConfig
 
 from ditl.config import EnvironmentConfig, RuntimeConfig

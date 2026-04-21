@@ -22,7 +22,7 @@ class PolarsEngine(Engine):
         return Schema(
             [
                 SchemaField(
-                    # Currently the type_ is an instance of the datatype model. Not sure if it should be the class instead
+                    # Currently the type_ is an instance of the datatype model. Not sure if it should be the class.
                     name=key,
                     type_=cls.registered_types[value](),
                     nullable=True,

@@ -60,7 +60,7 @@ class JoinArgSpec(WrapperArgSpec):
         return values
 
 
-JoinArgSpecType = TypeVar("JoinArgSpecType", bound=JoinArgSpec)
+JoinArgSpecType = TypeVar("JoinArgSpecType", bound=JoinArgSpec)  # pylint: disable=invalid-name
 
 
 class JoinFuncSpec(WrapperFunction):

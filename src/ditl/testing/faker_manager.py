@@ -23,11 +23,17 @@ class FakerManager:
         # TODO: Maybe provide a possibility to generate corrupt foreign key values
 
     def register_faker_type(self, faker_type: "FakerType") -> "FakerManager":
+        """aigen_start
+        Register a FakerType's generation pool in the manager if it has a generation_id.
+        aigen_end"""
         if faker_type.generation_id is not None and faker_type.generation_id not in self.non_key_generation_registry:
             self.non_key_generation_registry[faker_type.generation_id] = []
         return self
 
     def generate(self, table: Table, engine: Engine, n_values: int = 100) -> DataFrameWrapper:
+        """aigen_start
+        Generate a DataFrameWrapper with fake data matching the given table's schema.
+        aigen_end"""
         schema = table.columns.get_schema()
         columns = {key: col.generation.faker_type for key, col in table.columns.root.items()}
         return engine.dataframe_from_faker_columnar(
@@ -99,5 +105,3 @@ class FakerManager:
 #         ]
 #     ),
 # )
-
-# print(df.data_frame)
