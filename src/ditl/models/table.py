@@ -83,13 +83,19 @@ class Table(BaseModel):
         )
         return self
 
-# TODO: Add verify_schema functionality for a full table
+    # TODO: Add verify_schema functionality for a full table
 
     def _verify_schema(self, data_frame_wrapper: DataFrameWrapper) -> None:
         pass
 
-    def _cast(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
-        pass
+    def cast(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
+        """Convenience function to cast the dataframe into the actual table"""
+        dfw = DataFrameWrapper(
+            data_frame=data_frame_wrapper.data_frame,
+            schema=self.columns.get_schema(by_name=False),
+            engine=data_frame_wrapper.engine,
+        )
+        return dfw.cast()
 
     def validate_table_schema(self, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
         """aigen_start
@@ -97,7 +103,7 @@ class Table(BaseModel):
         aigen_end"""
         self._verify_schema(data_frame_wrapper)
 
-        return self._cast(data_frame_wrapper)
+        return self.cast(data_frame_wrapper)
 
 
 class SourceTable(ABC):
