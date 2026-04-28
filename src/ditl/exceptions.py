@@ -10,3 +10,7 @@ class InitiliazationMissingError(Exception):
 
 class DuplicateTransformationName(Exception):
     """Indicates a duplicated transformation name in the context of the tansformation manager"""
+
+
+class WrapperFunctionException(Exception):
+    """Indicates an issue with registered wrapper functions"""

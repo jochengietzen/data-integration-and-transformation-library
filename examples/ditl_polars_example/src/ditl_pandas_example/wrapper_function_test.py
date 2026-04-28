@@ -1,18 +1,21 @@
-import polars as pl
-from ditl_engine_polars.engine import PolarsEngine
+import pandas as pd
+from ditl_engine_pandas.engine import PandasEngine
 
+from ditl.logging import logger
 from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
 from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec
+
+logger.setup_stdout_handler()
 from ditl.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
 
-df = pl.DataFrame(
+df = pd.DataFrame(
     {
         "id_1": [1, 2, 3],
         "id_2": [4, 5, 6],
         "bar": [6.0, 7.0, 8.0],
     }
 )
-df_2 = pl.DataFrame(
+df_2 = pd.DataFrame(
     {
         "id_1": [0, 2, 5],
         "id_2": [5, 5, 5],
@@ -28,8 +31,11 @@ schema = Schema(
     ]
 )
 
-df_w1 = DataFrameWrapper(data_frame=df, schema=schema, engine=PolarsEngine())
-df_w2 = DataFrameWrapper(data_frame=df_2, schema=schema, engine=PolarsEngine())
+df_w1 = DataFrameWrapper(data_frame=df, schema=schema, engine=PandasEngine())
+df_w2 = DataFrameWrapper(data_frame=df_2, schema=schema, engine=PandasEngine())
+
+print(df_w1.data_frame.to_markdown())
+print(df_w2.data_frame.to_markdown())
 
 print(
     df_w1.join(

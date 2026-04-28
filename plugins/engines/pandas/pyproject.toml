@@ -24,6 +24,9 @@ ditl = { workspace = true }
 [project.scripts]
 ditl-engine-pandas = "ditl_engine_pandas:main"
 
+[project.entry-points."ditl.wrapper_functions"]
+join = "ditl_engine_pandas.functions.join"
+
 [tool.uv.build-backend]
 module-name = ["ditl_engine_pandas"]
 module-root = "src"

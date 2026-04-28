@@ -12,6 +12,6 @@ class WrapperArgSpec(BaseModel):
 WrapperArgSpecType = TypeVar("WrapperArgSpecType", bound=WrapperArgSpec)  # pylint: disable=invalid-name
 
 
-class WrapperFunction[WrapperArg: WrapperArgSpecType](BaseModel):
+class WrapperFunctionSpec[WrapperArg: WrapperArgSpecType](BaseModel):
     func_name: str
     arg_spec: WrapperArg

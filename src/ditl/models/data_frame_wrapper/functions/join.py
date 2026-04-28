@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
 from pydantic import ConfigDict, model_validator
 
-from ditl.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunction
+from ditl.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunctionSpec
 
 if TYPE_CHECKING:
     from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
@@ -63,6 +63,6 @@ class JoinArgSpec(WrapperArgSpec):
 JoinArgSpecType = TypeVar("JoinArgSpecType", bound=JoinArgSpec)  # pylint: disable=invalid-name
 
 
-class JoinFuncSpec(WrapperFunction):
+class JoinFuncSpec(WrapperFunctionSpec):
     func_name: str = "join"
     arg_spec: type[JoinArgSpecType]
