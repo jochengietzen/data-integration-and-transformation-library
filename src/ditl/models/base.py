@@ -162,11 +162,6 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
         return func(schema=self)
 
 
-# TODO: Add casting functionality for a full table
-
-# TODO: Try to make it work with complex types (Array, Map, Variant)
-
-
 class Columns(RootModel[dict[str, Column]]):
     @model_validator(mode="before")
     @classmethod

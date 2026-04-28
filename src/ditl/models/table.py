@@ -83,6 +83,8 @@ class Table(BaseModel):
         )
         return self
 
+# TODO: Add verify_schema functionality for a full table
+
     def _verify_schema(self, data_frame_wrapper: DataFrameWrapper) -> None:
         pass
 

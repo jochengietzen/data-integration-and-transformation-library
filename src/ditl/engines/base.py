@@ -124,18 +124,6 @@ class Engine(BaseModel):
         Build a DataFrameWrapper from a columnar dict of fake data with the given schema.
         aigen_end"""
 
-    # @classmethod
-    # def register_conversion_to_engine(cls, target_engine_identifier: str, func: ConversionMethod):
-    #     """aigen_start
-    #     Register a conversion function from this engine to the specified target engine.
-    #     aigen_end"""
-    #     cls.registered_conversion_methods[
-    #         ConversionEngineTuple(
-    #             source_engine_identifier=cls.engine_identifier, target_engine_identifier=target_engine_identifier
-    #         )
-    #     ] = func
-    #     # TODO: Warning, if tuple already exists and code differs!
-
     @classmethod
     @abstractmethod
     def convert_to_arrow(

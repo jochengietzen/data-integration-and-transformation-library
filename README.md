@@ -17,3 +17,5 @@ The schema is used to define the structure of your data. It contains the name of
 # TODOS
     - TODO: How should we handle DataType registration, when not yet present in ArrowEngine?
     - TODO: Revisit topic of preloaded DataFrameWrapper vs. manual load or separate module.
+    - TODO: Try to make it work with complex types (Array, Map, Variant)
+    - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results
