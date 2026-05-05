@@ -1,5 +1,4 @@
-from pathlib import Path
-from typing import IO, Any, ClassVar, TypeGuard
+from typing import Any, ClassVar, TypeGuard
 
 import polars as pl
 
@@ -45,26 +44,6 @@ class PolarsEngine(Engine):
     def cast(cls, schema: Schema, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
         data_frame: pl.DataFrame = data_frame_wrapper.data_frame
         return data_frame_wrapper.create_with_new_data(data_frame=data_frame.cast(cls._to_engine_schema(schema=schema)))
-
-    @classmethod
-    def _read_csv(cls, source: str, *args: Any, **kwargs: Any) -> DataFrameWrapper:
-        return DataFrameWrapper(data_frame=pl.read_csv(source, *args, **kwargs))
-
-    @classmethod
-    def _write_csv(
-        cls,
-        *args: Any,
-        data_frame: DataFrameWrapper,
-        file: str | Path | IO[str] | IO[bytes] | None = None,
-        **kwargs: Any,
-    ) -> None:
-        frame: pl.DataFrame = data_frame.data_frame
-        if not polars_frame(frame):
-            raise RuntimeError(
-                f"The data_frame Wrapper does not hold a polars data frame, but {type(data_frame.data_frame)}!"
-            )
-
-        frame.write_csv(file, *args, **kwargs)
 
     @classmethod
     def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> DataFrameWrapper:
@@ -129,9 +108,6 @@ class PolarsEngine(Engine):
                 to_method=lambda x: pl.String(),
             )
         )
-
-        cls.register_read_method("csv", method=cls._read_csv)
-        cls.register_write_method("csv", method=cls._write_csv)
 
 
 PolarsEngine.setup()

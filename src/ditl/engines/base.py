@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from collections import defaultdict
 from typing import TYPE_CHECKING, Any, ClassVar, Protocol, TypeVar
 
 from ditl.base_model import BaseModel
@@ -39,8 +38,6 @@ class Engine(BaseModel):
     engine_identifier: ClassVar[str]
     internal_schema_type: ClassVar[type[Any]]
     registered_types: ClassVar[dict[Any, type[DataType]]] = {}
-    registered_read_methods: ClassVar[dict[str, dict[str, ReadMethod]]] = defaultdict(dict)
-    registered_write_methods: ClassVar[dict[str, dict[str, WriteMethod]]] = defaultdict(dict)
     # TODO: Switch other registragtion variables to use the named tuple, as well
     # registered_conversion_methods: ClassVar[dict[ConversionEngineTuple, ConversionMethod]] = {}
 
@@ -52,53 +49,6 @@ class Engine(BaseModel):
         cls.registered_types[data_type._engine_identifier_to_engine_type[data_type.__name__][cls.engine_identifier]] = (
             data_type
         )
-
-    @classmethod
-    def read(cls, *args: Any, method_identifier: str, **kwargs: Any) -> "DataFrameWrapper":
-        """aigen_start
-        Dispatch a read call to the registered method identified by method_identifier.
-        aigen_end"""
-        if method_identifier not in cls.registered_read_methods[cls.engine_identifier]:
-            raise NotImplementedError(
-                f"The read method with name '{method_identifier}' "
-                f"is not implemented or registered for engine {cls.engine_identifier}!"
-            )
-        return cls.registered_read_methods[cls.engine_identifier][method_identifier](*args, **kwargs)
-
-    @classmethod
-    def write(
-        cls,
-        *args: Any,
-        method_identifier: str,
-        data_frame: "DataFrameWrapper",
-        **kwargs: Any,
-    ) -> None:
-        """aigen_start
-        Dispatch a write call to the registered method identified by method_identifier.
-        aigen_end"""
-        if method_identifier not in cls.registered_write_methods[cls.engine_identifier]:
-            raise NotImplementedError(
-                f"The write method with name '{method_identifier}' "
-                f"is not implemented or registered for engine {cls.engine_identifier}!"
-            )
-        cls.registered_write_methods[cls.engine_identifier][method_identifier](*args, data_frame=data_frame, **kwargs)
-
-    @classmethod
-    def register_read_method(cls, method_identifier: str, method: ReadMethod) -> None:
-        """aigen_start
-        Register a read method under the given identifier for this engine.
-        aigen_end"""
-        # TODO: Implement general logger
-        # TODO: log warning when overwriting existing function!
-        cls.registered_read_methods[cls.engine_identifier][method_identifier] = method
-
-    @classmethod
-    def register_write_method(cls, method_identifier: str, method: WriteMethod) -> None:
-        """aigen_start
-        Register a write method under the given identifier for this engine.
-        aigen_end"""
-        # TODO: log warning when overwriting existing function!
-        cls.registered_write_methods[cls.engine_identifier][method_identifier] = method
 
     @classmethod
     @abstractmethod
@@ -151,8 +101,7 @@ class Engine(BaseModel):
         arrow_wrapper = source_engine.convert_to_arrow(schema=schema, data_frame_wrapper=data_frame_wrapper)
         return target_engine.convert_from_arrow(schema=schema, data_frame_wrapper=arrow_wrapper)
 
-    # TODO: Add check whether the engine_read_settings and engine_write_settings have
-    # engines, that actually have implemented the transfer from one to the other.
+    # TODO: Add check whether the engine of the table actually have implemented the transfer from one to the other.
     # Only read => write direction seems to be required for now.
     # TODO: Prompt Primer -> Prompt Erzeugung für Claude etc.
     # TODO: provide standard functionalities like merge, upsert for engines

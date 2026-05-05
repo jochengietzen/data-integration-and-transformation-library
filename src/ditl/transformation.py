@@ -50,9 +50,13 @@ class Transformation(BaseModel):
                 runtime_config=self.runtime_config,
                 environment_config=self.environment_config,
             )
+            if input_frames[name].engine is None:
+                input_frames[name].engine = table.engine
+            if input_frames[name].schema is None:
+                input_frames[name].schema = table.get_schema(by_name=False)
 
             if table_instruction.cast_before_injection:
-                input_frames[name] = input_frames[name].cast(engine=table.engine_read_settings.engine)
+                input_frames[name] = input_frames[name].cast()
 
         result = self.func(**input_frames)
 

@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from collections.abc import Callable
-from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -195,10 +194,3 @@ class Columns(RootModel[dict[str, Column]]):
 class ForeignKey(BaseModel):
     table: "Table"
     columns: list[Column]
-
-
-class EngineFileType(Enum):
-    CSV = "csv"
-    JSON = "json"
-    DELTA = "delta"
-    PARQUET = "parquet"

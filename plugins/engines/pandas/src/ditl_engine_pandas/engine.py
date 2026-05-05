@@ -1,5 +1,4 @@
-from pathlib import Path
-from typing import IO, Any, ClassVar, TypeGuard
+from typing import Any, ClassVar, TypeGuard
 
 import numpy as np
 import pandas as pd
@@ -37,7 +36,7 @@ class PandasEngine(Engine):
     @classmethod
     def _to_engine_schema(cls, schema: Schema) -> dict[Any, Any]:
         return {
-            schema_field.name: schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier)
+            schema_field.name: schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier)()
             for schema_field in schema.root
         }
 
@@ -47,26 +46,6 @@ class PandasEngine(Engine):
         return data_frame_wrapper.create_with_new_data(
             data_frame=data_frame.astype(cls._to_engine_schema(schema=schema))
         )
-
-    @classmethod
-    def _read_csv(cls, source: str, *args: Any, **kwargs: Any) -> DataFrameWrapper:
-        return DataFrameWrapper(data_frame=pd.read_csv(source, *args, **kwargs))
-
-    @classmethod
-    def _write_csv(
-        cls,
-        *args: Any,
-        data_frame: DataFrameWrapper,
-        file: str | Path | IO[str] | IO[bytes] | None = None,
-        **kwargs: Any,
-    ) -> None:
-        frame: pd.DataFrame = data_frame.data_frame
-        if not pandas_frame(frame):
-            raise RuntimeError(
-                f"The data_frame Wrapper does not hold a pandas data frame, but {type(data_frame.data_frame)}!"
-            )
-
-        frame.to_csv(file, *args, **kwargs)
 
     @classmethod
     def dataframe_from_faker_columnar(cls, data: dict[str, list[Any]], schema: Schema) -> DataFrameWrapper:
@@ -138,9 +117,6 @@ class PandasEngine(Engine):
                 to_method=lambda x: pd.StringDtype(),
             )
         )
-
-        cls.register_read_method("csv", method=cls._read_csv)
-        cls.register_write_method("csv", method=cls._write_csv)
 
 
 PandasEngine.setup()

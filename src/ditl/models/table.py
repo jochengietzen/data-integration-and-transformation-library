@@ -9,7 +9,7 @@ from ditl.config import (
     RuntimeConfigType,
 )
 from ditl.engines.base import EngineType
-from ditl.models.base import Columns, EngineFileType, TablePath
+from ditl.models.base import Columns, Schema, TablePath
 from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from ditl.models.expectations import RowLevelTableExpectation
 
@@ -17,31 +17,17 @@ TablePathType = TypeVar("TablePathType", bound=TablePath)  # pylint: disable=inv
 TableExpectationType = TypeVar("TableExpectationType", bound=RowLevelTableExpectation)  # pylint: disable=invalid-name
 
 
-class EngineReadSettings(BaseModel):
-    engine: type[EngineType]
-    read_type: EngineFileType
-    args: list[Any] = Field(default_factory=list)
-    kwargs: dict[str, Any] = Field(default_factory=dict)
-
-
-class EngineWriteSettings(BaseModel):
-    engine: type[EngineType]
-    write_type: EngineFileType
-    args: list[Any] = Field(default_factory=list)
-    kwargs: dict[str, Any] = Field(default_factory=dict)
-
-
 class Table(BaseModel):
     path: TablePathType
     columns: Columns
+    engine: type[EngineType]
     description: str
-    engine_read_settings: EngineReadSettings
-    engine_write_settings: EngineWriteSettings
     # Assumption: on table-level we only have expectations,
     # there is no equivalent to constraints on column level
     # Possibliy we do not need the generic type.
     expectations: list[TableExpectationType] = Field(default_factory=list)
 
+    @abstractmethod
     def read(
         self,
         *args: Any,
@@ -52,16 +38,9 @@ class Table(BaseModel):
         """aigen_start
         Read data from the configured source path and return it as a DataFrameWrapper.
         aigen_end"""
-        args_ = self.engine_read_settings.args + list(args)
-        method_identifier = self.engine_read_settings.read_type.value
-        dfw = self.engine_read_settings.engine.read(
-            *args_,
-            method_identifier=method_identifier,
-            **(self.engine_read_settings.kwargs | kwargs),
-        )
-        dfw.schema = self.columns.get_schema()
-        return dfw
+        # TODO: Make sure that we set the engine to the attribute, if no engine was given
 
+    @abstractmethod
     def write(
         self,
         *args: Any,
@@ -73,15 +52,10 @@ class Table(BaseModel):
         """aigen_start
         Write the given DataFrameWrapper to the configured output path and return self.
         aigen_end"""
-        args_ = self.engine_write_settings.args + list(args)
-        method_identifier = self.engine_write_settings.write_type.value
-        self.engine_write_settings.engine.write(
-            *args_,
-            method_identifier=method_identifier,
-            data_frame=data_frame_wrapper,
-            **(self.engine_write_settings.kwargs | kwargs),
-        )
-        return self
+
+    def get_schema(self, by_name: bool = False) -> Schema:
+        """Convenience function to retrieve the Column based schema"""
+        return self.columns.get_schema(by_name=by_name)
 
     # TODO: Add verify_schema functionality for a full table
 
