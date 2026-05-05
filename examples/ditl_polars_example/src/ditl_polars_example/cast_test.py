@@ -18,12 +18,12 @@ schema = Schema(
     ]
 )
 
-df_w = DataFrameWrapper(data_frame=df, schema=schema)
+df_w = DataFrameWrapper(data_frame=df, schema=schema, engine=PolarsEngine)
 
 print(df)
 df_2 = PolarsEngine.cast(schema=schema, data_frame_wrapper=DataFrameWrapper(data_frame=df))
 print(df_2.data_frame)
 
 print(df_w.data_frame)
-df_w = df_w.cast(engine=PolarsEngine)
+df_w = df_w.cast()
 print(df_w.data_frame)

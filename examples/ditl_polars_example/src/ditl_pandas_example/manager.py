@@ -1,6 +1,5 @@
-from ditl_polars_example.config import MyEnvironmentConfig, MyRuntimeConfig
-
 from ditl.transformation import manager
+from ditl_pandas_example.config import MyEnvironmentConfig, MyRuntimeConfig
 
 manager.load_all_plugins()
 
@@ -12,4 +11,4 @@ manager.load_environment_config(
 )
 
 
-manager.load_all_transformations("ditl_polars_example.transformations")
+manager.load_all_transformations("ditl_pandas_example.transformations")

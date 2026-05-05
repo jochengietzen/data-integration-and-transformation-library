@@ -1,21 +1,23 @@
 from typing import Any
 
-from ditl_engine_polars.engine import PolarsEngine
-from ditl_polars_example.config import MyEnvironmentConfig
+import pandas as pd
+from ditl_engine_pandas.engine import PandasEngine
 
 from ditl.config import EnvironmentConfig, RuntimeConfig
+from ditl.engines.base import EngineType
 from ditl.models.base import (
     Column,
     Columns,
-    EngineFileType,
     IntegerType,
     StringType,
     TablePath,
 )
 from ditl.models.data_frame_wrapper import DataFrameWrapper
+from ditl.models.data_frame_wrapper.wrapper import TypedDataFrameWrapper
 from ditl.models.generation import Generation
-from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
+from ditl.models.table import Table
 from ditl.testing.faker_type import FakerIntType, FakerStringType
+from ditl_pandas_example.config import MyEnvironmentConfig
 
 
 class YoutubeTablePath(TablePath):
@@ -35,14 +37,7 @@ class YoutubeTablePath(TablePath):
 
 class YoutubeTable(Table):
     path: YoutubeTablePath
-    engine_read_settings: EngineReadSettings = EngineReadSettings(
-        engine=PolarsEngine,
-        read_type=EngineFileType.CSV,
-    )
-    engine_write_settings: EngineWriteSettings = EngineWriteSettings(
-        engine=PolarsEngine,
-        write_type=EngineFileType.CSV,
-    )
+    engine: type[EngineType] = PandasEngine
 
     def read(
         self,
@@ -51,30 +46,29 @@ class YoutubeTable(Table):
         environment_config: EnvironmentConfig,
         **kwargs,
     ) -> DataFrameWrapper:
-        return super().read(
+        df = pd.read_csv(
+            filepath_or_buffer=self.path.full_path(
+                runtime_config=runtime_config, environment_config=environment_config
+            ),
             *args,
-            runtime_config=runtime_config,
-            environment_config=environment_config,
-            source=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
             **kwargs,
         )
+        return DataFrameWrapper(data_frame=df, schema=self.get_schema(False), engine=self.engine)
 
     def write(
         self,
         *args,
         runtime_config: RuntimeConfig,
         environment_config: EnvironmentConfig,
-        data_frame_wrapper: DataFrameWrapper,
+        data_frame_wrapper: TypedDataFrameWrapper[pd.DataFrame],
         **kwargs,
     ) -> "YoutubeTable":
-        return super().write(
+        data_frame_wrapper.data_frame.to_csv(
             *args,
-            runtime_config=runtime_config,
-            environment_config=environment_config,
-            data_frame_wrapper=data_frame_wrapper,
-            file=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
+            path_or_buf=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
             **kwargs,
         )
+        return self
 
 
 class ReadTable(YoutubeTable):
@@ -279,3 +273,4 @@ if __name__ == "__main__":
     print(tech_channels.columns.get_schema())
     print(tech_videos.columns.get_schema())
     print(tech_channel_overview.columns.get_schema())
+    print(tech_channels.engine)

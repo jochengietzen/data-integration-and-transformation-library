@@ -1,19 +1,20 @@
 from typing import Any
 
+import polars as pl
 from ditl_engine_polars.engine import PolarsEngine
 
 from ditl.config import EnvironmentConfig, RuntimeConfig
+from ditl.engines.base import EngineType
 from ditl.models.base import (
     Column,
     Columns,
-    EngineFileType,
     IntegerType,
     StringType,
     TablePath,
 )
 from ditl.models.data_frame_wrapper import DataFrameWrapper
 from ditl.models.generation import Generation
-from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
+from ditl.models.table import Table
 from ditl.testing.faker_type import FakerIntType, FakerStringType
 from ditl_polars_example.config import MyEnvironmentConfig
 
@@ -35,14 +36,7 @@ class YoutubeTablePath(TablePath):
 
 class YoutubeTable(Table):
     path: YoutubeTablePath
-    engine_read_settings: EngineReadSettings = EngineReadSettings(
-        engine=PolarsEngine,
-        read_type=EngineFileType.CSV,
-    )
-    engine_write_settings: EngineWriteSettings = EngineWriteSettings(
-        engine=PolarsEngine,
-        write_type=EngineFileType.CSV,
-    )
+    engine: type[EngineType] = PolarsEngine
 
     def read(
         self,
@@ -51,12 +45,14 @@ class YoutubeTable(Table):
         environment_config: EnvironmentConfig,
         **kwargs,
     ) -> DataFrameWrapper:
-        return super().read(
-            *args,
-            runtime_config=runtime_config,
-            environment_config=environment_config,
-            source=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
-            **kwargs,
+        return DataFrameWrapper(
+            data_frame=pl.read_csv(
+                *args,
+                source=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
+                **kwargs,
+            ),
+            schema=self.get_schema(),
+            engine=self.engine,
         )
 
     def write(
@@ -67,11 +63,8 @@ class YoutubeTable(Table):
         data_frame_wrapper: DataFrameWrapper,
         **kwargs,
     ) -> "YoutubeTable":
-        return super().write(
+        return data_frame_wrapper.data_frame.write_csv(
             *args,
-            runtime_config=runtime_config,
-            environment_config=environment_config,
-            data_frame_wrapper=data_frame_wrapper,
             file=self.path.full_path(runtime_config=runtime_config, environment_config=environment_config),
             **kwargs,
         )
