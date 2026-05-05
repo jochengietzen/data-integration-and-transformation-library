@@ -19,3 +19,7 @@ The schema is used to define the structure of your data. It contains the name of
     - TODO: Revisit topic of preloaded DataFrameWrapper vs. manual load or separate module.
     - TODO: Try to make it work with complex types (Array, Map, Variant)
     - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results
+    - TODO: Find a migration mechanism
+            Current idea: define a migration table, that needs to be given a read/write method by the user. We can then track all model versions in that table and migrate the versions.
+            Discuss how and when a version will be created.
+            Should the table only track a state?
