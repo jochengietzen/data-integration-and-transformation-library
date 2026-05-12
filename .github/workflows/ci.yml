@@ -44,6 +44,9 @@ jobs:
       run:
           shell: bash
           working-directory: $GITHUB_WORKSPACE/ditl
+      uses:
+          with:
+            working-directory: $GITHUB_WORKSPACE/ditl
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
