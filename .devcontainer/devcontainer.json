@@ -10,7 +10,7 @@
     },
     "remoteUser": "vscode",
     "containerUser": "vscode",
-    "postCreateCommand": "just init",
+    "postCreateCommand": "if [ \"$CI\" != true ]; then just init; fi",
     "waitFor": "postCreateCommand",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
