@@ -35,10 +35,12 @@ create_sub_venvs:
 init: init_system_files
     #!/bin/zsh
     set -euxo pipefail
-    rm -rf .venv
-    uv venv
-    uv sync --all-groups
-    pre-commit install
+    if [ "$CI" != true ]; then
+        rm -rf .venv
+        uv venv
+        uv sync --all-groups
+        pre-commit install
+    fi
 
 check:
     #!/bin/zsh
