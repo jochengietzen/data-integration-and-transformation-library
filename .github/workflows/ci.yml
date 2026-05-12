@@ -44,9 +44,6 @@ jobs:
       run:
           shell: bash
           working-directory: $GITHUB_WORKSPACE/ditl
-      astral-sh/setup-uv@v6:
-          with:
-            working-directory: $GITHUB_WORKSPACE/ditl
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
@@ -58,6 +55,7 @@ jobs:
         with:
           version: "0.11.14"
           python-version: ${{ matrix.python }}
+          working-directory: $GITHUB_WORKSPACE/ditl
 
       - name: Install command runner
         uses: taiki-e/install-action@just
