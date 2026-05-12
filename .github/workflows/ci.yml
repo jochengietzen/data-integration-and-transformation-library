@@ -43,7 +43,7 @@ jobs:
     defaults:
       run:
           shell: bash
-          working-directory: $GITHUB_WORKSPACE/ditl
+          working-directory: /home/runner/work/ditl
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
