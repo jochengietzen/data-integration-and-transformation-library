@@ -1,5 +1,5 @@
 {
-    "name": "ditl",
+    "name": "simple_etl",
     "build": {
         "dockerfile": "./Dockerfile",
         "args": {}
@@ -21,10 +21,7 @@
             "nonFreePackages": false
         }
     },
-    "mounts": [
-        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/tmp/.ssh,type=bind,consistency=consistent"
-    ],
-    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=consistent",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
     "mounts": [
         {
