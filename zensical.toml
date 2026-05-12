@@ -96,7 +96,7 @@ repo_name = "jochengietzen/data-integration-and-transformation-library"
 # - https://zensical.org/docs/setup/logo-and-icons/#favicon
 # - https://developer.mozilla.org/en-US/docs/Glossary/Favicon
 #
-# TODO:
+# TODO: (V1)
 #favicon = "images/favicon.png"
 
 # Zensical supports more than 60 different languages. This means that the
@@ -258,7 +258,7 @@ features = [
 # option in the "theme" subsection. The logo must be a relative path to a file
 # in your "docs_dir", e.g., to use `docs/assets/logo.png` you would set:
 # ----------------------------------------------------------------------------
-# TODO:
+# TODO: (V1)
 #logo = "assets/logo.png"
 
 # ----------------------------------------------------------------------------

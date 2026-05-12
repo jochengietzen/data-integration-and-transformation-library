@@ -38,7 +38,7 @@ class Engine(BaseModel):
     engine_identifier: ClassVar[str]
     internal_schema_type: ClassVar[type[Any]]
     registered_types: ClassVar[dict[Any, type[DataType]]] = {}
-    # TODO: Switch other registragtion variables to use the named tuple, as well
+    # TODO: Switch other registragtion variables to use the named tuple, as well (V3?)
     # registered_conversion_methods: ClassVar[dict[ConversionEngineTuple, ConversionMethod]] = {}
 
     @classmethod
@@ -101,10 +101,8 @@ class Engine(BaseModel):
         arrow_wrapper = source_engine.convert_to_arrow(schema=schema, data_frame_wrapper=data_frame_wrapper)
         return target_engine.convert_from_arrow(schema=schema, data_frame_wrapper=arrow_wrapper)
 
-    # TODO: Add check whether the engine of the table actually have implemented the transfer from one to the other.
-    # Only read => write direction seems to be required for now.
-    # TODO: Prompt Primer -> Prompt Erzeugung für Claude etc.
-    # TODO: provide standard functionalities like merge, upsert for engines
+    # TODO: Prompt Primer -> Prompt Erzeugung für Claude etc. (V3)
+    # TODO: provide standard functionalities like merge, upsert for engines (V1-2)
 
 
 EngineType = TypeVar("EngineType", bound=Engine)  # pylint: disable=invalid-name

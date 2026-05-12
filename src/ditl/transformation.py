@@ -60,7 +60,8 @@ class Transformation(BaseModel):
 
         result = self.func(**input_frames)
 
-        # TODO: Add selects for schema + cast?
+        # TODO: Add selects for schema + cast? (V1/2)
+        #       Probably combination of schema select and input model instruction activation flag
         return DataFrameWrapper.ensure_is_wrapper(data_frame=result)
 
     def save_output_table(self, result: DataFrameWrapper) -> None:
@@ -156,9 +157,9 @@ class TransformationManager:
                 raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
 
             argspec = inspect.getfullargspec(func=func)
-            expected_argspec = {}  # TODO: tbd # pylint: disable=unused-variable # noqa # type: ignore
+            expected_argspec = {}  # TODO: tbd # pylint: disable=unused-variable # noqa # type: ignore (V1)
 
-            # TODO: compare argspec and expected_argspec
+            # TODO: compare argspec and expected_argspec (V1)
 
             table_models: dict[str, InputTableInstruction] = {
                 name: kwargs[name]

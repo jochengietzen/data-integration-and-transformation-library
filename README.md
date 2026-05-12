@@ -15,11 +15,12 @@ Wording is hard, and even though we know, that we will clash with some names of 
 The schema is used to define the structure of your data. It contains the name of each column as well as the type of each column. It is comparable to sparks schema of a table/dataframe etc.
 
 # TODOS
-    - TODO: How should we handle DataType registration, when not yet present in ArrowEngine?
-    - TODO: Revisit topic of preloaded DataFrameWrapper vs. manual load or separate module.
-    - TODO: Try to make it work with complex types (Array, Map, Variant)
-    - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results
-    - TODO: Find a migration mechanism
+    - TODO: How should we handle DataType registration, when not yet present in ArrowEngine? (V1)
+    - TODO: Revisit topic of preloaded DataFrameWrapper vs. manual load or separate module. (V2)
+    - TODO: Try to make it work with complex types (Array, Map, Variant) (V3?)
+    - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results (V1)
+    - TODO: Find a migration mechanism (V2/3)
             Current idea: define a migration table, that needs to be given a read/write method by the user. We can then track all model versions in that table and migrate the versions.
             Discuss how and when a version will be created.
             Should the table only track a state?
+    - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running. Also test and run all example code.

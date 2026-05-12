@@ -126,7 +126,8 @@ class DataFrameWrapper:
     def register_wrapper_function(
         cls, engine: Union["Engine", type["Engine"]], func_spec: WrapperFunctionSpec[Any], func: WrapperFunctionProtocol
     ):
-        # TODO: Ensure, that all registered functions have the same or compatible arg specs!
+        # TODO: Ensure, that all registered functions have the same or compatible arg specs! (V1)
+        # TODO: Double check, if this is still necessary or already done!
         func_key = EngineSpecificFunctionKey(engine_identifier=engine.engine_identifier, func_name=func_spec.func_name)
         if func_key in cls.registered_wrapper_functions:
             logger.info(

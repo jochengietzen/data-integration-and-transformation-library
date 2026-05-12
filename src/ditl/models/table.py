@@ -38,7 +38,7 @@ class Table(BaseModel):
         """aigen_start
         Read data from the configured source path and return it as a DataFrameWrapper.
         aigen_end"""
-        # TODO: Make sure that we set the engine to the attribute, if no engine was given
+        # TODO: Make sure that we set the engine to the attribute, if no engine was given (V1)
 
     @abstractmethod
     def write(
@@ -57,7 +57,7 @@ class Table(BaseModel):
         """Convenience function to retrieve the Column based schema"""
         return self.columns.get_schema(by_name=by_name)
 
-    # TODO: Add verify_schema functionality for a full table
+    # TODO: Add verify_schema functionality for a full table (V1)
 
     def _verify_schema(self, data_frame_wrapper: DataFrameWrapper) -> None:
         pass
