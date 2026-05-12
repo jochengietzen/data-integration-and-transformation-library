@@ -28,7 +28,7 @@ jobs:
         with:
           inheritEnv: false
           env:
-            CI: true
+            - CI
           cacheFrom: ghcr.io/jochengietzen/ditl-devcontainer
           push: never
           runCmd: just check
