@@ -25,13 +25,13 @@ jobs:
 
       - name: Run style & code checks
         uses: devcontainers/ci@v0.3
-        env:
-          CI: true
         with:
           inheritEnv: false
           cacheFrom: ghcr.io/jochengietzen/ditl-devcontainer
           push: never
           runCmd: just check
+          env: |
+            CI=true
   
   unit-tests:
     runs-on: ${{ matrix.os }}
