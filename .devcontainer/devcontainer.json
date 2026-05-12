@@ -9,6 +9,7 @@
         "VIRTUAL_ENV": "/workspace/.venv"
     },
     "remoteUser": "vscode",
+    "containerUser": "vscode",
     "postCreateCommand": "just init",
     "waitFor": "postCreateCommand",
     "features": {

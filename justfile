@@ -4,6 +4,7 @@ default:
 init_system_files:
     #!/bin/zsh
     set -euxo pipefail
+    mkdir -p /home/vscode
     if [ -f /tmp/.gitconfig ]; then rm -rf /home/vscode/.gitconfig && cp /tmp/.gitconfig /home/vscode/.gitconfig; fi
     if [ -d /tmp/.ssh ]; then rm -rf /home/vscode/.ssh && cp -r /tmp/.ssh /home/vscode/.ssh && chmod 600 /home/vscode/.ssh/*; fi
     git config --global --add safe.directory '*'
@@ -39,6 +40,7 @@ init: init_system_files
     pre-commit install
 
 check:
+    #!/bin/zsh
     uv run ruff check src/ tests/
     uv run pylint src/ tests/
     uv run mypy src/
