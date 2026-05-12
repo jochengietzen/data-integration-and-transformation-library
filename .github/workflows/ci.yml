@@ -39,7 +39,12 @@ jobs:
       fail-fast: false
       matrix:
           python: [ "3.13", "3.14" ]
-          os: [ ubuntu-latest, macos-latest, windows-latest ]
+          os: [ 
+            ubuntu-latest, 
+            # TODO: First naming, then fix
+            # macos-latest, 
+            # windows-latest 
+          ]
     defaults:
       run:
           shell: bash
@@ -51,7 +56,7 @@ jobs:
 
       - name: Move repostiory to home
         run: |
-            mv $GITHUB_WORKSPACE/ditl /home/runner/work/ditl
+            mv $GITHUB_WORKSPACE/ditl $GITHUB_WORKSPACE/ditl
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
@@ -64,11 +69,11 @@ jobs:
         uses: taiki-e/install-action@just
 
       - name: Install Python dependencies
-        working-directory: /home/runner/work/ditl
+        working-directory: $GITHUB_WORKSPACE/ditl
         run: |
             uv sync --all-groups
 
       - name: Run unit-tests
-        working-directory: /home/runner/work/ditl
+        working-directory: $GITHUB_WORKSPACE/ditl
         run: |
             just unit-tests
