@@ -43,7 +43,6 @@ jobs:
     defaults:
       run:
           shell: bash
-          working-directory: /home/runner/work/ditl
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
@@ -65,9 +64,11 @@ jobs:
         uses: taiki-e/install-action@just
 
       - name: Install Python dependencies
+        working-directory: /home/runner/work/ditl
         run: |
             uv sync --all-groups
 
       - name: Run unit-tests
+        working-directory: /home/runner/work/ditl
         run: |
             just unit-tests
