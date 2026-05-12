@@ -26,6 +26,7 @@ jobs:
       - name: Run style & code checks
         uses: devcontainers/ci@v0.3
         with:
+          inheritEnv: true
           cacheFrom: ghcr.io/jochengietzen/ditl-devcontainer
           push: never
           runCmd: just check
