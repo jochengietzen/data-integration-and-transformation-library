@@ -37,3 +37,21 @@ init: init_system_files
     uv venv
     uv sync --all-groups
     pre-commit install
+
+check:
+    #!/bin/zsh
+    uv run ruff check src/ tests/
+    uv run pylint src/ tests/
+    uv run mypy src/
+
+ssh-fix:
+    #!/bin/zsh
+    set -euxo pipefail
+    rm -rf /home/vscode/.ssh
+    mkdir -p /home/vscode/.ssh
+    cp /tmp/.ssh/* /home/vscode/.ssh
+    chmod 600 /home/vscode/.ssh/*
+
+unit-tests:
+    export TZ="UTC"; uv run pytest --cov=ditl --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
+    # export TZ="UTC"; uv run pytest --cov=ditl --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/

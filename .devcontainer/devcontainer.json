@@ -9,7 +9,8 @@
         "VIRTUAL_ENV": "/workspace/.venv"
     },
     "remoteUser": "vscode",
-    "postCreateCommand": "just init",
+    "containerUser": "vscode",
+    "postCreateCommand": "if [ \"$CI\" != true ]; then just init; fi",
     "waitFor": "postCreateCommand",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {

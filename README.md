@@ -24,3 +24,5 @@ The schema is used to define the structure of your data. It contains the name of
             Discuss how and when a version will be created.
             Should the table only track a state?
     - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running. Also test and run all example code.
+
+    - TODO: Finish CI Pipelines and finish Naming!
