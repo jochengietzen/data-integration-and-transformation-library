@@ -37,7 +37,7 @@ jobs:
         run: |
             uv sync --group docs
 
-      - run: zensical build --clean
+      - run: uv run zensical build --clean
       - uses: actions/upload-artifact@v4
         with:
           name: docs-preview
@@ -72,7 +72,7 @@ jobs:
         working-directory: /home/runner/work/ditl
         run: |
             uv sync --group docs
-      - run: zensical build --clean
+      - run: uv run zensical build --clean
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site
