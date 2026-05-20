@@ -561,6 +561,8 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
+]
+docs = [
     { name = "zensical" },
 ]
 types = [
@@ -586,8 +588,8 @@ dev = [
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "pytest-cov", specifier = "==6.2.1" },
     { name = "ruff", specifier = ">=0.11.11" },
-    { name = "zensical", specifier = ">=0.0.37" },
 ]
+docs = [{ name = "zensical", specifier = ">=0.0.37" }]
 types = [{ name = "types-pyyaml", specifier = ">=6.0.12.20250516" }]
 
 [[package]]
