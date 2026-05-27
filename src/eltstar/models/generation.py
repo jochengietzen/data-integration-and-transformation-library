@@ -1,7 +1,7 @@
 from pydantic import ConfigDict
 
-from ditl.base_model import BaseModel
-from ditl.testing.faker_type import FakerType
+from eltstar.base_model import BaseModel
+from eltstar.testing.faker_type import FakerType
 
 
 class Generation(BaseModel):

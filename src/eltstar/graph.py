@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 import networkx as nx
 
 if TYPE_CHECKING:
-    from ditl.models.table import Table
-    from ditl.transformation import Transformation
+    from eltstar.models.table import Table
+    from eltstar.transformation import Transformation
 
 
 class Node:

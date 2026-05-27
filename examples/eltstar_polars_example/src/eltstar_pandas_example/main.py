@@ -1,7 +1,7 @@
-from ditl_rs_dbx_asset_bundle_jobs.runtime_system import DatabricksAssetBundleJobRS
+from eltstar_rs_dbx_asset_bundle_jobs.runtime_system import DatabricksAssetBundleJobRS
 
-from ditl.logging import logger
-from ditl_pandas_example.manager import manager
+from eltstar.logging import logger
+from eltstar_pandas_example.manager import manager
 
 logger.debug("Registered transformations: %s", manager._registered_transformations.keys())
 result = manager._registered_transformations["youtube_channel_overview"].execute()

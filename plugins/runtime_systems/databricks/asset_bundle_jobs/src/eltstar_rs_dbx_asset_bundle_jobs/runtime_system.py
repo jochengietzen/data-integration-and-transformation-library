@@ -1,6 +1,6 @@
-from ditl.graph import Lineage
-from ditl.logging import logger
-from ditl.runtime_system.base import BaseRuntimeSystem
+from eltstar.graph import Lineage
+from eltstar.logging import logger
+from eltstar.runtime_system.base import BaseRuntimeSystem
 
 
 class DatabricksAssetBundleJobRS(BaseRuntimeSystem):

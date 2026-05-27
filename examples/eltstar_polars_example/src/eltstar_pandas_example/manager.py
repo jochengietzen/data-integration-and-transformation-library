@@ -1,5 +1,5 @@
-from ditl.transformation import manager
-from ditl_pandas_example.config import MyEnvironmentConfig, MyRuntimeConfig
+from eltstar.transformation import manager
+from eltstar_pandas_example.config import MyEnvironmentConfig, MyRuntimeConfig
 
 manager.load_all_plugins()
 
@@ -11,4 +11,4 @@ manager.load_environment_config(
 )
 
 
-manager.load_all_transformations("ditl_pandas_example.transformations")
+manager.load_all_transformations("eltstar_pandas_example.transformations")

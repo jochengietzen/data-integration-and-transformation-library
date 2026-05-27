@@ -1,8 +1,8 @@
 import pyarrow as pa
 
-from ditl.engines.arrow_engine import ArrowEngine
-from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from eltstar.engines.eltstar_arrow_engine import ArrowEngine
+from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField
+from eltstar.models.data_frame_wrapper import DataFrameWrapper
 
 df = pa.Table.from_pydict(
     {

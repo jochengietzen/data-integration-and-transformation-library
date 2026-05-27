@@ -1,6 +1,6 @@
 from typing import Any
 
-from ditl.exceptions import ProgrammingError
+from eltstar.exceptions import ProgrammingError
 
 
 def columnar_dictionary_to_records(

@@ -1,12 +1,12 @@
 import pandas as pd
-from ditl_engine_pandas.engine import PandasEngine
+from eltstar_engine_pandas.engine import PandasEngine
 
-from ditl.logging import logger
-from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
-from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec
+from eltstar.logging import logger
+from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField
+from eltstar.models.data_frame_wrapper.functions.join import JoinArgSpec
 
 logger.setup_stdout_handler()
-from ditl.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
+from eltstar.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
 
 df = pd.DataFrame(
     {

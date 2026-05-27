@@ -3,9 +3,9 @@ from typing import Literal
 
 import pandas as pd
 
-from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec, JoinFuncSpec
-from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
-from ditl_engine_pandas.engine import PandasEngine
+from eltstar.models.data_frame_wrapper.functions.join import JoinArgSpec, JoinFuncSpec
+from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar_engine_pandas.engine import PandasEngine
 
 
 class PandasJoinComparisonOperator(StrEnum):

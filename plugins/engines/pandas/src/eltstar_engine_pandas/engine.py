@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 import pyarrow as pa
 
-from ditl.engines.base import Engine
-from ditl.engines.ditl_arrow_engine import ArrowEngine
-from ditl.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
-from ditl.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
+from eltstar.engines.base import Engine
+from eltstar.engines.eltstar_arrow_engine import ArrowEngine
+from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from eltstar.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
 
 
 def pandas_frame(frame: Any) -> TypeGuard[pd.DataFrame]:

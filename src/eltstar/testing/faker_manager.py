@@ -4,14 +4,14 @@ from typing import Any
 
 from faker import Faker
 
-from ditl.engines.base import Engine
-from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
-from ditl.models.table import Table
+from eltstar.engines.base import Engine
+from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar.models.table import Table
 
-# from ditl.engines.polars_engine import PolarsEngine
-# from ditl.models.base import DataFrameWrapper, IntegerType, Schema, SchemaField, StringType
-# from ditl.testing.faker_type import FakerIDType, FakerIntType, FakerType
-from ditl.testing.faker_type import FakerType
+# from eltstar.engines.polars_engine import PolarsEngine
+# from eltstar.models.base import DataFrameWrapper, IntegerType, Schema, SchemaField, StringType
+# from eltstar.testing.faker_type import FakerIDType, FakerIntType, FakerType
+from eltstar.testing.faker_type import FakerType
 
 
 class FakerManager:

@@ -3,15 +3,15 @@ from typing import Any, TypeVar
 
 from pydantic import Field
 
-from ditl.base_model import BaseModel
-from ditl.config import (
+from eltstar.base_model import BaseModel
+from eltstar.config import (
     EnvironmentConfigType,
     RuntimeConfigType,
 )
-from ditl.engines.base import EngineType
-from ditl.models.base import Columns, Schema, TablePath
-from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
-from ditl.models.expectations import RowLevelTableExpectation
+from eltstar.engines.base import EngineType
+from eltstar.models.base import Columns, Schema, TablePath
+from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar.models.expectations import RowLevelTableExpectation
 
 TablePathType = TypeVar("TablePathType", bound=TablePath)  # pylint: disable=invalid-name
 TableExpectationType = TypeVar("TableExpectationType", bound=RowLevelTableExpectation)  # pylint: disable=invalid-name

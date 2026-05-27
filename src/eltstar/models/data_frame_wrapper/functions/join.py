@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
 from pydantic import ConfigDict, model_validator
 
-from ditl.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunctionSpec
+from eltstar.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunctionSpec
 
 if TYPE_CHECKING:
-    from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
+    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
 
 class JoinComparisonOperator(StrEnum):

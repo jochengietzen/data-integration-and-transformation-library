@@ -1,10 +1,10 @@
 import time
 
-from ditl_engine_pandas.engine import PandasEngine
+from eltstar_engine_pandas.engine import PandasEngine
 
-from ditl.logging import logger
-from ditl.testing.faker_manager import FakerManager
-from ditl_pandas_example.models.youtube import tech_channels
+from eltstar.logging import logger
+from eltstar.testing.faker_manager import FakerManager
+from eltstar_pandas_example.models.youtube import tech_channels
 
 faker_manager = FakerManager()
 for i in [10, 100, 1000]:

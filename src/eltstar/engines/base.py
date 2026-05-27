@@ -1,12 +1,12 @@
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, ClassVar, Protocol, TypeVar
 
-from ditl.base_model import BaseModel
-from ditl.exceptions import ProgrammingError
-from ditl.models.base import DataType, Schema
+from eltstar.base_model import BaseModel
+from eltstar.exceptions import ProgrammingError
+from eltstar.models.base import DataType, Schema
 
 if TYPE_CHECKING:
-    from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
+    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
 
 class ReadMethod(Protocol):

@@ -1,9 +1,9 @@
 import polars as pl
-from ditl_engine_polars.engine import PolarsEngine
+from eltstar_engine_polars.engine import PolarsEngine
 
-from ditl.models.base import FloatType, IntegerType, Schema, SchemaField
-from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec
-from ditl.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
+from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField
+from eltstar.models.data_frame_wrapper.functions.join import JoinArgSpec
+from eltstar.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
 
 df = pl.DataFrame(
     {

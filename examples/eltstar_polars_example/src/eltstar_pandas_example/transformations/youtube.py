@@ -1,9 +1,9 @@
 # import pandas as pd
-# from ditl_engine_pandas.functions.join import PandasJoinArgSpec
+# from eltstar_engine_pandas.functions.join import PandasJoinArgSpec
 
-# from ditl.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper, TypedDataFrameWrapper
-# from ditl.transformation import manager
-# from ditl_pandas_example.models.youtube import (
+# from eltstar.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper, TypedDataFrameWrapper
+# from eltstar.transformation import manager
+# from eltstar_pandas_example.models.youtube import (
 #     tech_channel_overview,
 #     tech_channel_overview_2,
 #     tech_channel_overview_3,

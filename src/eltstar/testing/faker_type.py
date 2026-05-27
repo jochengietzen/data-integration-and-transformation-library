@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 from faker import Faker
 
 if TYPE_CHECKING:
-    from ditl.testing.faker_manager import FakerManager
+    from eltstar.testing.faker_manager import FakerManager
 
 
 class FakerType:

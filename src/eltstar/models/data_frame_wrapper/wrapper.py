@@ -2,13 +2,13 @@ from collections import defaultdict
 from importlib.metadata import entry_points
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, Optional, Protocol, TypeVar, Union
 
-from ditl.exceptions import ProgrammingError, WrapperFunctionException
-from ditl.logging import logger
-from ditl.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunctionSpec
+from eltstar.exceptions import ProgrammingError, WrapperFunctionException
+from eltstar.logging import logger
+from eltstar.models.data_frame_wrapper.functions.base import WrapperArgSpec, WrapperFunctionSpec
 
 if TYPE_CHECKING:
-    from ditl.engines.base import Engine
-    from ditl.models.base import Schema
+    from eltstar.engines.base import Engine
+    from eltstar.models.base import Schema
 
 
 class WrapperFunctionProtocol(Protocol):
@@ -173,7 +173,7 @@ class DataFrameWrapper:
         if cls._loaded_plugins:
             return
 
-        for ep in entry_points(group="ditl.wrapper_functions"):
+        for ep in entry_points(group="eltstar.wrapper_functions"):
             logger.info("Found entry point to load:", ep)
             ep.load()
 

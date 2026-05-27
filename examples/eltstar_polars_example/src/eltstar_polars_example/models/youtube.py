@@ -1,22 +1,22 @@
 from typing import Any
 
 import polars as pl
-from ditl_engine_polars.engine import PolarsEngine
+from eltstar_engine_polars.engine import PolarsEngine
 
-from ditl.config import EnvironmentConfig, RuntimeConfig
-from ditl.engines.base import EngineType
-from ditl.models.base import (
+from eltstar.config import EnvironmentConfig, RuntimeConfig
+from eltstar.engines.base import EngineType
+from eltstar.models.base import (
     Column,
     Columns,
     IntegerType,
     StringType,
     TablePath,
 )
-from ditl.models.data_frame_wrapper import DataFrameWrapper
-from ditl.models.generation import Generation
-from ditl.models.table import Table
-from ditl.testing.faker_type import FakerIntType, FakerStringType
-from ditl_polars_example.config import MyEnvironmentConfig
+from eltstar.models.data_frame_wrapper import DataFrameWrapper
+from eltstar.models.generation import Generation
+from eltstar.models.table import Table
+from eltstar.testing.faker_type import FakerIntType, FakerStringType
+from eltstar_polars_example.config import MyEnvironmentConfig
 
 
 class YoutubeTablePath(TablePath):

@@ -2,10 +2,10 @@ from typing import Any, ClassVar, TypeGuard
 
 import pyarrow as pa
 
-from ditl.engines.base import Engine
-from ditl.exceptions import ProgrammingError
-from ditl.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
-from ditl.models.data_frame_wrapper import DataFrameWrapper
+from eltstar.engines.base import Engine
+from eltstar.exceptions import ProgrammingError
+from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from eltstar.models.data_frame_wrapper import DataFrameWrapper
 
 
 def arrow_frame(frame: Any) -> TypeGuard[pa.Table]:

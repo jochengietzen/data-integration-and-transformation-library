@@ -1,10 +1,10 @@
 import time
 
-from ditl_engine_polars.engine import PolarsEngine
+from eltstar_engine_polars.engine import PolarsEngine
 
-from ditl.logging import logger
-from ditl.testing.faker_manager import FakerManager
-from ditl_polars_example.models.youtube import tech_channels
+from eltstar.logging import logger
+from eltstar.testing.faker_manager import FakerManager
+from eltstar_polars_example.models.youtube import tech_channels
 
 faker_manager = FakerManager()
 for i in [10, 100, 1000]:

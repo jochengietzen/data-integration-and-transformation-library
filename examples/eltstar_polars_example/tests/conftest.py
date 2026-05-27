@@ -1,8 +1,8 @@
 import pytest
-from ditl_engine_polars.engine import PolarsEngine
+from eltstar_engine_polars.engine import PolarsEngine
 
-from ditl.engines.base import Engine
-from ditl.testing.faker_manager import FakerManager
+from eltstar.engines.base import Engine
+from eltstar.testing.faker_manager import FakerManager
 
 
 @pytest.fixture

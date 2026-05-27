@@ -1,5 +1,5 @@
-from ditl.transformation import manager
-from ditl_polars_example.config import MyEnvironmentConfig, MyRuntimeConfig
+from eltstar.transformation import manager
+from eltstar_polars_example.config import MyEnvironmentConfig, MyRuntimeConfig
 
 manager.load_runtime_config(runtime_class_type=MyRuntimeConfig, situation_identifier="local")
 manager.load_environment_config(
@@ -9,4 +9,4 @@ manager.load_environment_config(
 )
 
 
-manager.load_all_transformations("ditl_polars_example.transformations")
+manager.load_all_transformations("eltstar_polars_example.transformations")

@@ -2,7 +2,7 @@ from typing import TypeVar
 
 from pydantic import ConfigDict
 
-from ditl.base_model import BaseModel
+from eltstar.base_model import BaseModel
 
 
 class WrapperArgSpec(BaseModel):

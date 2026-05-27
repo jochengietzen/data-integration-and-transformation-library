@@ -2,11 +2,11 @@ from typing import Any, ClassVar, TypeGuard
 
 import polars as pl
 
-from ditl.engines.base import Engine
-from ditl.engines.ditl_arrow_engine import ArrowEngine
-from ditl.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
-from ditl.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
-from ditl.utils import columnar_dictionary_to_records
+from eltstar.engines.base import Engine
+from eltstar.engines.eltstar_arrow_engine import ArrowEngine
+from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from eltstar.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
+from eltstar.utils import columnar_dictionary_to_records
 
 
 def polars_frame(frame: Any) -> TypeGuard[pl.DataFrame]:

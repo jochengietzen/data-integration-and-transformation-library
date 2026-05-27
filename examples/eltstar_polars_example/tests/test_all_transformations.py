@@ -1,7 +1,7 @@
 import pytest
-from ditl_polars_example.manager import manager
+from eltstar_polars_example.manager import manager
 
-from ditl.testing.utils import parametrize_for_tests
+from eltstar.testing.utils import parametrize_for_tests
 
 
 @pytest.mark.parametrize("parameter", parametrize_for_tests(manager=manager))

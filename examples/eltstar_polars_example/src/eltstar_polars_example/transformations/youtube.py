@@ -1,8 +1,8 @@
 import polars as pl
 
-from ditl.models.data_frame_wrapper import DataFrameWrapper
-from ditl.transformation import manager
-from ditl_polars_example.models.youtube import (
+from eltstar.models.data_frame_wrapper import DataFrameWrapper
+from eltstar.transformation import manager
+from eltstar_polars_example.models.youtube import (
     tech_channel_overview,
     tech_channel_overview_2,
     tech_channel_overview_3,

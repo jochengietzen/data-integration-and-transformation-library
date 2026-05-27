@@ -3,10 +3,10 @@ from collections import defaultdict
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, ClassVar
 
-from ditl.base_model import BaseModel
+from eltstar.base_model import BaseModel
 
 if TYPE_CHECKING:
-    from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
+    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
 # TODO: (V2/3)
 # We are stuck with how to bring the expectation result into a form, that can be used to

@@ -3,9 +3,9 @@ from typing import Literal
 
 import polars as pl
 
-from ditl.models.data_frame_wrapper.functions.join import JoinArgSpec, JoinFuncSpec
-from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
-from ditl_engine_polars.engine import PolarsEngine
+from eltstar.models.data_frame_wrapper.functions.join import JoinArgSpec, JoinFuncSpec
+from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar_engine_polars.engine import PolarsEngine
 
 
 class PolarsJoinComparisonOperator(StrEnum):

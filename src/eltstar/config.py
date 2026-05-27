@@ -1,6 +1,6 @@
 from typing import Any, ClassVar, Protocol, TypeVar
 
-from ditl.base_model import BaseModel
+from eltstar.base_model import BaseModel
 
 
 class LoadMethod(Protocol):
