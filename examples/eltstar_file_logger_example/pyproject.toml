@@ -1,5 +1,5 @@
 [project]
-name = "ditl-file-logger-example"
+name = "eltstar-file-logger-example"
 version = "0.1.0"
 description = "Example DITL logger plugin that writes log output to a rotating file"
 readme = "README.md"
@@ -9,20 +9,20 @@ authors = [
     {name = "Tim Bossenmaier", email="bossenti@posteo.de"},
 ]
 dependencies = [
-    "ditl",
+    "eltstar",
 ]
 
-[project.entry-points."ditl.logger"]
-file_handler = "ditl_file_logger_example.plugin:setup"
+[project.entry-points."eltstar.logger"]
+file_handler = "eltstar_file_logger_example.plugin:setup"
 
 [tool.uv]
 package = true
 
 [tool.uv.sources]
-ditl = { workspace = true }
+eltstar = { workspace = true }
 
 [tool.uv.build-backend]
-module-name = ["ditl_file_logger_example"]
+module-name = ["eltstar_file_logger_example"]
 module-root = "src"
 
 [build-system]

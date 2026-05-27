@@ -7,19 +7,19 @@ from importlib.metadata import entry_points
 
 LoggerPlugin = Callable[[logging.Logger], None]
 
-DITL_LOGGER_NAME = "ditl"
-DITL_LOG_LEVEL_ENV_VAR = "DITL_LOG_LEVEL"
+ELTSTAR_LOGGER_NAME = "eltstar"
+ELTSTAR_LOG_LEVEL_ENV_VAR = "ELTSTAR_LOG_LEVEL"
 DEFAULT_LOG_LEVEL = logging.DEBUG
 STDOUT_LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 STDOUT_DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 
-class DitlLogger:
+class EltstarLogger:
     """Central logger singleton for DITL.
 
-    Wraps a standard :class:`logging.Logger` under the name ``"ditl"`` and
+    Wraps a standard :class:`logging.Logger` under the name ``"eltstar"`` and
     supports extending it at runtime via plugins discovered through the
-    ``ditl.logger`` entry point group.
+    ``eltstar.logger`` entry point group.
 
     The active log level is applied to both the logger itself and every handler
     attached to it (including handlers registered by plugins), so the singleton
@@ -27,7 +27,7 @@ class DitlLogger:
 
     **Initial level** is resolved in this order:
 
-    1. The ``DITL_LOG_LEVEL`` environment variable (e.g. ``"INFO"``, ``"WARNING"``).
+    1. The ``ELTSTAR_LOG_LEVEL`` environment variable (e.g. ``"INFO"``, ``"WARNING"``).
     2. :data:`DEFAULT_LOG_LEVEL` (``DEBUG``).
 
     Each plugin must be a callable that accepts a :class:`logging.Logger`
@@ -37,15 +37,15 @@ class DitlLogger:
 
     Example entry point declaration in a plugin's ``pyproject.toml``::
 
-        [project.entry-points."ditl.logger"]
+        [project.entry-points."eltstar.logger"]
         my_handler = "my_package.logging:setup"
 
     Where ``setup`` is a function ``(logger: logging.Logger) -> None``.
     """
 
     def __init__(self) -> None:
-        self._logger = logging.getLogger(DITL_LOGGER_NAME)
-        level: int | str = os.environ.get(DITL_LOG_LEVEL_ENV_VAR) or DEFAULT_LOG_LEVEL
+        self._logger = logging.getLogger(ELTSTAR_LOGGER_NAME)
+        level: int | str = os.environ.get(ELTSTAR_LOG_LEVEL_ENV_VAR) or DEFAULT_LOG_LEVEL
         self.set_level(level)
 
     @property
@@ -77,12 +77,12 @@ class DitlLogger:
         self._logger.addHandler(handler)
 
     def load_plugins(self) -> None:
-        """Discover and apply all logger plugins registered via the ``ditl.logger`` entry point group.
+        """Discover and apply all logger plugins registered via the ``eltstar.logger`` entry point group.
 
         After all plugins are loaded the current log level is propagated to every
         handler they may have added, ensuring consistent level control.
         """
-        for entry_point in entry_points(group="ditl.logger"):
+        for entry_point in entry_points(group="eltstar.logger"):
             self._logger.debug("Loading logger plugin: %s", entry_point.name)
             plugin: LoggerPlugin = entry_point.load()
             plugin(self._logger)
@@ -118,5 +118,5 @@ class DitlLogger:
         self._logger.exception(msg, *args, **kwargs)
 
 
-logger = DitlLogger()
+logger = EltstarLogger()
 ### aigen_end

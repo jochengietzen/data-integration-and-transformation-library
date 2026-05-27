@@ -1,5 +1,5 @@
 [project]
-name = "ditl"
+name = "eltstar"
 version = "0.1.0"
 description = "A library that aims to simplify etl/elt generation for standard use cases"
 authors = [
@@ -22,7 +22,7 @@ dependencies = [
 package = true
 
 [tool.uv.build-backend]
-module-name = ["ditl"]
+module-name = ["eltstar"]
 module-root = "src"
 
 [tool.uv.workspace]
@@ -107,7 +107,7 @@ indent-style = "space"
 line-ending = "lf"
 
 [tool.ruff.lint.isort]
-known-first-party = ["ditl", "examples"]
+known-first-party = ["eltstar", "examples"]
 
 [dependency-groups]
 dev = [

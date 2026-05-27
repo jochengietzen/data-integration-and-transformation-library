@@ -27,9 +27,9 @@ Each plugin/example under `plugins/` and `examples/` has its own isolated `.venv
 
 ## Architecture
 
-DITL is a uv workspace monorepo. The core library lives in `src/ditl/`. Engine support, engine conversions, and runtime system integrations are separate plugin packages under `plugins/`. Examples live under `examples/`.
+DITL is a uv workspace monorepo. The core library lives in `src/eltstar/`. Engine support, engine conversions, and runtime system integrations are separate plugin packages under `plugins/`. Examples live under `examples/`.
 
-### Core library (`src/ditl/`)
+### Core library (`src/eltstar/`)
 
 The central concept is the **registration pattern**: engines, data types, read/write methods, schema converters, and config loaders are all registered at runtime rather than hardcoded. The core library has no hard dependency on any dataframe library (pandas/polars).
 
@@ -41,23 +41,23 @@ Key classes and how they connect:
 - **`DataFrameWrapper`** (`models/data_frame_wrapper.py`): Engine-agnostic wrapper around any dataframe object. Holds a reference to `engine` and `schema`. Provides `.cast()`, `.write()`, and `.convert_to(target_engine)`.
 - **`Table`** (`models/table.py`): Defines a data table with `Columns`, `EngineReadSettings`, and `EngineWriteSettings`. Has `.read()` and `.write()` methods that delegate to the registered engine.
 - **`Columns`** (`models/base.py`): A `RootModel[dict[str, Column]]` that maps column keys to `Column` instances (which include `DataType`, constraints, expectations, and `Generation` for fake data).
-- **`Transformation`** / **`TransformationManager`** (`transformation.py`): Decorates Python functions as named transformations with input/output `Table` references. The global `manager` singleton is imported and used throughout. `manager.load_all_plugins()` discovers plugins via entry points (`ditl.engines`, `ditl.conversions`, `ditl.runtime_systems`).
+- **`Transformation`** / **`TransformationManager`** (`transformation.py`): Decorates Python functions as named transformations with input/output `Table` references. The global `manager` singleton is imported and used throughout. `manager.load_all_plugins()` discovers plugins via entry points (`eltstar.engines`, `eltstar.conversions`, `eltstar.runtime_systems`).
 - **`Lineage`** (`graph.py`): Builds a `networkx.MultiDiGraph` from registered transformations to track data lineage. Used by runtime systems to generate deployment artifacts.
 - **`RuntimeConfig` / `EnvironmentConfig`** (`config.py`): Base Pydantic models for runtime and environment configuration, both using the same registration pattern (register a load method by `situation_identifier`, then call `.load(situation_identifier=...)`).
 - **`FakerManager`** (`testing/faker_manager.py`): Generates schema-valid fake data for testing using `faker`. Calls `engine.dataframe_from_faker_columnar()`.
 
 ### Plugin packages
 
-Each plugin is a standalone Python package in the uv workspace that depends on `ditl` (resolved from workspace) plus its engine library. Plugins register themselves by calling `setup()` at module import time (currently), which wires types and methods into the core registries.
+Each plugin is a standalone Python package in the uv workspace that depends on `eltstar` (resolved from workspace) plus its engine library. Plugins register themselves by calling `setup()` at module import time (currently), which wires types and methods into the core registries.
 
-- `plugins/engines/polars/` → `ditl-engine-polars` / `ditl_engine_polars.engine.PolarsEngine`
-- `plugins/engines/pandas/` → `ditl-engine-pandas` / `ditl_engine_pandas.engine.PandasEngine`
-- `plugins/engine_conversions/pandas_to_polars/` → `ditl_pandas_to_polars` — registers bidirectional conversion functions on both engines
-- `plugins/runtime_systems/databricks/asset_bundle_jobs/` → `ditl_rs_dbx_asset_bundle_jobs` — implements `BaseRuntimeSystem.generate()` for Databricks Asset Bundle Jobs
+- `plugins/engines/polars/` → `eltstar-engine-polars` / `eltstar_engine_polars.engine.PolarsEngine`
+- `plugins/engines/pandas/` → `eltstar-engine-pandas` / `eltstar_engine_pandas.engine.PandasEngine`
+- `plugins/engine_conversions/pandas_to_polars/` → `eltstar_pandas_to_polars` — registers bidirectional conversion functions on both engines
+- `plugins/runtime_systems/databricks/asset_bundle_jobs/` → `eltstar_rs_dbx_asset_bundle_jobs` — implements `BaseRuntimeSystem.generate()` for Databricks Asset Bundle Jobs
 
 ### Plugin direction (in progress)
 
-The codebase is transitioning toward the **hybrid entry points + explicit registration** model described in `plugin_tactics.md`. The goal is auto-discovery via Python entry points groups (`ditl.engines`, `ditl.conversions`, `ditl.runtime_systems`) while retaining explicit `setup()` as a fallback. `TransformationManager.load_all_plugins()` already implements the entry point discovery side; engine plugins need their `pyproject.toml` updated to declare entry points.
+The codebase is transitioning toward the **hybrid entry points + explicit registration** model described in `plugin_tactics.md`. The goal is auto-discovery via Python entry points groups (`eltstar.engines`, `eltstar.conversions`, `eltstar.runtime_systems`) while retaining explicit `setup()` as a fallback. `TransformationManager.load_all_plugins()` already implements the entry point discovery side; engine plugins need their `pyproject.toml` updated to declare entry points.
 
 ### Naming conventions
 

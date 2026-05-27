@@ -1,5 +1,5 @@
 [project]
-name = "ditl-engine-polars"
+name = "eltstar-engine-polars"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,7 +9,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "ditl",
+    "eltstar",
     "polars>=1.34.0",
 ]
 
@@ -17,17 +17,17 @@ dependencies = [
 package = true
 
 [tool.uv.sources]
-ditl = { workspace = true }
+eltstar = { workspace = true }
 
 [project.scripts]
-ditl-engine-polars = "ditl_engine_polars:main"
+eltstar-engine-polars = "eltstar_engine_polars:main"
 
-[project.entry-points."ditl.wrapper_functions"]
-join = "ditl_engine_polars.functions.join"
+[project.entry-points."eltstar.wrapper_functions"]
+join = "eltstar_engine_polars.functions.join"
 
 
 [tool.uv.build-backend]
-module-name = ["ditl_engine_polars"]
+module-name = ["eltstar_engine_polars"]
 module-root = "src"
 
 [build-system]

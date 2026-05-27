@@ -1,5 +1,5 @@
 [project]
-name = "ditl-engine-pandas"
+name = "eltstar-engine-pandas"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,7 +9,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "ditl",
+    "eltstar",
     "pandas>=3.0",
     "pyarrow>=23.0.1",
     "pyarrow-stubs>=20.0.0.20251215",
@@ -19,16 +19,16 @@ dependencies = [
 package = true
 
 [tool.uv.sources]
-ditl = { workspace = true }
+eltstar = { workspace = true }
 
 [project.scripts]
-ditl-engine-pandas = "ditl_engine_pandas:main"
+eltstar-engine-pandas = "eltstar_engine_pandas:main"
 
-[project.entry-points."ditl.wrapper_functions"]
-join = "ditl_engine_pandas.functions.join"
+[project.entry-points."eltstar.wrapper_functions"]
+join = "eltstar_engine_pandas.functions.join"
 
 [tool.uv.build-backend]
-module-name = ["ditl_engine_pandas"]
+module-name = ["eltstar_engine_pandas"]
 module-root = "src"
 
 [build-system]
