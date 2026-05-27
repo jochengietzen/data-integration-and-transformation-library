@@ -12,7 +12,7 @@ DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 
 def setup(eltstar_logger: logging.Logger) -> None:
-    """Register a :class:`~logging.handlers.RotatingFileHandler` on the DITL logger.
+    """Register a :class:`~logging.handlers.RotatingFileHandler` on the eltstar logger.
 
     The log file path is read from the ``ELTSTAR_LOG_FILE`` environment variable.
     When the variable is not set, :data:`DEFAULT_LOG_FILE` (``eltstar.log`` in the

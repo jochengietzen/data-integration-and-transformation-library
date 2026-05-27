@@ -1,7 +1,7 @@
 # eltstar-file-logger-example
 
 <!---aigen_start-->
-Example DITL logger plugin that registers a rotating file handler on the central `eltstar` logger.
+Example eltstar logger plugin that registers a rotating file handler on the central `eltstar` logger.
 
 ## How it works
 
@@ -12,7 +12,7 @@ This package declares an entry point in the `eltstar.logger` group:
 file_handler = "eltstar_file_logger_example.plugin:setup"
 ```
 
-When `logger.load_plugins()` is called, DITL discovers this entry point and invokes `setup(logging.Logger)`, which attaches a [`RotatingFileHandler`](https://docs.python.org/3/library/logging.handlers.html#rotatingfilehandler) to the logger.
+When `logger.load_plugins()` is called, eltstar discovers this entry point and invokes `setup(logging.Logger)`, which attaches a [`RotatingFileHandler`](https://docs.python.org/3/library/logging.handlers.html#rotatingfilehandler) to the logger.
 
 ## Configuration
 
@@ -30,6 +30,6 @@ Install the package alongside `eltstar`, then call `load_plugins()` once at star
 from eltstar.logging import logger
 
 logger.load_plugins()   # attaches the file handler registered by this package
-logger.info("DITL is running")
+logger.info("eltstar is running")
 ```
 <!---aigen_end-->

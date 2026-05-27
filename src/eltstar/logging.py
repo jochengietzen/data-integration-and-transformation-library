@@ -15,7 +15,7 @@ STDOUT_DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 
 class EltstarLogger:
-    """Central logger singleton for DITL.
+    """Central logger singleton for eltstar.
 
     Wraps a standard :class:`logging.Logger` under the name ``"eltstar"`` and
     supports extending it at runtime via plugins discovered through the

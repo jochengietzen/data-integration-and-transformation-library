@@ -27,7 +27,7 @@ Each plugin/example under `plugins/` and `examples/` has its own isolated `.venv
 
 ## Architecture
 
-DITL is a uv workspace monorepo. The core library lives in `src/eltstar/`. Engine support, engine conversions, and runtime system integrations are separate plugin packages under `plugins/`. Examples live under `examples/`.
+eltstar is a uv workspace monorepo. The core library lives in `src/eltstar/`. Engine support, engine conversions, and runtime system integrations are separate plugin packages under `plugins/`. Examples live under `examples/`.
 
 ### Core library (`src/eltstar/`)
 
@@ -36,7 +36,7 @@ The central concept is the **registration pattern**: engines, data types, read/w
 Key classes and how they connect:
 
 - **`Engine`** (`engines/base.py`): Abstract base with `ClassVar` registries for read methods, write methods, and conversion methods. Each engine subclass defines a unique `engine_identifier`. Engines register themselves via `setup()`.
-- **`DataType`** (`models/base.py`): Abstract base for column types (`IntegerType`, `FloatType`, `StringType`). Each engine registers mappings between its native types and DITL types via `DataType.register_from_and_to_methods()`.
+- **`DataType`** (`models/base.py`): Abstract base for column types (`IntegerType`, `FloatType`, `StringType`). Each engine registers mappings between its native types and eltstar types via `DataType.register_from_and_to_methods()`.
 - **`Schema`** (`models/base.py`): A `RootModel[list[SchemaField | SchemaStruct]]` with class-level registries for converting to/from engine-native schemas. Registered by each engine's `setup()`.
 - **`DataFrameWrapper`** (`models/data_frame_wrapper.py`): Engine-agnostic wrapper around any dataframe object. Holds a reference to `engine` and `schema`. Provides `.cast()`, `.write()`, and `.convert_to(target_engine)`.
 - **`Table`** (`models/table.py`): Defines a data table with `Columns`, `EngineReadSettings`, and `EngineWriteSettings`. Has `.read()` and `.write()` methods that delegate to the registered engine.

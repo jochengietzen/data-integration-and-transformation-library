@@ -1,5 +1,5 @@
-# Data Integration and Transformation Library (DITL)
-DITL is a library, that allows you to streamline your etl development process.
+# eltstar
+eltstar is a library, that allows you to streamline your etl development process.
 
 # Core features
 - Simple generation of schemad valid fake data for local testing purposes

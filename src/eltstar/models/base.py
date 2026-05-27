@@ -13,13 +13,13 @@ from typing import (
 
 from pydantic import Field, RootModel, model_validator
 
-from ditl.base_model import BaseModel
-from ditl.config import EnvironmentConfigType, RuntimeConfigType
-from ditl.models.expectations import RowLevelColumnExpectation
-from ditl.models.generation import Generation
+from eltstar.base_model import BaseModel
+from eltstar.config import EnvironmentConfigType, RuntimeConfigType
+from eltstar.models.expectations import RowLevelColumnExpectation
+from eltstar.models.generation import Generation
 
 if TYPE_CHECKING:
-    from ditl.models.table import Table
+    from eltstar.models.table import Table
 
 
 class TablePath(BaseModel, ABC):
@@ -134,7 +134,7 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
         to_method: Callable[["Schema"], Any],
     ):
         """aigen_start
-        Register conversion functions between the engine's native schema format and the DITL Schema.
+        Register conversion functions between the engine's native schema format and the eltstar Schema.
         aigen_end"""
         if cls._from_engine_methods is None:
             cls._from_engine_methods = {}
@@ -144,7 +144,7 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
     @classmethod
     def from_engine_schema(cls, schema: Any) -> "Schema":
         """aigen_start
-        Convert an engine-native schema object into a DITL Schema by dispatching on its type.
+        Convert an engine-native schema object into a eltstar Schema by dispatching on its type.
         aigen_end"""
         for schema_type, func in cls._from_engine_methods.values():
             if isinstance(schema, schema_type):
@@ -153,7 +153,7 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
 
     def to_engine_schema(self, engine_identifier: str) -> Any:
         """aigen_start
-        Convert this DITL Schema to the engine-native schema format for the given engine identifier.
+        Convert this eltstar Schema to the engine-native schema format for the given engine identifier.
         aigen_end"""
         func = self._to_engine_methods.get(engine_identifier, None)
         if func is None:

@@ -1,4 +1,4 @@
-# Plugin Tactics for DITL
+# Plugin Tactics for eltstar
 
 ## Current State
 

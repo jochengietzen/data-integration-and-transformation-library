@@ -5,18 +5,18 @@ from collections.abc import Callable
 from importlib.metadata import entry_points
 from typing import Any
 
-from ditl.config import (
+from eltstar.config import (
     EnvironmentConfig,
     EnvironmentConfigType,
     RuntimeConfig,
     RuntimeConfigType,
 )
-from ditl.exceptions import DuplicateTransformationName, InitiliazationMissingError
-from ditl.graph import Lineage
-from ditl.logging import logger
-from ditl.models.base import BaseModel
-from ditl.models.data_frame_wrapper.wrapper import DataFrameWrapper
-from ditl.models.table import Table
+from eltstar.exceptions import DuplicateTransformationName, InitiliazationMissingError
+from eltstar.graph import Lineage
+from eltstar.logging import logger
+from eltstar.models.base import BaseModel
+from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar.models.table import Table
 
 
 class InputTableInstruction(BaseModel):
@@ -194,12 +194,12 @@ class TransformationManager:
 
     def load_all_plugins(self) -> None:
         """aigen_start
-        Discover and load all DITL plugins registered via Python entry points.
+        Discover and load all eltstar plugins registered via Python entry points.
         aigen_end"""
         plugin_groups = [
-            "ditl.engines",
-            "ditl.conversions",
-            "ditl.runtime_systems",
+            "eltstar.engines",
+            "eltstar.conversions",
+            "eltstar.runtime_systems",
         ]
         for group in plugin_groups:
             logger.info("Loading plugin group: %s", group)
