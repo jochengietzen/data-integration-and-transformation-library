@@ -19,6 +19,7 @@ members = [
     "eltstar-engine-pandas",
     "eltstar-engine-polars",
     "eltstar-file-logger-example",
+    "eltstar-pandas-example",
     "eltstar-polars-example",
     "eltstar-pyarrow",
     "eltstar-rs-dbx-asset-bundle-jobs",
@@ -636,6 +637,33 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "eltstar", editable = "." }]
+
+[[package]]
+name = "eltstar-pandas-example"
+version = "0.1.0"
+source = { editable = "examples/eltstar_pandas_example" }
+dependencies = [
+    { name = "eltstar" },
+    { name = "eltstar-engine-pandas" },
+    { name = "eltstar-engine-polars" },
+    { name = "eltstar-rs-dbx-asset-bundle-jobs" },
+    { name = "pandas" },
+    { name = "polars" },
+    { name = "pytest" },
+    { name = "tabulate" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "eltstar", editable = "." },
+    { name = "eltstar-engine-pandas", editable = "plugins/engines/pandas" },
+    { name = "eltstar-engine-polars", editable = "plugins/engines/polars" },
+    { name = "eltstar-rs-dbx-asset-bundle-jobs", editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" },
+    { name = "pandas", specifier = ">=3.0.1" },
+    { name = "polars", specifier = ">=1.34.0" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "tabulate", specifier = ">=0.10.0" },
+]
 
 [[package]]
 name = "eltstar-polars-example"
