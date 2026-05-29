@@ -1,4 +1,4 @@
-from ditl.config import EnvironmentConfig, RuntimeConfig
+from eltstar.config import EnvironmentConfig, RuntimeConfig
 
 
 class MyEnvironmentConfig(EnvironmentConfig):
