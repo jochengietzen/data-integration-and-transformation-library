@@ -2,11 +2,11 @@
 icon: simple/markdown
 ---
 
-# DITL - Data Integration and Transformation Library
+# eltstar
 
 ## WTF - W Questions
 ### Why did we create this library?
-We (Tim and Jochen) created DITL after several years in the ("modern") data engineering industry. There are many things we like and surely as many things that frustrate us. 
+We (Tim and Jochen) created eltstar after several years in the ("modern") data engineering industry. There are many things we like and surely as many things that frustrate us. 
 A few of the biggest issues we try to solve using this library. Some of them being
 
 - Vendor Lock-In and difficulty of switching between - well anything. It is relatively hard to move your code from databricks to snowflake (or vice versa) or simply from pandas to pyspark.

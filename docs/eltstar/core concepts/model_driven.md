@@ -1,6 +1,6 @@
 # Model driven tables
 
-In DITL one defines their tables as pydantic model instances.
+In eltstar one defines their tables as pydantic model instances.
 
 A table always belongs to a possible set of tables, usually belonging to a system or a groupable set of tables.
 Let's take the example of our youtube tables. Youtube would be our "system" and multiple tables exist in this system.
@@ -14,8 +14,8 @@ Let's take a closer look into the youtube example.
 ## TablePath
 
 ```python
-from ditl.models.base import TablePath
-from ditl.config import EnvironmentConfig, RuntimeConfig
+from eltstar.models.base import TablePath
+from eltstar.config import EnvironmentConfig, RuntimeConfig
 
 class YoutubeTablePath(TablePath):
     date: str
@@ -70,7 +70,7 @@ Now that we have a table path, we can continue with the definition of our System
 This class has a few more necessities and has to inherit from the class Table.
 
 ```python
-from ditl.models.table import EngineReadSettings, EngineWriteSettings, Table
+from eltstar.models.table import EngineReadSettings, EngineWriteSettings, Table
 
 class YoutubeTable(Table):
     path: YoutubeTablePath # (3)!
