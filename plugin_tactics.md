@@ -1,4 +1,4 @@
-# Plugin Tactics for DITL
+# Plugin Tactics for eltstar
 
 ## Current State
 
@@ -8,7 +8,7 @@ The codebase already has strong foundations for plugins through its **registrati
 - `DataType.register_from_and_to_methods()`
 - `TransformationManager.load_all_transformations()` (dynamic import via `pkgutil`)
 
-The main coupling issue: `PolarsEngine` lives inside `src/ditl/engines/` and `PolarsEngine.setup()` is called at import time (line 109), making `polars` a hard dependency of the core library.
+The main coupling issue: `PolarsEngine` lives inside `src/eltstar/engines/` and `PolarsEngine.setup()` is called at import time (line 109), making `polars` a hard dependency of the core library.
 
 ---
 
@@ -20,31 +20,31 @@ The standard mechanism for Python plugin systems. Each plugin package declares a
 
 **How it works:**
 
-Core (`ditl`) defines a group name, e.g. `ditl.engines`, and discovers plugins:
+Core (`eltstar`) defines a group name, e.g. `eltstar.engines`, and discovers plugins:
 
 ```python
-# ditl/engines/__init__.py
+# eltstar/engines/__init__.py
 from importlib.metadata import entry_points
 
 def load_engines():
-    for ep in entry_points(group="ditl.engines"):
+    for ep in entry_points(group="eltstar.engines"):
         engine_class = ep.load()  # imports the module, triggers setup()
 ```
 
-A plugin package (`ditl-polars`) declares:
+A plugin package (`eltstar-polars`) declares:
 
 ```toml
-# ditl-polars/pyproject.toml
-[project.entry-points."ditl.engines"]
-polars = "ditl_polars.engine:PolarsEngine"
+# eltstar-polars/pyproject.toml
+[project.entry-points."eltstar.engines"]
+polars = "eltstar_polars.engine:PolarsEngine"
 ```
 
 **Pros:**
 - Industry standard (`pytest`, `flake8`, `tox` all use this)
-- Zero config for users — `pip install ditl-polars` is enough
+- Zero config for users — `pip install eltstar-polars` is enough
 - Auto-discovery, no manual imports needed
-- Clean separation: `polars` is only a dependency of `ditl-polars`, not `ditl`
-- Multiple plugin types possible: `ditl.engines`, `ditl.data_types`, `ditl.faker_types`
+- Clean separation: `polars` is only a dependency of `eltstar-polars`, not `eltstar`
+- Multiple plugin types possible: `eltstar.engines`, `eltstar.data_types`, `eltstar.faker_types`
 
 **Cons:**
 - Requires packages to be installed (not just on `sys.path`)
@@ -60,7 +60,7 @@ Keep the current pattern but make it the public API. Users import and call `setu
 
 ```python
 # User code
-from ditl_polars import PolarsEngine
+from eltstar_polars import PolarsEngine
 PolarsEngine.setup()  # registers everything
 ```
 
@@ -82,10 +82,10 @@ The core removes the auto-call to `setup()` and drops polars from its dependenci
 Combine both: auto-discover installed plugins via entry points, but also allow manual `Engine.register(MyCustomEngine)` for ad-hoc or development use.
 
 ```python
-# ditl/engines/__init__.py
+# eltstar/engines/__init__.py
 def discover_engines():
     """Auto-load all installed engine plugins."""
-    for ep in entry_points(group="ditl.engines"):
+    for ep in entry_points(group="eltstar.engines"):
         engine_cls = ep.load()
         if hasattr(engine_cls, 'setup'):
             engine_cls.setup()
@@ -100,10 +100,10 @@ This gives the best of both worlds.
 The existing `TransformationManager.load_all_transformations(module_name)` uses `pkgutil.walk_packages`. This could be generalized:
 
 ```python
-# Auto-import all ditl_* packages
+# Auto-import all eltstar_* packages
 import pkgutil
 for importer, modname, ispkg in pkgutil.iter_modules():
-    if modname.startswith("ditl_"):
+    if modname.startswith("eltstar_"):
         importlib.import_module(modname)
 ```
 
@@ -112,33 +112,33 @@ for importer, modname, ispkg in pkgutil.iter_modules():
 
 ---
 
-## What a `ditl-polars` Plugin Would Look Like (Entry Points approach)
+## What a `eltstar-polars` Plugin Would Look Like (Entry Points approach)
 
 ```
-ditl-polars/
+eltstar-polars/
 ├── pyproject.toml
 └── src/
-    └── ditl_polars/
+    └── eltstar_polars/
         ├── __init__.py
-        ├── engine.py          # PolarsEngine class (moved from ditl)
+        ├── engine.py          # PolarsEngine class (moved from eltstar)
         └── data_types.py      # Optional: polars-specific types
 ```
 
 **`pyproject.toml`:**
 ```toml
 [project]
-name = "ditl-polars"
-dependencies = ["ditl", "polars>=1.0"]
+name = "eltstar-polars"
+dependencies = ["eltstar", "polars>=1.0"]
 
-[project.entry-points."ditl.engines"]
-polars = "ditl_polars.engine:PolarsEngine"
+[project.entry-points."eltstar.engines"]
+polars = "eltstar_polars.engine:PolarsEngine"
 ```
 
-**Changes to core `ditl`:**
+**Changes to core `eltstar`:**
 1. Remove `polars` from core dependencies
 2. Remove `engines/polars_engine.py`
-3. Add discovery in `engines/__init__.py` or a `ditl.plugins` module
-4. Optionally add a `ditl[polars]` extra that depends on `ditl-polars` for backwards compat
+3. Add discovery in `engines/__init__.py` or a `eltstar.plugins` module
+4. Optionally add a `eltstar[polars]` extra that depends on `eltstar-polars` for backwards compat
 
 ---
 
@@ -158,14 +158,14 @@ Regardless of approach, a few things need attention:
 
 ## Extras Strategies
 
-Both strategies below use `[project.optional-dependencies]` so that users can install engine support via `pip install ditl[polars]`. They differ in where the engine code lives.
+Both strategies below use `[project.optional-dependencies]` so that users can install engine support via `pip install eltstar[polars]`. They differ in where the engine code lives.
 
 ### Strategy A: Extras within a single package (monorepo)
 
-Keep the engine code inside `ditl` but make the heavy dependencies optional:
+Keep the engine code inside `eltstar` but make the heavy dependencies optional:
 
 ```toml
-# ditl/pyproject.toml
+# eltstar/pyproject.toml
 [project]
 dependencies = [
     "faker>=40.1.2",
@@ -177,18 +177,18 @@ dependencies = [
 [project.optional-dependencies]
 polars = ["polars>=1.34.0"]
 pandas = ["pandas>=2.3.1"]
-all = ["ditl[polars]", "ditl[pandas]"]
+all = ["eltstar[polars]", "eltstar[pandas]"]
 ```
 
 The engine module guards the import:
 
 ```python
-# ditl/engines/polars_engine.py
+# eltstar/engines/polars_engine.py
 try:
     import polars as pl
 except ImportError as e:
     raise ImportError(
-        "PolarsEngine requires polars. Install it with: pip install ditl[polars]"
+        "PolarsEngine requires polars. Install it with: pip install eltstar[polars]"
     ) from e
 ```
 
@@ -204,7 +204,7 @@ except ImportError as e:
 Combines extras with the entry points approach. The core package defines extras that pull in separate plugin packages:
 
 ```toml
-# ditl/pyproject.toml
+# eltstar/pyproject.toml
 [project]
 dependencies = [
     "faker>=40.1.2",
@@ -214,29 +214,29 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-polars = ["ditl-polars>=0.1.0"]
-pandas = ["ditl-pandas>=0.1.0"]
-all = ["ditl[polars]", "ditl[pandas]"]
+polars = ["eltstar-polars>=0.1.0"]
+pandas = ["eltstar-pandas>=0.1.0"]
+all = ["eltstar[polars]", "eltstar[pandas]"]
 ```
 
 ```toml
-# ditl-polars/pyproject.toml
+# eltstar-polars/pyproject.toml
 [project]
-name = "ditl-polars"
-dependencies = ["ditl>=0.1.0", "polars>=1.34.0"]
+name = "eltstar-polars"
+dependencies = ["eltstar>=0.1.0", "polars>=1.34.0"]
 
-[project.entry-points."ditl.engines"]
-polars = "ditl_polars.engine:PolarsEngine"
+[project.entry-points."eltstar.engines"]
+polars = "eltstar_polars.engine:PolarsEngine"
 ```
 
 Users get the same install UX:
 
 ```bash
-pip install ditl[polars]     # installs ditl + ditl-polars + polars
-pip install ditl[all]        # installs everything
+pip install eltstar[polars]     # installs eltstar + eltstar-polars + polars
+pip install eltstar[all]        # installs everything
 ```
 
-But the engine code is fully decoupled — `ditl-polars` is its own package with its own repo/directory, and entry points handle auto-discovery.
+But the engine code is fully decoupled — `eltstar-polars` is its own package with its own repo/directory, and entry points handle auto-discovery.
 
 **Pros:** True decoupling, third parties can publish their own engines, core stays lean, same user-facing install command.
 **Cons:** More packaging overhead, need to manage version compatibility between packages.
@@ -245,11 +245,11 @@ But the engine code is fully decoupled — `ditl-polars` is its own package with
 
 ### Migration Path: A to B
 
-Strategy A and B share the same user-facing install command (`pip install ditl[polars]`), so you can start with A and graduate to B later without breaking users. The transition is:
+Strategy A and B share the same user-facing install command (`pip install eltstar[polars]`), so you can start with A and graduate to B later without breaking users. The transition is:
 
-1. Extract engine code into a separate `ditl-polars` package
-2. Change the extra from `polars = ["polars>=1.34.0"]` to `polars = ["ditl-polars>=0.1.0"]`
-3. Add entry point declaration in `ditl-polars/pyproject.toml`
+1. Extract engine code into a separate `eltstar-polars` package
+2. Change the extra from `polars = ["polars>=1.34.0"]` to `polars = ["eltstar-polars>=0.1.0"]`
+3. Add entry point declaration in `eltstar-polars/pyproject.toml`
 4. Remove engine file from core
 
 The install command stays identical throughout.

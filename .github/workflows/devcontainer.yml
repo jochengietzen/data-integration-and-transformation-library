@@ -26,6 +26,6 @@ jobs:
       - name: Pre-build dev container image
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/jochengietzen/ditl-devcontainer
-          cacheFrom: ghcr.io/jochengietzen/ditl-devcontainer
+          imageName: ghcr.io/jochengietzen/eltstar-devcontainer
+          cacheFrom: ghcr.io/jochengietzen/eltstar-devcontainer
           push: always

@@ -15,13 +15,14 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "ditl",
-    "ditl-engine-pandas",
-    "ditl-engine-polars",
-    "ditl-file-logger-example",
-    "ditl-polars-example",
-    "ditl-pyarrow",
-    "ditl-rs-dbx-asset-bundle-jobs",
+    "eltstar",
+    "eltstar-engine-pandas",
+    "eltstar-engine-polars",
+    "eltstar-file-logger-example",
+    "eltstar-pandas-example",
+    "eltstar-polars-example",
+    "eltstar-pyarrow",
+    "eltstar-rs-dbx-asset-bundle-jobs",
 ]
 
 [[package]]
@@ -540,7 +541,7 @@ wheels = [
 ]
 
 [[package]]
-name = "ditl"
+name = "eltstar"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -593,11 +594,11 @@ docs = [{ name = "zensical", specifier = ">=0.0.37" }]
 types = [{ name = "types-pyyaml", specifier = ">=6.0.12.20250516" }]
 
 [[package]]
-name = "ditl-engine-pandas"
+name = "eltstar-engine-pandas"
 version = "0.1.0"
 source = { editable = "plugins/engines/pandas" }
 dependencies = [
-    { name = "ditl" },
+    { name = "eltstar" },
     { name = "pandas" },
     { name = "pyarrow" },
     { name = "pyarrow-stubs" },
@@ -605,47 +606,47 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ditl", editable = "." },
+    { name = "eltstar", editable = "." },
     { name = "pandas", specifier = ">=3.0" },
     { name = "pyarrow", specifier = ">=23.0.1" },
     { name = "pyarrow-stubs", specifier = ">=20.0.0.20251215" },
 ]
 
 [[package]]
-name = "ditl-engine-polars"
+name = "eltstar-engine-polars"
 version = "0.1.0"
 source = { editable = "plugins/engines/polars" }
 dependencies = [
-    { name = "ditl" },
+    { name = "eltstar" },
     { name = "polars" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "ditl", editable = "." },
+    { name = "eltstar", editable = "." },
     { name = "polars", specifier = ">=1.34.0" },
 ]
 
 [[package]]
-name = "ditl-file-logger-example"
+name = "eltstar-file-logger-example"
 version = "0.1.0"
-source = { editable = "examples/ditl_file_logger_example" }
+source = { editable = "examples/eltstar_file_logger_example" }
 dependencies = [
-    { name = "ditl" },
+    { name = "eltstar" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ditl", editable = "." }]
+requires-dist = [{ name = "eltstar", editable = "." }]
 
 [[package]]
-name = "ditl-polars-example"
+name = "eltstar-pandas-example"
 version = "0.1.0"
-source = { editable = "examples/ditl_polars_example" }
+source = { editable = "examples/eltstar_pandas_example" }
 dependencies = [
-    { name = "ditl" },
-    { name = "ditl-engine-pandas" },
-    { name = "ditl-engine-polars" },
-    { name = "ditl-rs-dbx-asset-bundle-jobs" },
+    { name = "eltstar" },
+    { name = "eltstar-engine-pandas" },
+    { name = "eltstar-engine-polars" },
+    { name = "eltstar-rs-dbx-asset-bundle-jobs" },
     { name = "pandas" },
     { name = "polars" },
     { name = "pytest" },
@@ -654,10 +655,10 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ditl", editable = "." },
-    { name = "ditl-engine-pandas", editable = "plugins/engines/pandas" },
-    { name = "ditl-engine-polars", editable = "plugins/engines/polars" },
-    { name = "ditl-rs-dbx-asset-bundle-jobs", editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" },
+    { name = "eltstar", editable = "." },
+    { name = "eltstar-engine-pandas", editable = "plugins/engines/pandas" },
+    { name = "eltstar-engine-polars", editable = "plugins/engines/polars" },
+    { name = "eltstar-rs-dbx-asset-bundle-jobs", editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" },
     { name = "pandas", specifier = ">=3.0.1" },
     { name = "polars", specifier = ">=1.34.0" },
     { name = "pytest", specifier = ">=9.0.2" },
@@ -665,32 +666,59 @@ requires-dist = [
 ]
 
 [[package]]
-name = "ditl-pyarrow"
+name = "eltstar-polars-example"
 version = "0.1.0"
-source = { editable = "examples/ditl_pyarrow" }
+source = { editable = "examples/eltstar_polars_example" }
 dependencies = [
-    { name = "ditl" },
+    { name = "eltstar" },
+    { name = "eltstar-engine-pandas" },
+    { name = "eltstar-engine-polars" },
+    { name = "eltstar-rs-dbx-asset-bundle-jobs" },
+    { name = "pandas" },
+    { name = "polars" },
+    { name = "pytest" },
+    { name = "tabulate" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "eltstar", editable = "." },
+    { name = "eltstar-engine-pandas", editable = "plugins/engines/pandas" },
+    { name = "eltstar-engine-polars", editable = "plugins/engines/polars" },
+    { name = "eltstar-rs-dbx-asset-bundle-jobs", editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" },
+    { name = "pandas", specifier = ">=3.0.1" },
+    { name = "polars", specifier = ">=1.34.0" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "tabulate", specifier = ">=0.10.0" },
+]
+
+[[package]]
+name = "eltstar-pyarrow"
+version = "0.1.0"
+source = { editable = "examples/eltstar_pyarrow" }
+dependencies = [
+    { name = "eltstar" },
     { name = "pyarrow" },
     { name = "pyarrow-stubs" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "ditl", editable = "." },
+    { name = "eltstar", editable = "." },
     { name = "pyarrow", specifier = ">=23.0.1" },
     { name = "pyarrow-stubs", specifier = ">=20.0.0.20251215" },
 ]
 
 [[package]]
-name = "ditl-rs-dbx-asset-bundle-jobs"
+name = "eltstar-rs-dbx-asset-bundle-jobs"
 version = "0.1.0"
 source = { editable = "plugins/runtime_systems/databricks/asset_bundle_jobs" }
 dependencies = [
-    { name = "ditl" },
+    { name = "eltstar" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ditl", editable = "." }]
+requires-dist = [{ name = "eltstar", editable = "." }]
 
 [[package]]
 name = "executing"

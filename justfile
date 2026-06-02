@@ -12,7 +12,7 @@ init_system_files:
     if [ -f /tmp/.zshrc ]; then cp /tmp/.zshrc /home/vscode/.zshrc; fi
 
 
-venv-roots := "/workspace/examples /workspace/plugins/engine_conversions /workspace/plugins/engines /workspace/plugins/runtime_systems"
+venv-roots := "/workspace/examples /workspace/plugins/engines /workspace/plugins/runtime_systems"
 
 create_sub_venvs:
     #!/bin/zsh
@@ -53,5 +53,5 @@ ssh-fix:
     chmod 600 /home/vscode/.ssh/*
 
 unit-tests:
-    export TZ="UTC"; uv run pytest --cov=ditl --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
-    # export TZ="UTC"; uv run pytest --cov=ditl --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
+    export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
+    # export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/

@@ -1,5 +1,5 @@
-# Data Integration and Transformation Library (DITL)
-DITL is a library, that allows you to streamline your etl development process.
+# eltstar
+eltstar is a library, that allows you to streamline your etl development process.
 
 # Core features
 - Simple generation of schemad valid fake data for local testing purposes
@@ -24,5 +24,13 @@ The schema is used to define the structure of your data. It contains the name of
             Discuss how and when a version will be created.
             Should the table only track a state?
     - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running. Also test and run all example code.
-
+    - TODO: Test all examples automatically (through entrypoints?)
     - TODO: Finish CI Pipelines and finish Naming!
+
+    - TODO: Generics in new style
+    - TODO: Better Orchestration possibilities (stages etc.)
+
+    - TODO: Commiting/Vetting Process
+                - Maintainer only after vetting process/getting to know each other
+                - Clear contribution rules (e.g. Size of PR if not [maintainer](https://carlos-camara.github.io/qa-hub-actions/actions/pr-size-labeler.html))
+    - TODO: Streaming mode through implementation/protocol? for engine
