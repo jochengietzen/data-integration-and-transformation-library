@@ -16,12 +16,7 @@ jobs:
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-        with:
-          path: "./eltstar"
 
-      - name: Move repostiory to home
-        run: |
-            mv $GITHUB_WORKSPACE/eltstar /home/runner/work/eltstar
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -30,15 +25,12 @@ jobs:
         with:
           version: "0.11.14"
           python-version: 3.14
-          working-directory: $GITHUB_WORKSPACE/eltstar
 
       - name: Install Python dependencies
-        working-directory: /home/runner/work/eltstar
         run: |
             uv sync --group docs
 
       - run: uv run zensical build --clean
-        working-directory: /home/runner/work/eltstar
 
       - uses: actions/upload-artifact@v4
         with:
@@ -54,12 +46,7 @@ jobs:
       - uses: actions/configure-pages@v6
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-        with:
-          path: "./eltstar"
-
-      - name: Move repostiory to home
-        run: |
-            mv $GITHUB_WORKSPACE/eltstar /home/runner/work/eltstar
+      
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -68,18 +55,16 @@ jobs:
         with:
           version: "0.11.14"
           python-version: 3.14
-          working-directory: $GITHUB_WORKSPACE/eltstar
 
       - name: Install Python dependencies
-        working-directory: /home/runner/work/eltstar
         run: |
             uv sync --group docs
       - run: uv run zensical build --clean
-        working-directory: /home/runner/work/eltstar
 
       - uses: actions/upload-pages-artifact@v5
         with:
           path: /home/runner/work/eltstar/site
+
       - uses: actions/deploy-pages@v5
         id: deployment
 

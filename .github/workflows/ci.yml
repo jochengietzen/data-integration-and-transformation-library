@@ -51,29 +51,20 @@ jobs:
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
-        with:
-          path: "./eltstar"
-
-      - name: Move repostiory to home
-        run: |
-            mv $GITHUB_WORKSPACE/eltstar /home/runner/work/eltstar
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
           version: "0.11.14"
           python-version: ${{ matrix.python }}
-          working-directory: $GITHUB_WORKSPACE/eltstar
 
       - name: Install command runner
         uses: taiki-e/install-action@just
 
       - name: Install Python dependencies
-        working-directory: /home/runner/work/eltstar
         run: |
             uv sync --all-groups
 
       - name: Run unit-tests
-        working-directory: /home/runner/work/eltstar
         run: |
             just unit-tests
