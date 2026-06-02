@@ -1,10 +1,10 @@
 import pandas as pd
 from eltstar_engine_pandas.engine import PandasEngine
 from eltstar_engine_polars.engine import PolarsEngine
-from eltstar_polars_example.manager import manager
 
 from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField
 from eltstar.models.data_frame_wrapper.preloaded_wrapper import DataFrameWrapper
+from eltstar_pandas_example.manager import manager
 
 manager.load_all_plugins()
 

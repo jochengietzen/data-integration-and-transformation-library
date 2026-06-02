@@ -58,7 +58,7 @@ class PandasEngine(Engine):
             )
 
         return DataFrameWrapper.from_data_frame(
-            pd.DataFrame({key: pd.Series(column, engine_schema[key]) for key, column in data.items()})
+            pd.DataFrame({key: pd.Series(data=column, dtype=engine_schema[key]) for key, column in data.items()})
         )
 
     @classmethod

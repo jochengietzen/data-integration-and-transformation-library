@@ -174,7 +174,7 @@ class DataFrameWrapper:
             return
 
         for ep in entry_points(group="eltstar.wrapper_functions"):
-            logger.info("Found entry point to load:", ep)
+            logger.info("Found entry point to load: %s", ep.value)
             ep.load()
 
         for func_name, engine_func_tuple in cls._get_wrapper_functions_by_name().items():
