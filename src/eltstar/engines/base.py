@@ -6,7 +6,8 @@ from eltstar.exceptions import ProgrammingError
 from eltstar.models.base import DataType, Schema
 
 if TYPE_CHECKING:
-    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+    from eltstar.engines.eltstar_arrow_engine import ArrowEngine
+    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper, TypedDataFrameWrapper
 
 
 class ReadMethod(Protocol):
