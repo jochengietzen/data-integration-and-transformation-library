@@ -45,7 +45,7 @@ class TransformationNode(Node):
 
 class TableNode(Node):
     def __init__(self, table: "Table"):
-        super().__init__({"path": table.path.model_dump_json()})
+        super().__init__({"path": table.path.model_dump_json()})  # type: ignore
         self.table = table
 
 
@@ -139,7 +139,7 @@ class Lineage:
         # pylint: disable=import-outside-toplevel
         import itertools as it
 
-        import matplotlib.pyplot as plt  # pylint: disable=import-error
+        import matplotlib.pyplot as plt  # type: ignore # pylint: disable=import-error
 
         g = self.graph if graph is None else graph
 

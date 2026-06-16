@@ -39,7 +39,7 @@ init: init_system_files
     pre-commit install
 
 check:
-    #!/bin/zsh
+    #!/bin/sh
     uv run ruff check src/ tests/
     uv run pylint src/ tests/
     uv run mypy src/
@@ -55,3 +55,6 @@ ssh-fix:
 unit-tests:
     export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
     # export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
+
+docs:
+    uv run zensical serve

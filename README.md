@@ -34,3 +34,5 @@ The schema is used to define the structure of your data. It contains the name of
                 - Maintainer only after vetting process/getting to know each other
                 - Clear contribution rules (e.g. Size of PR if not [maintainer](https://carlos-camara.github.io/qa-hub-actions/actions/pr-size-labeler.html))
     - TODO: Streaming mode through implementation/protocol? for engine
+    - TODO: Staging of Transformation func steps to detatch steps from model and allow plugin capability
+    - TODO: VSCode Plugin or typing extension => Full typing support for tables and dataframe wrappers

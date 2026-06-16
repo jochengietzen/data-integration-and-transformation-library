@@ -6,7 +6,8 @@ from eltstar.exceptions import ProgrammingError
 from eltstar.models.base import DataType, Schema
 
 if TYPE_CHECKING:
-    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+    from eltstar.engines.eltstar_arrow_engine import ArrowEngine
+    from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper, TypedDataFrameWrapper
 
 
 class ReadMethod(Protocol):
@@ -46,7 +47,7 @@ class Engine(BaseModel):
         """aigen_start
         Register a DataType by mapping its engine-native type to the DataType class for this engine.
         aigen_end"""
-        cls.registered_types[data_type._engine_identifier_to_engine_type[data_type.__name__][cls.engine_identifier]] = (
+        cls.registered_types[data_type._engine_identifier_to_engine_type[data_type.__name__][cls.engine_identifier]] = (  # pylint: disable=protected-access
             data_type
         )
 

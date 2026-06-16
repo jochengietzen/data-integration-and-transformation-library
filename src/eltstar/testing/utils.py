@@ -27,7 +27,7 @@ def parametrize_for_tests(manager: TransformationManager) -> Generator[Parameter
     """aigen_start
     Yield ParameterizedTest instances for each registered transformation in the manager.
     aigen_end"""
-    for name, transformation in manager._registered_transformations.items():
+    for name, transformation in manager._registered_transformations.items():  # pylint: disable=protected-access
         input_models = {}
         for model_name, input_table_model in transformation.input_table_models.items():
             input_models[model_name] = GenerateFixture(name=model_name, model=input_table_model.table)

@@ -127,9 +127,9 @@ class TransformationManager:
         aigen_end"""
         transformation_package = importlib.import_module(module_name)
         for loader, sub_module_name, _ in pkgutil.walk_packages(path=transformation_package.__path__):
-            spec = loader.find_spec(sub_module_name)
-            mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
+            spec = loader.find_spec(sub_module_name)  # type: ignore
+            mod = importlib.util.module_from_spec(spec)  # type: ignore
+            spec.loader.exec_module(mod)  # type: ignore
 
     def _check_initialization_state(self) -> None:
         missing_init: list[str] = []
@@ -157,7 +157,7 @@ class TransformationManager:
                 raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
 
             argspec = inspect.getfullargspec(func=func)
-            expected_argspec = {}  # TODO: tbd # pylint: disable=unused-variable # noqa # type: ignore (V1)
+            # expected_argspec = {}  # TODO: tbd # pylint: disable=unused-variable # noqa # type: ignore (V1)
 
             # TODO: compare argspec and expected_argspec (V1)
 

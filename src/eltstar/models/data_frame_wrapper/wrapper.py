@@ -1,4 +1,3 @@
-from collections import defaultdict
 from importlib.metadata import entry_points
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, Optional, Protocol, TypeVar, Union
 
@@ -72,25 +71,6 @@ class DataFrameWrapper:
         aigen_end"""
         return cls(data_frame=data_frame, schema=schema, engine=engine)
 
-    def write(
-        self,
-        *args: Any,
-        method_identifier: str,
-        **kwargs: Any,
-    ) -> None:
-        """aigen_start
-        Write the wrapped dataframe using the engine's registered write method.
-        aigen_end"""
-        if self.engine is None:
-            raise ProgrammingError("Writing requires an engine to be set for the DataFrameWrapper!")
-        self.engine.write(
-            *args,
-            method_identifier=method_identifier,
-            data_frame=self.cast() if self.schema is not None else self,
-            schema=self.schema,
-            **kwargs,
-        )
-
     def cast(self) -> "DataFrameWrapper":
         """aigen_start
         Cast the wrapped dataframe to the types defined in the schema using the registered engine.
@@ -126,6 +106,10 @@ class DataFrameWrapper:
     def register_wrapper_function(
         cls, engine: Union["Engine", type["Engine"]], func_spec: WrapperFunctionSpec[Any], func: WrapperFunctionProtocol
     ):
+        """
+        Function to register a new DataFrameWrapper Function.
+        This allows you to register an engine specific implementation to your given wrapper function specification.
+        """
         # TODO: Ensure, that all registered functions have the same or compatible arg specs! (V1)
         # TODO: Double check, if this is still necessary or already done!
         func_key = EngineSpecificFunctionKey(engine_identifier=engine.engine_identifier, func_name=func_spec.func_name)
@@ -160,8 +144,8 @@ class DataFrameWrapper:
             )
 
     @classmethod
-    def _get_wrapper_functions_by_name(cls) -> dict[str, list[EngineFunctionTuple]]:
-        ret: dict[str, EngineFunctionTuple] = defaultdict(list)
+    def _get_wrapper_functions_by_name(cls) -> dict[str, EngineFunctionTuple]:
+        ret: dict[str, EngineFunctionTuple] = {}
         for func_key, func_value in cls.registered_wrapper_functions.items():
             ret[func_key.func_name] = EngineFunctionTuple(
                 engine_identifier=func_key.engine_identifier, function=func_value
@@ -170,6 +154,10 @@ class DataFrameWrapper:
 
     @classmethod
     def load_all_plugins(cls) -> None:
+        """
+        Method to load all eltstar wrapper_function plugins
+        by traversing entrypoints grouped under `eltstar.wrapper_functions`.
+        """
         if cls._loaded_plugins:
             return
 
@@ -210,7 +198,8 @@ class DataFrameWrapper:
 DataFrameType = TypeVar("DataFrameType")  # pylint: disable=invalid-name
 
 
-class TypedDataFrameWrapper[DataFrameT: DataFrameType](DataFrameWrapper):
+# TODO: try to find proper way to handle pydantic and mypy
+class TypedDataFrameWrapper[DataFrameT: DataFrameType](DataFrameWrapper):  # type: ignore
     def __init__(self, data_frame: DataFrameT, schema: Optional["Schema"] = None) -> None:
         super().__init__(data_frame=data_frame, schema=schema)
         self.data_frame: DataFrameT = data_frame

@@ -6,32 +6,29 @@ jobs:
   quality-checks:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4
 
-      - name: Ensure SSH and gitconfig exist
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          touch ~/.gitconfig
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.14"
+          python-version: ${{ matrix.python }}
 
-      # - uses: devcontainers/ci@v0.3
-      #   with:
-      #     imageName: ghcr.io/${{ github.repository }}-devcontainer
-      #     runCmd: |
-      #       uv run pytest
-      #       uv run ruff check .
+      - name: Install command runner
+        uses: taiki-e/install-action@just
+
+      - name: Install Python dependencies
+        run: |
+            uv sync --all-groups
 
       - name: Run style & code checks
-        uses: devcontainers/ci@v0.3
-        with:
-          inheritEnv: false
-          cacheFrom: ghcr.io/jochengietzen/eltstar-devcontainer
-          push: never
-          runCmd: just check
-          env: |
-            CI=true
+        run: |
+            just check
   
   unit-tests:
     runs-on: ${{ matrix.os }}
@@ -47,7 +44,7 @@ jobs:
           ]
     defaults:
       run:
-          shell: bash
+        shell: bash
     steps:
       - name: Checkout (GitHub)
         uses: actions/checkout@v4

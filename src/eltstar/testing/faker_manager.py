@@ -27,7 +27,8 @@ class FakerManager:
         Register a FakerType's generation pool in the manager if it has a generation_id.
         aigen_end"""
         if faker_type.generation_id is not None and faker_type.generation_id not in self.non_key_generation_registry:
-            self.non_key_generation_registry[faker_type.generation_id] = []
+            # TODO: check proper typing!
+            self.non_key_generation_registry[faker_type.generation_id] = set()  # type: ignore
         return self
 
     def generate(self, table: Table, engine: Engine, n_values: int = 100) -> DataFrameWrapper:
@@ -35,7 +36,9 @@ class FakerManager:
         Generate a DataFrameWrapper with fake data matching the given table's schema.
         aigen_end"""
         schema = table.columns.get_schema()
-        columns = {key: col.generation.faker_type for key, col in table.columns.root.items()}
+        columns = {
+            key: col.generation.faker_type for key, col in table.columns.root.items() if col.generation is not None
+        }
         return engine.dataframe_from_faker_columnar(
             data=self._generate_for_columns(columns=columns, n_values=n_values),
             schema=schema,
@@ -56,8 +59,8 @@ class FakerManager:
 
             percentage = (
                 random.randint(
-                    faker_type.reuse_percentage_min * 100 // 1,
-                    faker_type.reuse_percentage_max * 100 // 1,
+                    a=int(faker_type.reuse_percentage_min * 100 // 1),
+                    b=int(faker_type.reuse_percentage_max * 100 // 1),
                 )
                 / 100
             )
