@@ -6,9 +6,11 @@ from eltstar.engines.base import Engine
 from eltstar.exceptions import ProgrammingError
 from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
+from eltstar.models.data_frame_wrapper.wrapper import TypedDataFrameWrapper
 
 
 def arrow_frame(frame: Any) -> TypeGuard[pa.Table]:
+    """Type guard for arrow data frames"""
     return isinstance(frame, pa.Table)
 
 
@@ -68,7 +70,17 @@ class ArrowEngine(Engine):
         )
 
     @classmethod
+    def convert_from_arrow(
+        cls, schema: Schema, data_frame_wrapper: "TypedDataFrameWrapper[ArrowEngine]"
+    ) -> "DataFrameWrapper":
+        """Cannot convert arrow to arrow"""
+        raise ProgrammingError(
+            "A dataframe wrapper for engine Arrow cannot be converted to Arrow. This should not happen!"
+        )
+
+    @classmethod
     def setup(cls):
+        """Setup the arrow engine class"""
         Schema.register_from_engine_schema(
             engine_identifier=cls.engine_identifier,
             engine_schema_type=cls.internal_schema_type,

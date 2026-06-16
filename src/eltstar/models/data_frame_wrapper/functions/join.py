@@ -44,6 +44,7 @@ class JoinArgSpec(WrapperArgSpec):
     @model_validator(mode="before")
     @classmethod
     def check_left_on_with_right_on(cls, values: dict[str, Any]) -> dict[str, Any]:
+        """Validator to verify correct settings of left_on and right_on for joining logic"""
         if "left_on" not in values:
             raise ValueError("left_on is not present in join arg spec! Required!")
         if "right_on" not in values:
@@ -55,6 +56,7 @@ class JoinArgSpec(WrapperArgSpec):
     @model_validator(mode="before")
     @classmethod
     def default_operator_list(cls, values: dict[str, Any]) -> dict[str, Any]:
+        """Validator for the operator list. Generates a default value if no value present."""
         if "operator_list" not in values:
             values["operator_list"] = [JoinComparisonOperator.EQUAL.value] * len(values["left_on"])
         return values

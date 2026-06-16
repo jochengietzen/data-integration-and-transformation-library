@@ -126,6 +126,10 @@ class DataFrameWrapper:
     def register_wrapper_function(
         cls, engine: Union["Engine", type["Engine"]], func_spec: WrapperFunctionSpec[Any], func: WrapperFunctionProtocol
     ):
+        """
+        Function to register a new DataFrameWrapper Function.
+        This allows you to register an engine specific implementation to your given wrapper function specification.
+        """
         # TODO: Ensure, that all registered functions have the same or compatible arg specs! (V1)
         # TODO: Double check, if this is still necessary or already done!
         func_key = EngineSpecificFunctionKey(engine_identifier=engine.engine_identifier, func_name=func_spec.func_name)
@@ -170,6 +174,10 @@ class DataFrameWrapper:
 
     @classmethod
     def load_all_plugins(cls) -> None:
+        """
+        Method to load all eltstar wrapper_function plugins
+        by traversing entrypoints grouped under `eltstar.wrapper_functions`.
+        """
         if cls._loaded_plugins:
             return
 

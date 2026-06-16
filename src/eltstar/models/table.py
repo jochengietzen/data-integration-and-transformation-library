@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, TypeVar
 
-from pydantic import Field
-
+# from pydantic import Field
 from eltstar.base_model import BaseModel
 from eltstar.config import (
     EnvironmentConfigType,
@@ -11,10 +10,11 @@ from eltstar.config import (
 from eltstar.engines.base import EngineType
 from eltstar.models.base import Columns, Schema, TablePath
 from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
-from eltstar.models.expectations import RowLevelTableExpectation
+
+# from eltstar.models.expectations import RowLevelTableExpectation
 
 TablePathType = TypeVar("TablePathType", bound=TablePath)  # pylint: disable=invalid-name
-TableExpectationType = TypeVar("TableExpectationType", bound=RowLevelTableExpectation)  # pylint: disable=invalid-name
+# TableExpectationType = TypeVar("TableExpectationType", bound=RowLevelTableExpectation)  # pylint: disable=invalid-name
 
 
 class Table(BaseModel):
@@ -25,7 +25,7 @@ class Table(BaseModel):
     # Assumption: on table-level we only have expectations,
     # there is no equivalent to constraints on column level
     # Possibliy we do not need the generic type.
-    expectations: list[TableExpectationType] = Field(default_factory=list)
+    # expectations: list[TableExpectationType] = Field(default_factory=list)
 
     @abstractmethod
     def read(

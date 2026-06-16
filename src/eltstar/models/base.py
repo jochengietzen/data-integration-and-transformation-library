@@ -15,7 +15,8 @@ from pydantic import Field, RootModel, model_validator
 
 from eltstar.base_model import BaseModel
 from eltstar.config import EnvironmentConfigType, RuntimeConfigType
-from eltstar.models.expectations import RowLevelColumnExpectation
+
+# from eltstar.models.expectations import RowLevelColumnExpectation
 from eltstar.models.generation import Generation
 
 if TYPE_CHECKING:
@@ -111,7 +112,7 @@ class Column(BaseModel):
     name: str = Field(..., pattern=r"^[a-zA-Z0-9-_]+$")
     data_type: DataTypeType
     constraints: list[Constraint] = Field(default_factory=list)
-    expectations: list[RowLevelColumnExpectation] = Field(default_factory=list)
+    # expectations: list[RowLevelColumnExpectation] = Field(default_factory=list)
     generation: Generation | None = None
     description: str | None = None
     is_primary_key: bool = False
