@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Any, TypeVar
 
 # from pydantic import Field
@@ -18,9 +18,9 @@ TablePathType = TypeVar("TablePathType", bound=TablePath)  # pylint: disable=inv
 
 
 class Table(BaseModel):
-    path: TablePathType
+    path: TablePathType  # type: ignore # TODO: try to find proper way to handle pydantic and mypy
     columns: Columns
-    engine: type[EngineType]
+    engine: type[EngineType]  # type: ignore # TODO: try to find proper way to handle pydantic and mypy
     description: str
     # Assumption: on table-level we only have expectations,
     # there is no equivalent to constraints on column level
@@ -78,16 +78,3 @@ class Table(BaseModel):
         self._verify_schema(data_frame_wrapper)
 
         return self.cast(data_frame_wrapper)
-
-
-class SourceTable(ABC):
-    @abstractmethod
-    def ingest(self, *args, **kwargs) -> DataFrameWrapper:
-        """aigen_start
-        Ingest data from a source and return it as a DataFrameWrapper.
-        aigen_end"""
-
-    def __ingest__(self, data_frame_wrapper: DataFrameWrapper, table_model: Table):
-        data_frame_wrapper = DataFrameWrapper.ensure_is_wrapper(data_frame=data_frame_wrapper)
-
-        table_model.write(data_frame_wrapper)

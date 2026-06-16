@@ -39,6 +39,13 @@ exclude = [
     '^three\.',
 ]
 
+[[tool.mypy.overrides]]
+module = [
+    "matplotlib.*"
+]
+follow_untyped_imports = true
+
+
 [tool.pylint.main]
 fail-under = 10
 ignore-patterns = ["^\\.#"]
@@ -130,5 +137,6 @@ docs = [
     "zensical>=0.0.37",
 ]
 types = [
+    "types-networkx>=3.6.1.20260612",
     "types-pyyaml>=6.0.12.20250516",
 ]

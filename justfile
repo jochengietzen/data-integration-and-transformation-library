@@ -39,7 +39,7 @@ init: init_system_files
     pre-commit install
 
 check:
-    #!/bin/zsh
+    #!/bin/sh
     uv run ruff check src/ tests/
     uv run pylint src/ tests/
     uv run mypy src/

@@ -38,7 +38,7 @@ class ArrowEngine(Engine):
             fields=[
                 pa.field(
                     name=schema_field.name,
-                    type=schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier),
+                    type=schema_field.to_engine_type(engine_identifier=cls.engine_identifier),
                     nullable=schema_field.nullable,
                 )
                 for schema_field in schema.root

@@ -47,7 +47,7 @@ class FromToMethod(NamedTuple):
 
 
 class DataType(BaseModel):
-    _from_and_to_engine_methods: ClassVar[dict[str, dict[str, FromToMethod["DataType"]]]] = defaultdict(dict)
+    _from_and_to_engine_methods: ClassVar[dict[str, dict[str, FromToMethod]]] = defaultdict(dict)
     _engine_type_to_engine_identifier: ClassVar[dict[str, dict[Any, str]]] = defaultdict(dict)
     _engine_identifier_to_engine_type: ClassVar[dict[str, dict[str, Any]]] = defaultdict(dict)
 
@@ -101,16 +101,25 @@ class SchemaField(BaseModel):
     type_: DataType
     nullable: bool
 
+    def to_engine_type(self, engine_identifier: str) -> Any:
+        """Convenience method for engine type conversion"""
+        return self.type_.to_engine_type(engine_identifier)
+
 
 class SchemaStruct(BaseModel):
     name: str
     fields: list[Union["SchemaStruct", SchemaField]]
     nullable: bool
 
+    def to_engine_type(self, engine_identifier: str) -> Any:
+        """not implemented"""
+        # TODO: Fix
+        raise NotImplementedError("No definition for a SchemaStruct to engine type exists!")
+
 
 class Column(BaseModel):
     name: str = Field(..., pattern=r"^[a-zA-Z0-9-_]+$")
-    data_type: DataTypeType
+    data_type: DataTypeType  # type: ignore # TODO: try to find proper way to handle pydantic and mypy
     constraints: list[Constraint] = Field(default_factory=list)
     # expectations: list[RowLevelColumnExpectation] = Field(default_factory=list)
     generation: Generation | None = None
@@ -149,7 +158,7 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
         aigen_end"""
         for schema_type, func in cls._from_engine_methods.values():
             if isinstance(schema, schema_type):
-                return func(schema=schema)
+                return func(schema=schema)  # type: ignore
         raise RuntimeError(f"Engine for type {type(schema)} not defined!")
 
     def to_engine_schema(self, engine_identifier: str) -> Any:
@@ -159,7 +168,7 @@ class Schema(RootModel[list[SchemaStruct | SchemaField]]):
         func = self._to_engine_methods.get(engine_identifier, None)
         if func is None:
             raise RuntimeError(f"Engine {engine_identifier} has no to engine schema defined!")
-        return func(schema=self)
+        return func(schema=self)  # type: ignore
 
 
 class Columns(RootModel[dict[str, Column]]):

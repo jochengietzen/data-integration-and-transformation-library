@@ -95,27 +95,27 @@ class EltstarLogger:
 
     def debug(self, msg: object, *args: object, **kwargs: object) -> None:
         """Log a message at DEBUG level."""
-        self._logger.debug(msg, *args, **kwargs)
+        self._logger.debug(msg, *args, **kwargs)  # type: ignore
 
     def info(self, msg: object, *args: object, **kwargs: object) -> None:
         """Log a message at INFO level."""
-        self._logger.info(msg, *args, **kwargs)
+        self._logger.info(msg, *args, **kwargs)  # type: ignore
 
     def warning(self, msg: object, *args: object, **kwargs: object) -> None:
         """Log a message at WARNING level."""
-        self._logger.warning(msg, *args, **kwargs)
+        self._logger.warning(msg, *args, **kwargs)  # type: ignore
 
     def error(self, msg: object, *args: object, **kwargs: object) -> None:
         """Log a message at ERROR level."""
-        self._logger.error(msg, *args, **kwargs)
+        self._logger.error(msg, *args, **kwargs)  # type: ignore
 
     def critical(self, msg: object, *args: object, **kwargs: object) -> None:
         """Log a message at CRITICAL level."""
-        self._logger.critical(msg, *args, **kwargs)
+        self._logger.critical(msg, *args, **kwargs)  # type: ignore
 
     def exception(self, msg: object, *args: object, **kwargs: object) -> None:
         """Log a message at ERROR level, including the current exception traceback."""
-        self._logger.exception(msg, *args, **kwargs)
+        self._logger.exception(msg, *args, **kwargs)  # type: ignore
 
 
 logger = EltstarLogger()

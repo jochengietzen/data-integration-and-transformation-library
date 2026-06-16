@@ -12,6 +12,7 @@ class WrapperArgSpec(BaseModel):
 WrapperArgSpecType = TypeVar("WrapperArgSpecType", bound=WrapperArgSpec)  # pylint: disable=invalid-name
 
 
-class WrapperFunctionSpec[WrapperArg: WrapperArgSpecType](BaseModel):
+# TODO: try to find proper way to handle pydantic and mypy
+class WrapperFunctionSpec[WrapperArg: WrapperArgSpecType](BaseModel):  # type: ignore
     func_name: str
     arg_spec: WrapperArg

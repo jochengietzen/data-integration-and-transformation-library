@@ -29,7 +29,10 @@ class EnvironmentConfig(BaseModel):
                 f"The configuration {cls.__name__} does not have a load function for "
                 f"situation {situation_identifier} implemented."
             )
-        return cls.registered_load_methods[situation_identifier](*args, **kwargs)
+        return cls.registered_load_methods[situation_identifier](
+            *args,
+            **kwargs,
+        )  # type: ignore # TODO: proper typing for configuration call
 
     env: str
 
@@ -56,7 +59,10 @@ class RuntimeConfig(BaseModel):
                 f"The configuration {cls.__name__} does not have a load function for "
                 f"situation {situation_identifier} implemented."
             )
-        return cls.registered_load_methods[situation_identifier](*args, **kwargs)
+        return cls.registered_load_methods[situation_identifier](
+            *args,
+            **kwargs,
+        )  # type: ignore # TODO: proper typing for configuration call
 
 
 EnvironmentConfigType = TypeVar("EnvironmentConfigType", bound=EnvironmentConfig)  # pylint: disable=invalid-name
