@@ -157,9 +157,7 @@ class TransformationManager:
                 raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
 
             argspec = inspect.getfullargspec(func=func)
-            # expected_argspec = {}  # TODO: tbd # pylint: disable=unused-variable # noqa # type: ignore (V1)
-
-            # TODO: compare argspec and expected_argspec (V1)
+            # expected_argspec = {} # pylint: disable=unused-variable # noqa # type: ignore (V1)
 
             table_models: dict[str, InputTableInstruction] = {
                 name: kwargs[name]

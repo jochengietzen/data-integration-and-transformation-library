@@ -19,15 +19,13 @@ class FakerManager:
         self.faker = Faker() if faker is None else faker
         self.primary_key_generation_registry: dict[str, set] = {}
         self.non_key_generation_registry: dict[str, set] = {}
-        # TODO: Make sure, that primary key generates the most values! (V1)
-        # TODO: Maybe provide a possibility to generate corrupt foreign key values (V2/3)
 
     def register_faker_type(self, faker_type: "FakerType") -> "FakerManager":
         """aigen_start
         Register a FakerType's generation pool in the manager if it has a generation_id.
         aigen_end"""
         if faker_type.generation_id is not None and faker_type.generation_id not in self.non_key_generation_registry:
-            # TODO: check proper typing!
+            # TODO: check proper typing! (V1)
             self.non_key_generation_registry[faker_type.generation_id] = set()  # type: ignore
         return self
 

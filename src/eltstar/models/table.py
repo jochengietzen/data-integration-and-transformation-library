@@ -52,12 +52,11 @@ class Table(BaseModel):
         """aigen_start
         Write the given DataFrameWrapper to the configured output path and return self.
         aigen_end"""
+        # TODO: Make sure that we set the engine to the attribute, if no engine was given (V1)
 
     def get_schema(self, by_name: bool = False) -> Schema:
         """Convenience function to retrieve the Column based schema"""
         return self.columns.get_schema(by_name=by_name)
-
-    # TODO: Add verify_schema functionality for a full table (V1)
 
     def _verify_schema(self, data_frame_wrapper: DataFrameWrapper) -> None:
         pass

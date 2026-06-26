@@ -102,8 +102,5 @@ class Engine(BaseModel):
         arrow_wrapper = source_engine.convert_to_arrow(schema=schema, data_frame_wrapper=data_frame_wrapper)
         return target_engine.convert_from_arrow(schema=schema, data_frame_wrapper=arrow_wrapper)
 
-    # TODO: Prompt Primer -> Prompt Erzeugung für Claude etc. (V3)
-    # TODO: provide standard functionalities like merge, upsert for engines (V1-2)
-
 
 EngineType = TypeVar("EngineType", bound=Engine)  # pylint: disable=invalid-name

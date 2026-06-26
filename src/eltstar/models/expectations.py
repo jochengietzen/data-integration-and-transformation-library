@@ -8,7 +8,6 @@
 # if TYPE_CHECKING:
 #     from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 
-# # TODO: (V2/3)
 # # We are stuck with how to bring the expectation result into a form, that can be used to
 # # do quarantining and evaluation. Maybe through an extension of the dataframewrapper?
 

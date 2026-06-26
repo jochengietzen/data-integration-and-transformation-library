@@ -122,7 +122,7 @@ We now have a couple of things to unwrap in this block.
 - First, the latest concept with the table path - no need to reiterate for now.
 - Then we have the engine_read_settings and the engine_write_settings. These are relatively simple settings, that link to an engine and an engine file type. This is used/passed onto the engine, when calling the super().read/write methods.
 - Then we have the read and write methods defined. Please notice, how we call the read with source and the write with file parameter containing the full_path passed to the super's write method. These refer to the methods of your engine (e.g. the read csv method or write csv method in polars).
-Theoretically, you can completely overwrite these methods to load data from e.g. postgres and write to that. This makes the usage extremely versatile. # TODO: Discuss if this is really the best method to define read/write. Feels complicated and restricting with the engine file type
+Theoretically, you can completely overwrite these methods to load data from e.g. postgres and write to that. This makes the usage extremely versatile. # TODO: Fix to remove the engine style if still present
 
 ## Table instances
 

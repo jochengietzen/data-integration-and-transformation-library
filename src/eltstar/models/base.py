@@ -113,7 +113,6 @@ class SchemaStruct(BaseModel):
 
     def to_engine_type(self, engine_identifier: str) -> Any:
         """not implemented"""
-        # TODO: Fix
         raise NotImplementedError("No definition for a SchemaStruct to engine type exists!")
 
 
