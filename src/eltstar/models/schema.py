@@ -1,9 +1,30 @@
 from collections.abc import Callable
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Union
 
 from pydantic import RootModel
 
-from eltstar.models.column import SchemaField, SchemaStruct
+from eltstar.base_model import BaseModel
+from eltstar.models.data_type import DataType
+
+
+class SchemaField(BaseModel):
+    name: str
+    type_: DataType
+    nullable: bool
+
+    def to_engine_type(self, engine_identifier: str) -> Any:
+        """Convenience method for engine type conversion"""
+        return self.type_.to_engine_type(engine_identifier)
+
+
+class SchemaStruct(BaseModel):
+    name: str
+    fields: list[Union["SchemaStruct", SchemaField]]
+    nullable: bool
+
+    def to_engine_type(self, engine_identifier: str) -> Any:
+        """not implemented"""
+        raise NotImplementedError("No definition for a SchemaStruct to engine type exists!")
 
 
 class Schema(RootModel[list[SchemaStruct | SchemaField]]):

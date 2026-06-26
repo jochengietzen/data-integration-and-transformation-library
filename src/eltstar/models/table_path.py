@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from eltstar.base_model import BaseModel
+from eltstar.config import EnvironmentConfigType, RuntimeConfigType
 
 
 class TablePath(BaseModel, ABC):

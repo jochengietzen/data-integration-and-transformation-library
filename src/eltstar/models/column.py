@@ -1,34 +1,11 @@
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Any
 
 from pydantic import Field, RootModel, model_validator
 
 from eltstar.base_model import BaseModel
-from eltstar.models.data_type import DataType, DataTypeType
-from eltstar.models.foreign_key import ForeignKey
+from eltstar.models.data_type import DataTypeType
 from eltstar.models.generation import Generation
-
-if TYPE_CHECKING:
-    from eltstar.models.schema import Schema
-
-
-class SchemaField(BaseModel):
-    name: str
-    type_: DataType
-    nullable: bool
-
-    def to_engine_type(self, engine_identifier: str) -> Any:
-        """Convenience method for engine type conversion"""
-        return self.type_.to_engine_type(engine_identifier)
-
-
-class SchemaStruct(BaseModel):
-    name: str
-    fields: list[Union["SchemaStruct", SchemaField]]
-    nullable: bool
-
-    def to_engine_type(self, engine_identifier: str) -> Any:
-        """not implemented"""
-        raise NotImplementedError("No definition for a SchemaStruct to engine type exists!")
+from eltstar.models.schema import Schema, SchemaField
 
 
 class Constraint(BaseModel):
@@ -44,7 +21,6 @@ class Column(BaseModel):
     description: str | None = None
     is_primary_key: bool = False
     is_nullable: bool = False
-    foreign_key: Optional["ForeignKey"] = None
 
 
 class Columns(RootModel[dict[str, Column]]):

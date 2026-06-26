@@ -2,13 +2,13 @@ from typing import Any
 
 import pyarrow as pa
 
-from eltstar.config import EnvironmentConfigType, RuntimeConfigType
+from eltstar.config import EnvironmentConfig, EnvironmentConfigType, RuntimeConfig, RuntimeConfigType
 from eltstar.engines.base import EngineType
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
-from eltstar.models.base import Column, Columns, StringType, TablePath
+from eltstar.models import Column, Columns, Table, TablePath
+from eltstar.models.base import StringType
 from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from eltstar.models.generation import Generation
-from eltstar.models.table import Table
 from eltstar.testing.faker_type import FakerStringType
 from eltstar.transformation import TransformationManager
 

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 # from pydantic import Field
 from eltstar.base_model import BaseModel
@@ -7,12 +7,13 @@ from eltstar.config import (
     EnvironmentConfigType,
     RuntimeConfigType,
 )
-from eltstar.engines.base import EngineType
 from eltstar.models.column import Columns
 from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from eltstar.models.schema import Schema
-from eltstar.models.TablePath import TablePath
+from eltstar.models.table_path import TablePath
 
+if TYPE_CHECKING:
+    from eltstar.engines.base import EngineType
 # from eltstar.models.expectations import RowLevelTableExpectation
 
 TablePathType = TypeVar("TablePathType", bound=TablePath)  # pylint: disable=invalid-name
@@ -22,7 +23,7 @@ TablePathType = TypeVar("TablePathType", bound=TablePath)  # pylint: disable=inv
 class Table(BaseModel):
     path: TablePathType  # type: ignore # TODO: try to find proper way to handle pydantic and mypy
     columns: Columns
-    engine: type[EngineType]  # type: ignore # TODO: try to find proper way to handle pydantic and mypy
+    engine: type["EngineType"]  # type: ignore # TODO: try to find proper way to handle pydantic and mypy
     description: str
     # Assumption: on table-level we only have expectations,
     # there is no equivalent to constraints on column level

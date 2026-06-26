@@ -1,4 +1,3 @@
-
 # from eltstar.models.expectations import RowLevelColumnExpectation
 from eltstar.models.data_type import DataType
 
