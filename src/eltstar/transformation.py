@@ -158,6 +158,7 @@ class TransformationManager:
 
             argspec = inspect.getfullargspec(func=func)
             # expected_argspec = {} # pylint: disable=unused-variable # noqa # type: ignore (V1)
+            # raise ValueError("Nope")
 
             table_models: dict[str, InputTableInstruction] = {
                 name: kwargs[name]

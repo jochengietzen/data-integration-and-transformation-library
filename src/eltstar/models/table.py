@@ -8,8 +8,10 @@ from eltstar.config import (
     RuntimeConfigType,
 )
 from eltstar.engines.base import EngineType
-from eltstar.models.base import Columns, Schema, TablePath
+from eltstar.models.column import Columns
 from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar.models.schema import Schema
+from eltstar.models.TablePath import TablePath
 
 # from eltstar.models.expectations import RowLevelTableExpectation
 
