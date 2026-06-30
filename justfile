@@ -12,12 +12,13 @@ init_system_files:
     if [ -f /tmp/.zshrc ]; then cp /tmp/.zshrc /home/vscode/.zshrc; fi
 
 
-venv-roots := "/workspace/examples /workspace/plugins/engines /workspace/plugins/runtime_systems"
 
 create_sub_venvs:
-    #!/bin/zsh
+    #!/bin/bash
     set -euo pipefail
-    for root in {{ venv-roots }}; do
+    export venv_roots="{{justfile_directory()}}/examples {{justfile_directory()}}/plugins/engines {{justfile_directory()}}/plugins/runtime_systems"
+    export cwd=$(pwd)
+    for root in $venv_roots; do
         if [ ! -d "$root" ]; then
             echo "Skipping '$root': not a directory"
             continue
@@ -25,10 +26,14 @@ create_sub_venvs:
         for folder in "$root"/*/; do
             [ -d "$folder" ] || continue
             echo "Creating venv in: $folder"
-            rm -rf "$folder/.venv"
-            python -m venv "$folder/.venv"
+            cd $folder
+            rm -rf ".venv"
+            # python -m venv ".venv"
+            export UV_PROJECT_ENVIRONMENT="$folder/.venv"
+            uv sync --all-groups --all-extras
         done
     done
+    cd $cwd
 
 init: init_system_files
     #!/bin/zsh

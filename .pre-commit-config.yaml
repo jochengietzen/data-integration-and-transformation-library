@@ -4,7 +4,7 @@ repos:
       - id: print_statement
         name: Check that print is not in the source code
         types: [ python ]
-        exclude: '^examples/'
+        exclude: '^examples/.*|^scripts/run_examples.py'
         entry: '[^#]*print\(.*\)'
         language: pygrep
 
@@ -22,6 +22,14 @@ repos:
         types: [ python ]
         pass_filenames: false
         entry: ruff check --fix src/ tests/
+        verbose: true
+      
+      - id: run_examples
+        name: run_examples
+        language: python
+        types: [ python ]
+        pass_filenames: false
+        entry: python scripts/run_examples.py
         verbose: true
 
       # - id: mypy

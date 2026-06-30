@@ -25,10 +25,12 @@ def youtube_channel_overview(
     )
     print("yeah")
     tech_channel_overview = tech_channel_overview.create_with_new_data(
-        data_frame=tech_channel_overview.data_frame.groupby("channel_id").agg(
+        data_frame=tech_channel_overview.data_frame.groupby("channel_id")
+        .agg(
             channel_views=("views", "sum"),
             channel_likes=("likes", "sum"),
-        ).reset_index()
+        )
+        .reset_index()
     )
     tech_channel_overview = tech_channel_overview.join(
         PandasJoinArgSpec(
