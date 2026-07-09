@@ -1,15 +1,15 @@
-import polars as pl
-from eltstar_engine_polars.engine import PolarsEngine
+import pyarrow as pa
 
+from eltstar.engines.eltstar_arrow_engine import ArrowEngine
 from eltstar.models.base import FloatType, IntegerType
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
 from eltstar.models.schema import Schema, SchemaField
 
 if __name__ == "__main__":
-    df = pl.DataFrame(
+    df = pa.Table.from_pydict(
         {
-            "foo": [1, 2, 3],
             "bar": [6.0, 7.0, 8.0],
+            "foo": [1, 2, 3],
         }
     )
 
@@ -20,10 +20,10 @@ if __name__ == "__main__":
         ]
     )
 
-    df_w = DataFrameWrapper(data_frame=df, schema=schema, engine=PolarsEngine)
+    df_w = DataFrameWrapper(data_frame=df, schema=schema, engine=ArrowEngine)
 
     print(df)
-    df_2 = PolarsEngine.cast(schema=schema, data_frame_wrapper=DataFrameWrapper(data_frame=df))
+    df_2 = ArrowEngine.cast(schema=schema, data_frame_wrapper=DataFrameWrapper(data_frame=df))
     print(df_2.data_frame)
 
     print(df_w.data_frame)

@@ -4,9 +4,10 @@ import pyarrow as pa
 
 from eltstar.engines.base import Engine
 from eltstar.exceptions import ProgrammingError
-from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from eltstar.models.base import FloatType, IntegerType, StringType
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
 from eltstar.models.data_frame_wrapper.wrapper import TypedDataFrameWrapper
+from eltstar.models.schema import Schema, SchemaField
 
 
 def arrow_frame(frame: Any) -> TypeGuard[pa.Table]:

@@ -6,8 +6,9 @@ import pyarrow as pa
 
 from eltstar.engines.base import Engine
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
-from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from eltstar.models.base import FloatType, IntegerType, StringType
 from eltstar.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
+from eltstar.models.schema import Schema, SchemaField
 
 
 def pandas_frame(frame: Any) -> TypeGuard[pd.DataFrame]:

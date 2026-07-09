@@ -5,16 +5,17 @@ from collections.abc import Callable
 from importlib.metadata import entry_points
 from typing import Any
 
+from eltstar.base_model import BaseModel
 from eltstar.config import (
     EnvironmentConfig,
     EnvironmentConfigType,
     RuntimeConfig,
     RuntimeConfigType,
 )
+from eltstar.engines.base import EngineType  # pylint: disable=unused-import  # noqa
 from eltstar.exceptions import DuplicateTransformationName, InitiliazationMissingError
 from eltstar.graph import Lineage
 from eltstar.logging import logger
-from eltstar.models.base import BaseModel
 from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from eltstar.models.table import Table
 
@@ -22,6 +23,9 @@ from eltstar.models.table import Table
 class InputTableInstruction(BaseModel):
     table: Table
     cast_before_injection: bool = True
+
+
+InputTableInstruction.model_rebuild()
 
 
 class Transformation(BaseModel):
@@ -77,6 +81,9 @@ class Transformation(BaseModel):
             environment_config=self.environment_config,
             data_frame_wrapper=result,
         )
+
+
+Transformation.model_rebuild()
 
 
 class TransformationManager:
@@ -158,6 +165,7 @@ class TransformationManager:
 
             argspec = inspect.getfullargspec(func=func)
             # expected_argspec = {} # pylint: disable=unused-variable # noqa # type: ignore (V1)
+            # raise ValueError("Nope")
 
             table_models: dict[str, InputTableInstruction] = {
                 name: kwargs[name]

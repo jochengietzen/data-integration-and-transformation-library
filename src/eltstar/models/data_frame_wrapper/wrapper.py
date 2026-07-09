@@ -7,7 +7,7 @@ from eltstar.models.data_frame_wrapper.functions.base import WrapperArgSpec, Wra
 
 if TYPE_CHECKING:
     from eltstar.engines.base import Engine
-    from eltstar.models.base import Schema
+    from eltstar.models.schema import Schema
 
 
 class WrapperFunctionProtocol(Protocol):

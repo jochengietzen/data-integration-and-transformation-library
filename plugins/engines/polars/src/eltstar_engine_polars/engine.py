@@ -4,7 +4,8 @@ import polars as pl
 
 from eltstar.engines.base import Engine
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
-from eltstar.models.base import FloatType, IntegerType, Schema, SchemaField, StringType
+from eltstar.models.schema import Schema, SchemaField
+from eltstar.models.base import FloatType, IntegerType,StringType
 from eltstar.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
 from eltstar.utils import columnar_dictionary_to_records
 

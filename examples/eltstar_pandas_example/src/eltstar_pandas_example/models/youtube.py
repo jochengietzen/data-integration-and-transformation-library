@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
@@ -6,18 +8,23 @@ from eltstar_engine_pandas.engine import PandasEngine
 from eltstar.config import EnvironmentConfig, RuntimeConfig
 from eltstar.engines.base import EngineType
 from eltstar.models.base import (
-    Column,
-    Columns,
     IntegerType,
     StringType,
-    TablePath,
+)
+from eltstar.models.column import (
+    Column,
+    Columns,
 )
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
 from eltstar.models.data_frame_wrapper.wrapper import TypedDataFrameWrapper
 from eltstar.models.generation import Generation
 from eltstar.models.table import Table
+from eltstar.models.table_path import TablePath
 from eltstar.testing.faker_type import FakerIntType, FakerStringType
 from eltstar_pandas_example.config import MyEnvironmentConfig
+
+FILE_PARTS = __file__.split(os.sep)
+ROOT = Path(os.sep.join(FILE_PARTS[: FILE_PARTS.index("examples")])).absolute()
 
 
 class YoutubeTablePath(TablePath):
@@ -32,7 +39,7 @@ class YoutubeTablePath(TablePath):
         environment_config: MyEnvironmentConfig,
         **kwargs: dict[str, Any],
     ) -> str:
-        return f"/workspace/data/{environment_config.env}/{self.name}_{self.date}_{self.time}.csv"
+        return str(ROOT / f"data/{environment_config.env}/{self.name}_{self.date}_{self.time}.csv")
 
 
 class YoutubeTable(Table):

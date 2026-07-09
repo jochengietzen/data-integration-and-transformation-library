@@ -3,7 +3,8 @@ from typing import TYPE_CHECKING, Any, ClassVar, Protocol, TypeVar
 
 from eltstar.base_model import BaseModel
 from eltstar.exceptions import ProgrammingError
-from eltstar.models.base import DataType, Schema
+from eltstar.models.data_type import DataType
+from eltstar.models.schema import Schema
 
 if TYPE_CHECKING:
     from eltstar.engines.eltstar_arrow_engine import ArrowEngine
