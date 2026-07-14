@@ -23,7 +23,6 @@ def youtube_channel_overview(
     tech_channel_overview = tech_channels.join(
         function_spec=PandasJoinArgSpec(other=tech_videos, left_on=["channel_id"], right_on=["channel_id"], how="left")
     )
-    print("yeah")
     tech_channel_overview = tech_channel_overview.create_with_new_data(
         data_frame=tech_channel_overview.data_frame.groupby("channel_id")
         .agg(
@@ -40,6 +39,7 @@ def youtube_channel_overview(
             how="inner",
         )
     )
+    tech_channel_overview.data_frame.sort_values("channel_id", inplace=True)
     return tech_channel_overview
 
 

@@ -220,7 +220,7 @@ tech_channel_overview_3 = tech_videos.model_copy()
 tech_channel_overview_3.path = YoutubeTablePath(name="youtube_channels_overview_3", date="1", time="2")
 
 tech_channel_overview = YoutubeTable(
-    path=YoutubeTablePath(name="youtube_channels_overview", date="1", time="2"),
+    path=YoutubeTablePath(name="youtube_channels_overview_pandas", date="1", time="2"),
     columns=Columns(
         root=dict(
             channel_id=Column(

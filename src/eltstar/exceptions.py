@@ -14,3 +14,7 @@ class DuplicateTransformationName(Exception):
 
 class WrapperFunctionException(Exception):
     """Indicates an issue with registered wrapper functions"""
+
+
+class TransformationDefinitionError(Exception):
+    """Indicates a mistake in using the transformation manager"""

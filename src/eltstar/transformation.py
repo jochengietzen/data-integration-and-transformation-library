@@ -3,7 +3,7 @@ import inspect
 import pkgutil
 from collections.abc import Callable
 from importlib.metadata import entry_points
-from typing import Any
+from typing import Any, get_origin
 
 from eltstar.base_model import BaseModel
 from eltstar.config import (
@@ -13,10 +13,10 @@ from eltstar.config import (
     RuntimeConfigType,
 )
 from eltstar.engines.base import EngineType  # pylint: disable=unused-import  # noqa
-from eltstar.exceptions import DuplicateTransformationName, InitiliazationMissingError
+from eltstar.exceptions import DuplicateTransformationName, InitiliazationMissingError, TransformationDefinitionError
 from eltstar.graph import Lineage
 from eltstar.logging import logger
-from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
+from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper, TypedDataFrameWrapper
 from eltstar.models.table import Table
 
 
@@ -164,8 +164,60 @@ class TransformationManager:
                 raise DuplicateTransformationName(f"The function '{func_name}' is already registered.")
 
             argspec = inspect.getfullargspec(func=func)
-            # expected_argspec = {} # pylint: disable=unused-variable # noqa # type: ignore (V1)
-            # raise ValueError("Nope")
+
+            expected_data_frames = list(kwargs.keys())
+            errors = []
+            instruction_df_args_message = (
+                "Please make sure, to list all DataFrames as parameters and as arguments "
+                "for the register_transformation decorator! "
+                "The names of the models and the data frame parameters have to be identical!"
+            )
+            for df in expected_data_frames:
+                if df not in argspec.args:
+                    errors.append(
+                        TransformationDefinitionError(
+                            f"The transformation '{func_name}' did not define the expected parameter '{df}'"
+                            " as function parameter! "
+                            f"Expected: {expected_data_frames}, Received: {argspec.args}"
+                        )
+                    )
+                if not isinstance(kwargs[df], Table):
+                    errors.append(
+                        TransformationDefinitionError(
+                            f"The register_transformation argument '{df}' for transformation '{func_name}' "
+                            f" is not an instance of a Table (or Table subclass). You can only register "
+                            f"Table (subclasses) in this decorator! Type received: {str(type(kwargs[df]))}"
+                        )
+                    )
+            for arg in argspec.args:
+                if arg not in expected_data_frames:
+                    errors.append(
+                        TransformationDefinitionError(
+                            f"The transformation '{func_name}' had the unexpected parameter '{arg}' in the"
+                            f" function definition! Expected: {expected_data_frames}, Received: {argspec.args}"
+                        )
+                    )
+                annotation = argspec.annotations.get(arg, None)
+                if annotation is None:
+                    errors.append(
+                        TransformationDefinitionError(
+                            f"Please make sure to annotate the parameter '{arg}' "
+                            f"of the transformation function `{func_name}'!"
+                        )
+                    )
+                elif annotation is not DataFrameWrapper and get_origin(annotation) is not TypedDataFrameWrapper:
+                    errors.append(
+                        TransformationDefinitionError(
+                            f"Please make sure to use type DataFrameWrapper (or TypedDataFrameWrapper) as "
+                            f"transformation parameter for the parameter '{arg}'. Received type: {str(annotation)}"
+                        )
+                    )
+
+            if errors:
+                raise ExceptionGroup(
+                    f"The transformation '{func_name}' was defined improperly.",
+                    errors + [TransformationDefinitionError(instruction_df_args_message)],
+                )
 
             table_models: dict[str, InputTableInstruction] = {
                 name: kwargs[name]

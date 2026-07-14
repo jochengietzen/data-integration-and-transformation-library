@@ -18,18 +18,26 @@ The schema is used to define the structure of your data. It contains the name of
     
     - TODO: How should we handle DataType registration, when not yet present in ArrowEngine? (V1)
     - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results (V1)
-    - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running. Also test and run all example code.
+    - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running.
     - TODO: Provide proper Documentation (V1)
     - TODO: Build very very minimal example for quick overview of concepts (V1)
         - TODO: Build minimal exmaple for asset bundles! (V1)
-    - TODO: Implement checks for expected argspec in TransformationManager's register_transformation func (V1)
-        - Also compare expected argspec with actual argspec!
-    - TODO: Actually provide implementation fo to_engine_type in SchemaStruct Class! (V1)
+    - TODO: Actually provide implementation for to_engine_type in SchemaStruct Class! (V1)
     - TODO: Add verify_schema functionality for a full table in the Table class (V1)
     - TODO: Make sure, that primary key generates the most values in the FakerManager generation! (V1)
+    - TODO: Provide Tests for Core libraries
     - TODO: Release Process! (V1)
+        Process:
+            - Only release from main
+            - Tag Based Releases
+            - Commitizen
+                => Remove Squash merge and always use fast-forward merges
+                    - Enforce conventional commits for messages
+                    - Restrict number of commits per branch
 
     - TODO: Generics in new style (V2)
+    - TODO: Runner object passed to function (V2)
+    - TODO: Pass function name to function itself (V2)
     - TODO: Revisit topic of preloaded DataFrameWrapper vs. manual load or separate module. (V2)
     - TODO: Test all examples automatically (through entrypoints?) (V2)
     - TODO: provide standard functionalities like merge, upsert for engines (V2)
@@ -45,6 +53,7 @@ The schema is used to define the structure of your data. It contains the name of
 
     - TODO: VSCode Plugin or typing extension => Full typing support for tables and dataframe wrappers (V2-V3)
     - TODO: Try to make it work with complex types (Array, Map, Variant) (V3?)
+    - TODO: Create way for user to define custom parameters passed to transformations (V3?)
     - TODO: Better Orchestration possibilities (stages etc.) (V3)
     - TODO: Streaming mode through implementation/protocol? for engine (V3)
     - TODO: Staging of Transformation func steps to detatch steps from model and allow plugin capability (V3)
