@@ -22,8 +22,6 @@ The schema is used to define the structure of your data. It contains the name of
     - TODO: Provide proper Documentation (V1)
     - TODO: Build very very minimal example for quick overview of concepts (V1)
         - TODO: Build minimal exmaple for asset bundles! (V1)
-    - TODO: Implement checks for expected argspec in TransformationManager's register_transformation func (V1)
-        - Also compare expected argspec with actual argspec!
     - TODO: Actually provide implementation for to_engine_type in SchemaStruct Class! (V1)
     - TODO: Add verify_schema functionality for a full table in the Table class (V1)
     - TODO: Make sure, that primary key generates the most values in the FakerManager generation! (V1)
