@@ -59,3 +59,13 @@ The schema is used to define the structure of your data. It contains the name of
     - TODO: Staging of Transformation func steps to detatch steps from model and allow plugin capability (V3)
     - TODO: Prompt Primer -> Prompt Erzeugung für Claude etc. (V3)
 
+# Adding examples
+
+```
+cd examples
+mkdir <example_name>
+uv init --package --name <example_name> --directory /workspace/examples/<example_name>
+just create_missing_sub_venvs
+cd <example_name>
+uv add --active eltstar
+```

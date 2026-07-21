@@ -13,6 +13,30 @@ init_system_files:
 
 
 
+create_missing_sub_venvs:
+    #!/bin/bash
+    set -euo pipefail
+    export venv_roots="{{justfile_directory()}}/examples {{justfile_directory()}}/plugins/engines {{justfile_directory()}}/plugins/runtime_systems"
+    export cwd=$(pwd)
+    for root in $venv_roots; do
+        if [ ! -d "$root" ]; then
+            echo "Skipping '$root': not a directory"
+            continue
+        fi
+        for folder in "$root"/*/; do
+            [ -d "$folder" ] || continue
+            echo "Creating venv in: $folder"
+            cd $folder
+            [ -d "$folder/.venv" ] && echo "skipping $folder" && continue
+            rm -rf ".venv"
+            # python -m venv ".venv"
+            export UV_PROJECT_ENVIRONMENT="$folder/.venv"
+            uv sync --all-groups --all-extras
+        done
+    done
+    cd $cwd
+
+
 create_sub_venvs:
     #!/bin/bash
     set -euo pipefail

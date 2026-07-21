@@ -2,7 +2,7 @@ from typing import Any, ClassVar, TypeGuard
 
 import pyarrow as pa
 
-from eltstar.engines.base import Engine
+from eltstar.engines.base import ARROW_ENGINE_IDENTIFIER, Engine
 from eltstar.exceptions import ProgrammingError
 from eltstar.models.base import FloatType, IntegerType, StringType
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
@@ -16,7 +16,7 @@ def arrow_frame(frame: Any) -> TypeGuard[pa.Table]:
 
 
 class ArrowEngine(Engine):
-    engine_identifier: ClassVar[str] = "arrow"
+    engine_identifier: ClassVar[str] = ARROW_ENGINE_IDENTIFIER
     internal_schema_type: ClassVar[type[pa.Schema]] = pa.Schema
 
     @classmethod

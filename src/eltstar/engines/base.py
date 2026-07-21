@@ -10,6 +10,8 @@ if TYPE_CHECKING:
     from eltstar.engines.eltstar_arrow_engine import ArrowEngine
     from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper, TypedDataFrameWrapper
 
+ARROW_ENGINE_IDENTIFIER = "arrow"
+
 
 class ReadMethod(Protocol):
     def __call__(self, *args: Any, **kwargs: Any) -> "DataFrameWrapper": ...
@@ -97,10 +99,17 @@ class Engine(BaseModel):
         """aigen_start
         Convert the given DataFrameWrapper to a different engine using a registered conversion function.
         aigen_end"""
+        if data_frame_wrapper.engine.engine_identifier == target_engine.engine_identifier:
+            return data_frame_wrapper
         source_engine = data_frame_wrapper.engine
         if source_engine is None:
             raise ProgrammingError("Can only convert dataframes that are engine aware!")
-        arrow_wrapper = source_engine.convert_to_arrow(schema=schema, data_frame_wrapper=data_frame_wrapper)
+        if source_engine.engine_identifier == ARROW_ENGINE_IDENTIFIER:
+            arrow_wrapper = data_frame_wrapper
+        else:
+            arrow_wrapper = source_engine.convert_to_arrow(schema=schema, data_frame_wrapper=data_frame_wrapper)
+        if target_engine.engine_identifier == ARROW_ENGINE_IDENTIFIER:
+            return arrow_wrapper
         return target_engine.convert_from_arrow(schema=schema, data_frame_wrapper=arrow_wrapper)
 
 
