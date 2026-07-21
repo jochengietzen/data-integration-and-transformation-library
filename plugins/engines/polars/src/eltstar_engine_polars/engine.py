@@ -4,9 +4,19 @@ import polars as pl
 
 from eltstar.engines.base import Engine
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
-from eltstar.models.schema import Schema, SchemaField
-from eltstar.models.base import FloatType, IntegerType,StringType
+from eltstar.models.base import (
+    BinaryType,
+    BooleanType,
+    DateType,
+    DecimalType28,
+    FloatType,
+    IntegerType,
+    StringType,
+    TimestampTypeSecondsNTZ,
+    TimestampTypeSecondsUTC,
+)
 from eltstar.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
+from eltstar.models.schema import Schema, SchemaField
 from eltstar.utils import columnar_dictionary_to_records
 
 
@@ -89,26 +99,69 @@ class PolarsEngine(Engine):
             data_type=IntegerType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pl.Int64,
-                from_method=lambda x: IntegerType(),
-                to_method=lambda x: pl.Int64(),
             )
         )
         cls.register_data_type(
             data_type=FloatType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pl.Float64,
-                from_method=lambda x: FloatType(),
-                to_method=lambda x: pl.Float64(),
             )
         )
         cls.register_data_type(
             data_type=StringType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pl.String,
-                from_method=lambda x: StringType(),
-                to_method=lambda x: pl.String(),
             )
         )
+        cls.register_data_type(
+            data_type=BooleanType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pl.Boolean,
+            )
+        )
+        cls.register_data_type(
+            data_type=TimestampTypeSecondsNTZ.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                # engine_type=pl.Datetime,
+                engine_type=pl.Datetime(
+                    time_unit=TimestampTypeSecondsNTZ.unit, time_zone=TimestampTypeSecondsNTZ.time_zone
+                ),
+            )
+        )
+        cls.register_data_type(
+            data_type=TimestampTypeSecondsUTC.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                # engine_type=pl.Datetime,
+                engine_type=pl.Datetime(
+                    time_unit=TimestampTypeSecondsUTC.unit, time_zone=TimestampTypeSecondsUTC.time_zone
+                ),
+            )
+        )
+        cls.register_data_type(
+            data_type=DateType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pl.Date,
+            )
+        )
+        cls.register_data_type(
+            data_type=BinaryType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pl.Binary,
+            )
+        )
+        cls.register_data_type(
+            data_type=DecimalType28.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                # engine_type=pl.Decimal,
+                engine_type=pl.Decimal(precision=DecimalType28.precision, scale=DecimalType28.scale),
+            )
+        )
+        # cls.register_data_type(
+        #     data_type=UUIDType.register_from_and_to_methods(
+        #         engine_identifier=cls.engine_identifier,
+        #         engine_type=pl.String,
+        #     )
+        # )
 
 
 PolarsEngine.setup()

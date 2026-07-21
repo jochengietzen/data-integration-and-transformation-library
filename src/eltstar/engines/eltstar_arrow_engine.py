@@ -4,7 +4,18 @@ import pyarrow as pa
 
 from eltstar.engines.base import ARROW_ENGINE_IDENTIFIER, Engine
 from eltstar.exceptions import ProgrammingError
-from eltstar.models.base import FloatType, IntegerType, StringType
+from eltstar.models.base import (
+    BinaryType,
+    BooleanType,
+    DateType,
+    DecimalType28,
+    FloatType,
+    IntegerType,
+    StringType,
+    TimestampTypeSecondsNTZ,
+    TimestampTypeSecondsUTC,
+    UUIDType,
+)
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
 from eltstar.models.data_frame_wrapper.wrapper import TypedDataFrameWrapper
 from eltstar.models.schema import Schema, SchemaField
@@ -35,6 +46,7 @@ class ArrowEngine(Engine):
 
     @classmethod
     def _to_engine_schema(cls, schema: Schema) -> pa.Schema:
+        print([schema_field.to_engine_type(engine_identifier=cls.engine_identifier) for schema_field in schema.root])
         return pa.schema(
             fields=[
                 pa.field(
@@ -92,24 +104,60 @@ class ArrowEngine(Engine):
             data_type=IntegerType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pa.int64(),
-                from_method=lambda x: IntegerType(),
-                to_method=lambda x: pa.int64(),
             )
         )
         cls.register_data_type(
             data_type=FloatType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pa.float64(),
-                from_method=lambda x: FloatType(),
-                to_method=lambda x: pa.float64(),
             )
         )
         cls.register_data_type(
             data_type=StringType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pa.string(),
-                from_method=lambda x: StringType(),
-                to_method=lambda x: pa.string(),
+            )
+        )
+        cls.register_data_type(
+            data_type=BooleanType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.bool_(),
+            )
+        )
+        cls.register_data_type(
+            data_type=TimestampTypeSecondsNTZ.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.timestamp(TimestampTypeSecondsNTZ.unit, TimestampTypeSecondsNTZ.time_zone),
+            )
+        )
+        cls.register_data_type(
+            data_type=TimestampTypeSecondsUTC.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.timestamp(TimestampTypeSecondsUTC.unit, TimestampTypeSecondsUTC.time_zone),
+            )
+        )
+        cls.register_data_type(
+            data_type=DateType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.date64(),
+            )
+        )
+        cls.register_data_type(
+            data_type=BinaryType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.binary(),
+            )
+        )
+        cls.register_data_type(
+            data_type=DecimalType28.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.decimal256(precision=DecimalType28.precision, scale=DecimalType28.scale),
+            )
+        )
+        cls.register_data_type(
+            data_type=UUIDType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pa.uuid(),
             )
         )
 

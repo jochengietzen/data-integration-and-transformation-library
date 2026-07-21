@@ -6,7 +6,14 @@ import pyarrow as pa
 
 from eltstar.engines.base import Engine
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
-from eltstar.models.base import FloatType, IntegerType, StringType
+from eltstar.models.base import (
+    BooleanType,
+    DateType,
+    FloatType,
+    IntegerType,
+    StringType,
+    TimestampTypeSecondsUTC,
+)
 from eltstar.models.data_frame_wrapper import DataFrameWrapper, TypedDataFrameWrapper
 from eltstar.models.schema import Schema, SchemaField
 
@@ -98,26 +105,69 @@ class PandasEngine(Engine):
             data_type=IntegerType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=np.int64,
-                from_method=lambda x: IntegerType(),
-                to_method=lambda x: np.int64(),
             )
         )
         cls.register_data_type(
             data_type=FloatType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=np.float64,
-                from_method=lambda x: FloatType(),
-                to_method=lambda x: np.float64(),
             )
         )
         cls.register_data_type(
             data_type=StringType.register_from_and_to_methods(
                 engine_identifier=cls.engine_identifier,
                 engine_type=pd.StringDtype,
-                from_method=lambda x: StringType(),
-                to_method=lambda x: pd.StringDtype(),
             )
         )
+        cls.register_data_type(
+            data_type=BooleanType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pd.BooleanDtype,
+            )
+        )
+        # cls.register_data_type(
+        #     data_type=TimestampTypeSecondsNTZ.register_from_and_to_methods(
+        #         engine_identifier=cls.engine_identifier,
+        #         engine_type=pd.DatetimeTZDtype(
+        #             unit=TimestampTypeSecondsNTZ.unit,
+        #             tz=TimestampTypeSecondsNTZ.time_zone,
+        #         ),
+        #     )
+        # )
+        cls.register_data_type(
+            data_type=TimestampTypeSecondsUTC.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=lambda: pd.DatetimeTZDtype(
+                    unit=TimestampTypeSecondsUTC.unit,
+                    tz=TimestampTypeSecondsUTC.time_zone,
+                ),
+            )
+        )
+        cls.register_data_type(
+            data_type=DateType.register_from_and_to_methods(
+                engine_identifier=cls.engine_identifier,
+                engine_type=pd.Timestamp,
+            )
+        )
+        # cls.register_data_type(
+        #     data_type=BinaryType.register_from_and_to_methods(
+        #         engine_identifier=cls.engine_identifier,
+        #         engine_type=pd.Bin,
+        #     )
+        # )
+        # cls.register_data_type(
+        #     data_type=DecimalType28.register_from_and_to_methods(
+        #         engine_identifier=cls.engine_identifier,
+        #         # engine_type=pd.Decimal,
+        #         engine_type=lambda: pd.Decimal(precision=DecimalType28.precision, scale=DecimalType28.scale),
+        #     )
+        # )
+        # cls.register_data_type(
+        #     data_type=UUIDType.register_from_and_to_methods(
+        #         engine_identifier=cls.engine_identifier,
+        #         engine_type=pd.String,
+        #     )
+        # )
 
 
 PandasEngine.setup()

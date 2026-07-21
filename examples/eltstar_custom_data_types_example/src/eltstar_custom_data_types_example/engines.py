@@ -9,23 +9,17 @@ ArrowEngine.register_data_type(
     data_type=DoubleType.register_from_and_to_methods(
         engine_identifier=ArrowEngine.engine_identifier,
         engine_type=pa.float64(),
-        from_method=lambda x: DoubleType(),
-        to_method=lambda x: pa.float64(),
     )
 )
 ArrowEngine.register_data_type(
     data_type=MissingDataType.register_from_and_to_methods(
         engine_identifier=ArrowEngine.engine_identifier,
         engine_type=pa.float64(),
-        from_method=lambda x: MissingDataType(),
-        to_method=lambda x: pa.float64(),
     )
 )
 PolarsEngine.register_data_type(
     data_type=DoubleType.register_from_and_to_methods(
         engine_identifier=PolarsEngine.engine_identifier,
         engine_type=pl.Float64,
-        from_method=lambda x: DoubleType(),
-        to_method=lambda x: pl.Float64(),
     )
 )

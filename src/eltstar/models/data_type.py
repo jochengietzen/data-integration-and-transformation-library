@@ -1,17 +1,10 @@
 from collections import defaultdict
-from collections.abc import Callable
-from typing import Any, ClassVar, NamedTuple, TypeVar
+from typing import Any, ClassVar, TypeVar
 
 from eltstar.base_model import BaseModel
 
 
-class FromToMethod(NamedTuple):
-    from_method: Callable[[Any], "DataType"]
-    to_method: Callable[["DataType"], Any]
-
-
 class DataType(BaseModel):
-    _from_and_to_engine_methods: ClassVar[dict[str, dict[str, FromToMethod]]] = defaultdict(dict)
     _engine_type_to_engine_identifier: ClassVar[dict[str, dict[Any, str]]] = defaultdict(dict)
     _engine_identifier_to_engine_type: ClassVar[dict[str, dict[str, Any]]] = defaultdict(dict)
 
@@ -20,15 +13,10 @@ class DataType(BaseModel):
         cls,
         engine_identifier: str,
         engine_type: Any,
-        from_method: Callable[[Any], "DataType"],
-        to_method: Callable[["DataType"], Any],
     ) -> type["DataType"]:
         """aigen_start
         Register bidirectional conversion methods between this DataType and an engine-native type.
         aigen_end"""
-        cls._from_and_to_engine_methods[cls.__name__][engine_identifier] = FromToMethod(
-            from_method=from_method, to_method=to_method
-        )
         cls._engine_type_to_engine_identifier[cls.__name__][engine_type] = engine_identifier
         cls._engine_identifier_to_engine_type[cls.__name__][engine_identifier] = engine_type
         return cls
