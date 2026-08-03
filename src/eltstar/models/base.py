@@ -1,53 +1,56 @@
 # from eltstar.models.expectations import RowLevelColumnExpectation
 
-from typing import ClassVar
 
 from eltstar.models.data_type import DataType
 
 
 class IntegerType(DataType):
-    pass
+    identifier: str = "integer"
 
 
 class FloatType(DataType):
-    pass
+    identifier: str = "float"
 
 
 class StringType(DataType):
-    pass
+    identifier: str = "string"
 
 
 class BooleanType(DataType):
-    pass
+    identifier: str = "boolean"
 
 
 class TimestampTypeBase(DataType):
-    unit: ClassVar[str]
-    time_zone: ClassVar[str | None]
+    unit: str
+    time_zone: str | None
 
 
 class TimestampTypeSecondsNTZ(TimestampTypeBase):
-    unit: ClassVar[str] = "ns"
-    time_zone: ClassVar[str | None] = None
+    identifier: str = "timestamp_ntz_ns"
+    unit: str = "ns"
+    time_zone: str | None = None
 
 
 class TimestampTypeSecondsUTC(TimestampTypeBase):
-    unit: ClassVar[str] = "ns"
-    time_zone: ClassVar[str] = "UTC"
+    identifier: str = "timestamp_utc_ns"
+    unit: str = "ns"
+    time_zone: str = "UTC"
 
 
 class DateType(DataType):
-    pass
+    identifier: str = "date"
 
 
 class BinaryType(DataType):
-    length: ClassVar[int] = -1
+    identifier: str = "binary"
+    length: int = -1
 
 
 class DecimalType28(DataType):
-    precision: ClassVar[int] = 28
-    scale: ClassVar[int] = 0
+    identifier: str = "decimal_28"
+    precision: int = 28
+    scale: int = 0
 
 
 class UUIDType(DataType):
-    pass
+    identifier: str = "uuid"

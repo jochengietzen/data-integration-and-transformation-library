@@ -47,7 +47,7 @@ if __name__ == "__main__":
     try:
         df_p = df_a2.convert_to(target_engine=PolarsEngine)
         print(df_p)
-    except RuntimeError:
+    except KeyError:
         print("Could not convert to polars, as expected!")
     else:
         raise RuntimeError(

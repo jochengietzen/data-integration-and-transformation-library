@@ -1,10 +1,9 @@
 from typing import Any, ClassVar, TypeGuard
 
-import numpy as np
 import pandas as pd
 import pyarrow as pa
 
-from eltstar.engines.base import Engine
+from eltstar.engines.base import Engine, EngineSpecificDataType
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
 from eltstar.models.base import (
     BooleanType,
@@ -32,9 +31,10 @@ class PandasEngine(Engine):
         return Schema(
             [
                 SchemaField(
-                    # Currently the type_ is an instance of the datatype model. Not sure if it should be the class.
                     name=key,
-                    type_=cls.registered_types[value](),
+                    type_=cls.registered_types[cls.engine_identifier]
+                    .get_by_engine_type(engine_type=value)
+                    .eltstar_type,
                     nullable=True,
                 )
                 for key, value in schema.items()
@@ -44,7 +44,9 @@ class PandasEngine(Engine):
     @classmethod
     def _to_engine_schema(cls, schema: Schema) -> dict[Any, Any]:
         return {
-            schema_field.name: schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier)()
+            schema_field.name: cls.registered_types[cls.engine_identifier]
+            .get_by_eltstar_type(eltstar_obj=schema_field.type_)
+            .engine_type()
             for schema_field in schema.root
         }
 
@@ -102,70 +104,75 @@ class PandasEngine(Engine):
             to_method=cls._to_engine_schema,
         )
         cls.register_data_type(
-            data_type=IntegerType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=np.int64,
-            )
+            data_type=IntegerType(),
+            engine_type=EngineSpecificDataType(
+                # dtype_class=np.int64,
+                str_repr="int"
+            ),
         )
         cls.register_data_type(
-            data_type=FloatType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=np.float64,
-            )
+            data_type=FloatType(),
+            engine_type=EngineSpecificDataType(
+                # dtype_class=np.float64,
+                str_repr="float",
+            ),
         )
         cls.register_data_type(
-            data_type=StringType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pd.StringDtype,
-            )
+            data_type=StringType(),
+            engine_type=EngineSpecificDataType(
+                # dtype_class=pd.StringDtype,
+                str_repr="str",
+            ),
         )
         cls.register_data_type(
-            data_type=BooleanType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pd.BooleanDtype,
-            )
+            data_type=BooleanType(),
+            engine_type=EngineSpecificDataType(
+                # dtype_class=pd.BooleanDtype,
+                str_repr="bool",
+            ),
         )
         # cls.register_data_type(
-        #     data_type=TimestampTypeSecondsNTZ.register_from_and_to_methods(
-        #         engine_identifier=cls.engine_identifier,
-        #         engine_type=pd.DatetimeTZDtype(
+        #     data_type=TimestampTypeSecondsNTZ(),
+        #         engine_type=EngineSpecificDataType(dtype_class=pd.DatetimeTZDtype(
         #             unit=TimestampTypeSecondsNTZ.unit,
         #             tz=TimestampTypeSecondsNTZ.time_zone,
         #         ),
         #     )
         # )
-        cls.register_data_type(
-            data_type=TimestampTypeSecondsUTC.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=lambda: pd.DatetimeTZDtype(
-                    unit=TimestampTypeSecondsUTC.unit,
-                    tz=TimestampTypeSecondsUTC.time_zone,
+        for base in ["ns", "us"]:
+            timestamp_type_seconds_utc = TimestampTypeSecondsUTC(unit=base)
+            timestamp_type_seconds_utc.identifier = timestamp_type_seconds_utc.identifier.replace("_ns", "_" + base)
+            cls.register_data_type(
+                data_type=timestamp_type_seconds_utc,
+                engine_type=EngineSpecificDataType(
+                    # dtype_class=lambda: pd.DatetimeTZDtype(
+                    #     unit=timestamp_type_seconds_utc.unit,
+                    #     tz=timestamp_type_seconds_utc.time_zone,
+                    # ),
+                    str_repr=f"datetime64[{base}, UTC]"
                 ),
             )
-        )
         cls.register_data_type(
-            data_type=DateType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pd.Timestamp,
-            )
+            data_type=DateType(),
+            engine_type=EngineSpecificDataType(
+                # dtype_class=pd.Timestamp,
+                str_repr="datetime64[us]",
+            ),
         )
         # cls.register_data_type(
-        #     data_type=BinaryType.register_from_and_to_methods(
-        #         engine_identifier=cls.engine_identifier,
-        #         engine_type=pd.Bin,
+        #     data_type=BinaryType(),
+        #         engine_type=EngineSpecificDataType(dtype_class=pd.Bin,
         #     )
         # )
         # cls.register_data_type(
-        #     data_type=DecimalType28.register_from_and_to_methods(
-        #         engine_identifier=cls.engine_identifier,
-        #         # engine_type=pd.Decimal,
-        #         engine_type=lambda: pd.Decimal(precision=DecimalType28.precision, scale=DecimalType28.scale),
+        #     data_type=DecimalType28(),
+        #         # engine_type=EngineSpecificDataType(dtype_class=pd.Decimal,
+        #         engine_type=EngineSpecificDataType(dtype_class=lambda: pd.Decimal(precision=DecimalType28.precision, scale=DecimalType28.scale),
         #     )
         # )
         # cls.register_data_type(
-        #     data_type=UUIDType.register_from_and_to_methods(
-        #         engine_identifier=cls.engine_identifier,
-        #         engine_type=pd.String,
+        #     data_type=UUIDType(),
+        #         engine_type=EngineSpecificDataType(dtype_class=pd.String,
         #     )
         # )
 

@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, ClassVar, Union
+from typing import Any, ClassVar
 
 from pydantic import RootModel
 
@@ -12,22 +12,15 @@ class SchemaField(BaseModel):
     type_: DataType
     nullable: bool
 
-    def to_engine_type(self, engine_identifier: str) -> Any:
-        """Convenience method for engine type conversion"""
-        return self.type_.to_engine_type(engine_identifier)
+
+# class SchemaStruct(BaseModel):
+#     name: str
+#     fields: list[Union["SchemaStruct", SchemaField]]
+#     nullable: bool
 
 
-class SchemaStruct(BaseModel):
-    name: str
-    fields: list[Union["SchemaStruct", SchemaField]]
-    nullable: bool
-
-    def to_engine_type(self, engine_identifier: str) -> Any:
-        """not implemented"""
-        raise NotImplementedError("No definition for a SchemaStruct to engine type exists!")
-
-
-class Schema(RootModel[list[SchemaStruct | SchemaField]]):
+# class Schema(RootModel[list[SchemaStruct | SchemaField]]):
+class Schema(RootModel[list[SchemaField]]):
     _from_engine_methods: ClassVar[dict[str, tuple[type[Any], Callable[[Any], "Schema"]]]] = {}
     _to_engine_methods: ClassVar[dict[str, Callable[["Schema"], Any]]] = {}
     # provides schema for a given instance of Columns

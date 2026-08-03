@@ -2,6 +2,8 @@ from eltstar.models.data_type import DataType
 
 
 class DoubleType(DataType):
-    pass
+    identifier: str = "double"
+
+
 class MissingDataType(DataType):
-    pass
+    identifier: str = "missing"

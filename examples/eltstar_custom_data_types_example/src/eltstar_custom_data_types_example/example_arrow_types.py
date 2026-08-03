@@ -28,3 +28,6 @@ if __name__ == "__main__":
     df_w = DataFrameWrapper(data_frame=table, schema=schema, engine=ArrowEngine).cast()
 
     print(df_w.data_frame)
+
+    print(ArrowEngine._from_engine_schema(schema=table.schema))
+    print(ArrowEngine._to_engine_schema(schema=schema))

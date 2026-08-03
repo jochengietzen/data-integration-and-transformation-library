@@ -2,7 +2,7 @@ from typing import Any, ClassVar, TypeGuard
 
 import polars as pl
 
-from eltstar.engines.base import Engine
+from eltstar.engines.base import Engine, EngineSpecificDataType
 from eltstar.engines.eltstar_arrow_engine import ArrowEngine
 from eltstar.models.base import (
     BinaryType,
@@ -35,7 +35,9 @@ class PolarsEngine(Engine):
                 SchemaField(
                     # Currently the type_ is an instance of the datatype model. Not sure if it should be the class.
                     name=key,
-                    type_=cls.registered_types[value](),
+                    type_=cls.registered_types[cls.engine_identifier]
+                    .get_by_engine_type(engine_type=value)
+                    .eltstar_type,
                     nullable=True,
                 )
                 for key, value in schema.items()
@@ -46,7 +48,9 @@ class PolarsEngine(Engine):
     def _to_engine_schema(cls, schema: Schema) -> pl.Schema:
         return pl.Schema(
             schema={
-                schema_field.name: schema_field.type_.to_engine_type(engine_identifier=cls.engine_identifier)
+                schema_field.name: cls.registered_types[cls.engine_identifier]
+                .get_by_eltstar_type(eltstar_obj=schema_field.type_)
+                .engine_type()
                 for schema_field in schema.root
             }
         )
@@ -96,70 +100,60 @@ class PolarsEngine(Engine):
             to_method=cls._to_engine_schema,
         )
         cls.register_data_type(
-            data_type=IntegerType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pl.Int64,
-            )
+            data_type=IntegerType(),
+            engine_type=EngineSpecificDataType(dtype_class=pl.Int64),
         )
         cls.register_data_type(
-            data_type=FloatType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pl.Float64,
-            )
+            data_type=FloatType(),
+            engine_type=pl.Float64,
         )
         cls.register_data_type(
-            data_type=StringType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pl.String,
-            )
+            data_type=StringType(),
+            engine_type=EngineSpecificDataType(dtype_class=pl.String),
         )
         cls.register_data_type(
-            data_type=BooleanType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pl.Boolean,
-            )
+            data_type=BooleanType(),
+            engine_type=EngineSpecificDataType(dtype_class=pl.Boolean),
+        )
+        timestamp_type_seconds_ntz = TimestampTypeSecondsNTZ()
+        cls.register_data_type(
+            data_type=timestamp_type_seconds_ntz,
+            # engine_type=EngineSpecificDataType(dtype_class=pl.Datetime),
+            engine_type=EngineSpecificDataType(
+                dtype_class=pl.Datetime(
+                    time_unit=timestamp_type_seconds_ntz.unit, time_zone=timestamp_type_seconds_ntz.time_zone
+                )
+            ),
+        )
+        timestamp_type_seconds_utc = TimestampTypeSecondsUTC()
+        cls.register_data_type(
+            data_type=timestamp_type_seconds_utc,
+            # engine_type=EngineSpecificDataType(dtype_class=pl.Datetime),
+            engine_type=EngineSpecificDataType(
+                dtype_class=pl.Datetime(
+                    time_unit=timestamp_type_seconds_utc.unit, time_zone=timestamp_type_seconds_utc.time_zone
+                )
+            ),
         )
         cls.register_data_type(
-            data_type=TimestampTypeSecondsNTZ.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                # engine_type=pl.Datetime,
-                engine_type=pl.Datetime(
-                    time_unit=TimestampTypeSecondsNTZ.unit, time_zone=TimestampTypeSecondsNTZ.time_zone
-                ),
-            )
+            data_type=DateType(),
+            engine_type=EngineSpecificDataType(dtype_class=pl.Date),
         )
         cls.register_data_type(
-            data_type=TimestampTypeSecondsUTC.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                # engine_type=pl.Datetime,
-                engine_type=pl.Datetime(
-                    time_unit=TimestampTypeSecondsUTC.unit, time_zone=TimestampTypeSecondsUTC.time_zone
-                ),
-            )
+            data_type=BinaryType(),
+            engine_type=EngineSpecificDataType(dtype_class=pl.Binary),
         )
+        decimal_type28 = DecimalType28()
         cls.register_data_type(
-            data_type=DateType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pl.Date,
-            )
-        )
-        cls.register_data_type(
-            data_type=BinaryType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pl.Binary,
-            )
-        )
-        cls.register_data_type(
-            data_type=DecimalType28.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                # engine_type=pl.Decimal,
-                engine_type=pl.Decimal(precision=DecimalType28.precision, scale=DecimalType28.scale),
-            )
+            data_type=decimal_type28,
+            # engine_type=EngineSpecificDataType(dtype_class=pl.Decimal),
+            engine_type=EngineSpecificDataType(
+                dtype_class=pl.Decimal(precision=decimal_type28.precision, scale=decimal_type28.scale)
+            ),
         )
         # cls.register_data_type(
-        #     data_type=UUIDType.register_from_and_to_methods(
-        #         engine_identifier=cls.engine_identifier,
-        #         engine_type=pl.String,
+        #     data_type=UUIDType(),
+        #         engine_type=EngineSpecificDataType(dtype_class=pl.String),
         #     )
         # )
 

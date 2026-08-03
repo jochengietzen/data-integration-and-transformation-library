@@ -14,8 +14,9 @@ if __name__ == "__main__":
             "d": [pd.Timestamp("2026-01-01 01:01:01+00:00")] * 3,
             # "d": [6.0, 7.0, 8.0],
             "uuid": [str(uuid4()), str(uuid4()), str(uuid4())],
-        }
+        },
     )
+    print(table)
 
     schema = Schema(
         root=[
@@ -28,3 +29,6 @@ if __name__ == "__main__":
     df_w = DataFrameWrapper(data_frame=table, schema=schema, engine=PandasEngine).cast()
 
     print(df_w.data_frame)
+
+    print(PandasEngine._to_engine_schema(schema=schema))
+    print(PandasEngine._from_engine_schema(schema=table.dtypes))

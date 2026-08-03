@@ -3,7 +3,7 @@ from uuid import uuid4
 import polars as pl
 from eltstar_engine_polars.engine import PolarsEngine
 
-from eltstar.models.base import DecimalType28, TimestampTypeSecondsNTZ, StringType
+from eltstar.models.base import DecimalType28, StringType, TimestampTypeSecondsNTZ
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
 from eltstar.models.schema import Schema, SchemaField
 
@@ -27,3 +27,6 @@ if __name__ == "__main__":
     df_w = DataFrameWrapper(data_frame=table, schema=schema, engine=PolarsEngine).cast()
 
     print(df_w.data_frame)
+
+    print(PolarsEngine._from_engine_schema(schema=table.schema))
+    print(PolarsEngine._to_engine_schema(schema=schema))
