@@ -16,9 +16,6 @@ The schema is used to define the structure of your data. It contains the name of
 
 # TODOS
     
-    - TODO: How should we handle DataType registration, when not yet present in ArrowEngine? (V1)
-        - Finish test case for all DataTypes in Arrow example
-        - Refactor register_to and from method for data types. Suspicion: We don't need the to_method and from_method any longer
     - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results (V1)
     - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running.
     - TODO: Provide proper Documentation (V1)
