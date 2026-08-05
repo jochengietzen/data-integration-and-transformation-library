@@ -103,6 +103,7 @@ class PandasEngine(Engine):
             from_method=cls._from_engine_schema,
             to_method=cls._to_engine_schema,
         )
+        # We are using the string representation here as we couldn't manage to get it working with the actual dtype
         cls.register_data_type(
             data_type=IntegerType(),
             engine_type=EngineSpecificDataType(
