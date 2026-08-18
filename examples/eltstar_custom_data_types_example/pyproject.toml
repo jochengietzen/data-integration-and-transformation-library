@@ -1,7 +1,7 @@
 [project]
 name = "eltstar-custom-data-types-example"
 version = "0.1.0"
-description = "Add your description here"
+description = "Example to demonstrate how to define and use custom data types"
 readme = "README.md"
 authors = [
     { name = "Jochen Gietzen", email = "jochen.gietzen@gmail.com" },

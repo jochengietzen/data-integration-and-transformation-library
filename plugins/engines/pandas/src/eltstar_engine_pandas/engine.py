@@ -107,28 +107,24 @@ class PandasEngine(Engine):
         cls.register_data_type(
             data_type=IntegerType(),
             engine_type=EngineSpecificDataType(
-                # dtype_class=np.int64,
                 str_repr="int"
             ),
         )
         cls.register_data_type(
             data_type=FloatType(),
             engine_type=EngineSpecificDataType(
-                # dtype_class=np.float64,
                 str_repr="float",
             ),
         )
         cls.register_data_type(
             data_type=StringType(),
             engine_type=EngineSpecificDataType(
-                # dtype_class=pd.StringDtype,
                 str_repr="str",
             ),
         )
         cls.register_data_type(
             data_type=BooleanType(),
             engine_type=EngineSpecificDataType(
-                # dtype_class=pd.BooleanDtype,
                 str_repr="bool",
             ),
         )
@@ -146,17 +142,12 @@ class PandasEngine(Engine):
             cls.register_data_type(
                 data_type=timestamp_type_seconds_utc,
                 engine_type=EngineSpecificDataType(
-                    # dtype_class=lambda: pd.DatetimeTZDtype(
-                    #     unit=timestamp_type_seconds_utc.unit,
-                    #     tz=timestamp_type_seconds_utc.time_zone,
-                    # ),
                     str_repr=f"datetime64[{base}, UTC]"
                 ),
             )
         cls.register_data_type(
             data_type=DateType(),
             engine_type=EngineSpecificDataType(
-                # dtype_class=pd.Timestamp,
                 str_repr="datetime64[us]",
             ),
         )

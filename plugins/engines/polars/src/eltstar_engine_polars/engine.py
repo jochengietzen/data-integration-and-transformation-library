@@ -118,7 +118,6 @@ class PolarsEngine(Engine):
         timestamp_type_seconds_ntz = TimestampTypeSecondsNTZ()
         cls.register_data_type(
             data_type=timestamp_type_seconds_ntz,
-            # engine_type=EngineSpecificDataType(dtype_class=pl.Datetime),
             engine_type=EngineSpecificDataType(
                 dtype_class=pl.Datetime(
                     time_unit=timestamp_type_seconds_ntz.unit, time_zone=timestamp_type_seconds_ntz.time_zone
@@ -128,7 +127,6 @@ class PolarsEngine(Engine):
         timestamp_type_seconds_utc = TimestampTypeSecondsUTC()
         cls.register_data_type(
             data_type=timestamp_type_seconds_utc,
-            # engine_type=EngineSpecificDataType(dtype_class=pl.Datetime),
             engine_type=EngineSpecificDataType(
                 dtype_class=pl.Datetime(
                     time_unit=timestamp_type_seconds_utc.unit, time_zone=timestamp_type_seconds_utc.time_zone
@@ -146,7 +144,6 @@ class PolarsEngine(Engine):
         decimal_type28 = DecimalType28()
         cls.register_data_type(
             data_type=decimal_type28,
-            # engine_type=EngineSpecificDataType(dtype_class=pl.Decimal),
             engine_type=EngineSpecificDataType(
                 dtype_class=pl.Decimal(precision=decimal_type28.precision, scale=decimal_type28.scale)
             ),
