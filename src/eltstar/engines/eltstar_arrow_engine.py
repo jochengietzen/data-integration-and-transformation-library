@@ -2,9 +2,20 @@ from typing import Any, ClassVar, TypeGuard
 
 import pyarrow as pa
 
-from eltstar.engines.base import Engine
+from eltstar.engines.base import ARROW_ENGINE_IDENTIFIER, Engine, EngineSpecificDataType
 from eltstar.exceptions import ProgrammingError
-from eltstar.models.base import FloatType, IntegerType, StringType
+from eltstar.models.base import (
+    BinaryType,
+    BooleanType,
+    DateType,
+    DecimalType28,
+    FloatType,
+    IntegerType,
+    StringType,
+    TimestampTypeSecondsNTZ,
+    TimestampTypeSecondsUTC,
+    UUIDType,
+)
 from eltstar.models.data_frame_wrapper import DataFrameWrapper
 from eltstar.models.data_frame_wrapper.wrapper import TypedDataFrameWrapper
 from eltstar.models.schema import Schema, SchemaField
@@ -16,7 +27,7 @@ def arrow_frame(frame: Any) -> TypeGuard[pa.Table]:
 
 
 class ArrowEngine(Engine):
-    engine_identifier: ClassVar[str] = "arrow"
+    engine_identifier: ClassVar[str] = ARROW_ENGINE_IDENTIFIER
     internal_schema_type: ClassVar[type[pa.Schema]] = pa.Schema
 
     @classmethod
@@ -26,7 +37,9 @@ class ArrowEngine(Engine):
                 SchemaField(
                     # Currently the type_ is an instance of the datatype model. Not sure if it should be the class.
                     name=field.name,
-                    type_=cls.registered_types[field.type](),
+                    type_=cls.registered_types[cls.engine_identifier]
+                    .get_by_engine_type(engine_type=field.type)
+                    .eltstar_type,
                     nullable=field.nullable,
                 )
                 for field in schema
@@ -37,9 +50,13 @@ class ArrowEngine(Engine):
     def _to_engine_schema(cls, schema: Schema) -> pa.Schema:
         return pa.schema(
             fields=[
-                pa.field(
+                pa.field(  # type: ignore
                     name=schema_field.name,
-                    type=schema_field.to_engine_type(engine_identifier=cls.engine_identifier),
+                    type=(
+                        cls.registered_types[cls.engine_identifier]
+                        .get_by_eltstar_type(eltstar_obj=schema_field.type_)
+                        .engine_type()
+                    ),
                     nullable=schema_field.nullable,
                 )
                 for schema_field in schema.root
@@ -89,28 +106,53 @@ class ArrowEngine(Engine):
             to_method=cls._to_engine_schema,
         )
         cls.register_data_type(
-            data_type=IntegerType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pa.int64(),
-                from_method=lambda x: IntegerType(),
-                to_method=lambda x: pa.int64(),
-            )
+            data_type=IntegerType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.int64()),
         )
         cls.register_data_type(
-            data_type=FloatType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pa.float64(),
-                from_method=lambda x: FloatType(),
-                to_method=lambda x: pa.float64(),
-            )
+            data_type=FloatType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.float64()),
         )
         cls.register_data_type(
-            data_type=StringType.register_from_and_to_methods(
-                engine_identifier=cls.engine_identifier,
-                engine_type=pa.string(),
-                from_method=lambda x: StringType(),
-                to_method=lambda x: pa.string(),
-            )
+            data_type=StringType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.string()),
+        )
+        cls.register_data_type(
+            data_type=BooleanType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.bool_()),
+        )
+        timestamp_type_seconds_ntz = TimestampTypeSecondsNTZ()
+        cls.register_data_type(
+            data_type=timestamp_type_seconds_ntz,
+            engine_type=EngineSpecificDataType(
+                lambda_class=lambda: pa.timestamp(timestamp_type_seconds_ntz.unit, timestamp_type_seconds_ntz.time_zone)
+            ),
+        )
+        timestamp_type_seconds_utc = TimestampTypeSecondsUTC()
+        cls.register_data_type(
+            data_type=timestamp_type_seconds_utc,
+            engine_type=EngineSpecificDataType(
+                lambda_class=lambda: pa.timestamp(timestamp_type_seconds_utc.unit, timestamp_type_seconds_utc.time_zone)
+            ),
+        )
+        cls.register_data_type(
+            data_type=DateType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.date64()),
+        )
+        cls.register_data_type(
+            data_type=BinaryType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.binary()),
+        )
+        decimal_type28 = DecimalType28()
+        cls.register_data_type(
+            data_type=decimal_type28,
+            engine_type=EngineSpecificDataType(
+                lambda_class=lambda: pa.decimal256(precision=decimal_type28.precision, scale=decimal_type28.scale)
+            ),
+        )
+        cls.register_data_type(
+            data_type=UUIDType(),
+            engine_type=EngineSpecificDataType(dtype_class=pa.uuid()),
         )
 
 

@@ -16,7 +16,6 @@ The schema is used to define the structure of your data. It contains the name of
 
 # TODOS
     
-    - TODO: How should we handle DataType registration, when not yet present in ArrowEngine? (V1)
     - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results (V1)
     - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running.
     - TODO: Provide proper Documentation (V1)
@@ -59,3 +58,13 @@ The schema is used to define the structure of your data. It contains the name of
     - TODO: Staging of Transformation func steps to detatch steps from model and allow plugin capability (V3)
     - TODO: Prompt Primer -> Prompt Erzeugung für Claude etc. (V3)
 
+# Adding examples
+
+```
+cd examples
+mkdir <example_name>
+uv init --package --name <example_name> --directory /workspace/examples/<example_name>
+just create_missing_sub_venvs
+cd <example_name>
+uv add --active eltstar
+```

@@ -16,6 +16,7 @@ resolution-markers = [
 [manifest]
 members = [
     "eltstar",
+    "eltstar-custom-data-types-example",
     "eltstar-engine-pandas",
     "eltstar-engine-polars",
     "eltstar-file-logger-example",
@@ -595,6 +596,21 @@ docs = [{ name = "zensical", specifier = ">=0.0.37" }]
 types = [
     { name = "types-networkx", specifier = ">=3.6.1.20260612" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20250516" },
+]
+
+[[package]]
+name = "eltstar-custom-data-types-example"
+version = "0.1.0"
+source = { editable = "examples/eltstar_custom_data_types_example" }
+dependencies = [
+    { name = "eltstar" },
+    { name = "eltstar-engine-polars" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "eltstar", editable = "." },
+    { name = "eltstar-engine-polars", editable = "plugins/engines/polars" },
 ]
 
 [[package]]

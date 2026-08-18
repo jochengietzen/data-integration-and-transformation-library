@@ -14,3 +14,10 @@ def columnar_dictionary_to_records(
     if any(lens[k] != first_len for k in lens):
         raise ProgrammingError("Can only convert columnar to records, if all columns have the same length!")
     return [{key: values[key][i] for key in values.keys()} for i in range(first_len)]
+
+
+def coalesce(*args):
+    for x in args:
+        if x is not None:
+            return x
+    return None

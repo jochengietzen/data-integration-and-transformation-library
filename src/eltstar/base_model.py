@@ -15,3 +15,6 @@ class BaseModel(_BaseModel):
         """
         with open(path, encoding=encoding) as f:
             return cls(**yaml.full_load(f))
+
+    def __hash__(self) -> int:
+        return hash(str(self.dict()))
