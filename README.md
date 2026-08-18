@@ -21,7 +21,6 @@ The schema is used to define the structure of your data. It contains the name of
     - TODO: Provide proper Documentation (V1)
     - TODO: Build very very minimal example for quick overview of concepts (V1)
         - TODO: Build minimal exmaple for asset bundles! (V1)
-    - TODO: Actually provide implementation for to_engine_type in SchemaStruct Class! (V1)
     - TODO: Add verify_schema functionality for a full table in the Table class (V1)
     - TODO: Make sure, that primary key generates the most values in the FakerManager generation! (V1)
     - TODO: Provide Tests for Core libraries
@@ -34,6 +33,8 @@ The schema is used to define the structure of your data. It contains the name of
                     - Enforce conventional commits for messages
                     - Restrict number of commits per branch
 
+    - TODO: Add SchemaStruct Class! (V2)
+        - TODO: provide implementation for to_engine_type in SchemaStruct Class! (V2)
     - TODO: Generics in new style (V2)
     - TODO: Runner object passed to function (V2)
     - TODO: Pass function name to function itself (V2)
