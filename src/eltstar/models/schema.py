@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Self
 
 from pydantic import RootModel
 
@@ -11,6 +11,9 @@ class SchemaField(BaseModel):
     name: str
     type_: DataType
     nullable: bool
+
+    def __lt__(self, other: Self) -> bool:
+        return self.name < other.name
 
 
 # class SchemaStruct(BaseModel):
@@ -60,3 +63,15 @@ class Schema(RootModel[list[SchemaField]]):
         if func is None:
             raise RuntimeError(f"Engine {engine_identifier} has no to engine schema defined!")
         return func(schema=self)  # type: ignore
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+        return self.equals(other, ignore_order=True)
+
+    def equals(self, other: Self, ignore_order: bool) -> bool:
+        """Returns True iff all of the schemafields are equal"""
+        self_fields = sorted(self.root) if ignore_order else self.root
+        other_fields = sorted(other.root) if ignore_order else other.root
+
+        return self_fields == other_fields

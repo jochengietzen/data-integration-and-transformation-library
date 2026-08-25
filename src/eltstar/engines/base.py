@@ -150,6 +150,16 @@ class Engine(BaseModel):
 
     @classmethod
     @abstractmethod
+    def get_engine_schema(cls, data_frame_wrapper: "DataFrameWrapper") -> Any:
+        """Extracts the engine specific dataframe schema of a given data_frame_wrapper"""
+
+    @classmethod
+    def engine_schemas_equals(cls, schema_left: Any, schema_right: Any) -> bool:
+        """Returns true iff schemas are equal"""
+        return schema_left == schema_right
+
+    @classmethod
+    @abstractmethod
     def convert_from_arrow(
         cls, schema: Schema, data_frame_wrapper: "TypedDataFrameWrapper[ArrowEngine]"
     ) -> "DataFrameWrapper":
