@@ -16,12 +16,10 @@ The schema is used to define the structure of your data. It contains the name of
 
 # TODOS
     
-    - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results (V1)
     - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running.
     - TODO: Provide proper Documentation (V1)
     - TODO: Build very very minimal example for quick overview of concepts (V1)
         - TODO: Build minimal exmaple for asset bundles! (V1)
-    - TODO: Actually provide implementation for to_engine_type in SchemaStruct Class! (V1)
     - TODO: Add verify_schema functionality for a full table in the Table class (V1)
     - TODO: Make sure, that primary key generates the most values in the FakerManager generation! (V1)
     - TODO: Provide Tests for Core libraries
@@ -34,6 +32,8 @@ The schema is used to define the structure of your data. It contains the name of
                     - Enforce conventional commits for messages
                     - Restrict number of commits per branch
 
+    - TODO: Add SchemaStruct Class! (V2)
+        - TODO: provide implementation for to_engine_type in SchemaStruct Class! (V2)
     - TODO: Generics in new style (V2)
     - TODO: Runner object passed to function (V2)
     - TODO: Pass function name to function itself (V2)
@@ -61,10 +61,11 @@ The schema is used to define the structure of your data. It contains the name of
 # Adding examples
 
 ```
+export EXAMPLE_NAME=<example_name>
 cd examples
-mkdir <example_name>
-uv init --package --name <example_name> --directory /workspace/examples/<example_name>
+mkdir $EXAMPLE_NAME
+uv init --package --name $EXAMPLE_NAME --directory /workspace/examples/$EXAMPLE_NAME
 just create_missing_sub_venvs
-cd <example_name>
+cd $EXAMPLE_NAME
 uv add --active eltstar
 ```

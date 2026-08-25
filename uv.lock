@@ -16,6 +16,7 @@ resolution-markers = [
 [manifest]
 members = [
     "eltstar",
+    "eltstar-add-function-to-multiple-engines-example",
     "eltstar-custom-data-types-example",
     "eltstar-engine-pandas",
     "eltstar-engine-polars",
@@ -596,6 +597,29 @@ docs = [{ name = "zensical", specifier = ">=0.0.37" }]
 types = [
     { name = "types-networkx", specifier = ">=3.6.1.20260612" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20250516" },
+]
+
+[[package]]
+name = "eltstar-add-function-to-multiple-engines-example"
+version = "0.1.0"
+source = { editable = "examples/eltstar_add_function_to_multiple_engines_example" }
+dependencies = [
+    { name = "eltstar" },
+    { name = "eltstar-engine-pandas" },
+    { name = "eltstar-engine-polars" },
+    { name = "pandas" },
+    { name = "polars" },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "eltstar", editable = "." },
+    { name = "eltstar-engine-pandas", editable = "plugins/engines/pandas" },
+    { name = "eltstar-engine-polars", editable = "plugins/engines/polars" },
+    { name = "pandas", specifier = ">=3.0.3" },
+    { name = "polars", specifier = ">=1.40.1" },
+    { name = "pytest", specifier = ">=9.0.3" },
 ]
 
 [[package]]
