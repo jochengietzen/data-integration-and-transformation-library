@@ -16,7 +16,6 @@ The schema is used to define the structure of your data. It contains the name of
 
 # TODOS
     
-    - TODO: Provide testable function, so users can verify the wrapper functions in different engines provide the same results (V1)
     - TODO: Embed example code into documentation (V1-2) to ensure example code is still valid/running.
     - TODO: Provide proper Documentation (V1)
     - TODO: Build very very minimal example for quick overview of concepts (V1)
@@ -62,10 +61,11 @@ The schema is used to define the structure of your data. It contains the name of
 # Adding examples
 
 ```
+export EXAMPLE_NAME=<example_name>
 cd examples
-mkdir <example_name>
-uv init --package --name <example_name> --directory /workspace/examples/<example_name>
+mkdir $EXAMPLE_NAME
+uv init --package --name $EXAMPLE_NAME --directory /workspace/examples/$EXAMPLE_NAME
 just create_missing_sub_venvs
-cd <example_name>
+cd $EXAMPLE_NAME
 uv add --active eltstar
 ```
