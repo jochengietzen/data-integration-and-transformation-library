@@ -648,6 +648,11 @@ dependencies = [
     { name = "pyarrow-stubs" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "eltstar", editable = "." },
@@ -655,6 +660,9 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=23.0.1" },
     { name = "pyarrow-stubs", specifier = ">=20.0.0.20251215" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.0.3" }]
 
 [[package]]
 name = "eltstar-engine-polars"

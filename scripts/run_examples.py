@@ -27,8 +27,8 @@ def test_examples():
                         executables.append(file_path)
 
         for executable in executables:
-            print([str(entry_point / ".venv/bin/python"), str(executable)])
-            subprocess.check_output([str(entry_point / ".venv/bin/python"), str(executable)])
+            print([str(ROOT / ".venv/bin/python"), str(executable)])
+            subprocess.check_output([str(ROOT / ".venv/bin/python"), str(executable)])
 
 
 if __name__ == "__main__":
