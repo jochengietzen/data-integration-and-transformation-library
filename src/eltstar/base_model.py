@@ -1,7 +1,10 @@
+# pylint: disable=invalid-name
+from collections.abc import Iterable
 from os import PathLike
 
 import yaml
 from pydantic import BaseModel as _BaseModel
+from pydantic import RootModel
 
 
 class BaseModel(_BaseModel):
@@ -18,3 +21,30 @@ class BaseModel(_BaseModel):
 
     def __hash__(self) -> int:
         return hash(str(self.dict()))
+
+
+class DictRootModel[KeyType, ValueType](RootModel[dict[KeyType, ValueType]]):
+    root: dict[KeyType, ValueType]
+
+    def items(self) -> tuple[KeyType, ValueType]:
+        """Root's items method"""
+        return self.root.items()
+
+    def keys(self) -> Iterable[KeyType]:
+        return self.root.keys()
+
+    def values(self) -> Iterable[ValueType]:
+        return self.root.values()
+
+
+class ListRootModel[ItemType](RootModel[list[ItemType]]):
+    root: list[ItemType]
+
+    def __iter__(self):
+        return iter(self.root)
+
+    def __getitem__(self, item):
+        return self.root[item]
+
+    def __len__(self) -> int:
+        return len(self.root)

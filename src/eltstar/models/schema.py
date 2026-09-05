@@ -1,9 +1,7 @@
 from collections.abc import Callable
 from typing import Any, ClassVar, Self
 
-from pydantic import RootModel
-
-from eltstar.base_model import BaseModel
+from eltstar.base_model import BaseModel, ListRootModel
 from eltstar.models.data_type import DataType
 
 
@@ -23,7 +21,7 @@ class SchemaField(BaseModel):
 
 
 # class Schema(RootModel[list[SchemaStruct | SchemaField]]):
-class Schema(RootModel[list[SchemaField]]):
+class Schema(ListRootModel[SchemaField]):
     _from_engine_methods: ClassVar[dict[str, tuple[type[Any], Callable[[Any], "Schema"]]]] = {}
     _to_engine_methods: ClassVar[dict[str, Callable[["Schema"], Any]]] = {}
     # provides schema for a given instance of Columns

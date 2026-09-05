@@ -2,9 +2,9 @@ from abc import abstractmethod
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, Protocol, Self, TypeVar
 
-from pydantic import RootModel, model_validator
+from pydantic import model_validator
 
-from eltstar.base_model import BaseModel
+from eltstar.base_model import BaseModel, DictRootModel
 from eltstar.exceptions import ProgrammingError
 from eltstar.models.data_type import DataType
 from eltstar.models.schema import Schema
@@ -64,7 +64,7 @@ class RegisteredTypeTuple(NamedTuple):
     engine_type: EngineSpecificDataType
 
 
-class RegisteredTypeLookup(RootModel[dict[str, RegisteredTypeTuple]]):
+class RegisteredTypeLookup(DictRootModel[str, RegisteredTypeTuple]):
     root: dict[str, RegisteredTypeTuple]
 
     @property
