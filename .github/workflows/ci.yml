@@ -67,6 +67,4 @@ jobs:
 
       - name: Run all unit-tests
         run: |
-            shopt -s globstar
-            export TZ="UTC"
-            uv run pytest --cov=eltstar --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail ./tests/ ./plugins/**/tests/ ./examples/**/tests/
+            just unit-tests

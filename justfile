@@ -35,10 +35,8 @@ ssh-fix:
     chmod 600 /home/vscode/.ssh/*
 
 unit-tests:
-    #!/bin/bash
-    shopt -s globstar
-    export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail ./tests/ ./plugins/**/tests/ ./examples/**/tests/
-    # export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/ plugins/**/tests/ examples/**/tests/
+    uv run pytest
+    # uv run pytest --cov-fail-under=90
 
 docs:
     uv run zensical serve
