@@ -1,13 +1,15 @@
+import datetime
+
 import pandas as pd
 from eltstar_engine_pandas.engine import PandasEngine
 
 from eltstar.exceptions import SchemaVerificationError
-from eltstar.models.base import IntegerType, StringType
+from eltstar.models.base import IntegerType, StringType, TimestampTypeSecondsUTC
 from eltstar.models.column import Column, Columns
 from eltstar.models.data_frame_wrapper.wrapper import DataFrameWrapper
 from eltstar.models.generation import Generation
 from eltstar.models.schema import Schema, SchemaField
-from eltstar.testing.faker_type import FakerIDType, FakerStringType
+from eltstar.testing.faker_type import FakerIDType, FakerStringType, FakerTimestampTypeSecondsUTC
 from eltstar_pandas_example.models.youtube import ReadTable, YoutubeTablePath
 
 if __name__ == "__main__":
@@ -31,6 +33,11 @@ if __name__ == "__main__":
                     data_type=StringType(),
                     generation=Generation(faker_type=FakerStringType()),
                 ),
+                some_time=Column(
+                    name="some_time",
+                    data_type=TimestampTypeSecondsUTC(identifier="timestamp_utc_us", unit="us"),
+                    generation=Generation(faker_type=FakerTimestampTypeSecondsUTC()),
+                ),
             )
         ),
     )
@@ -42,17 +49,26 @@ if __name__ == "__main__":
         {
             "channel_id": [1, 2, 3],
             "channel_name": ["foo", "biz", "bar"],
+            "some_time": [
+                datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC),
+                datetime.datetime(2021, 1, 1, tzinfo=datetime.UTC),
+                datetime.datetime(2022, 1, 1, tzinfo=datetime.UTC),
+            ],
         }
     )
 
     # print(data.printSchema())
-
 
     data2 = pd.DataFrame(
         {
             "channel_id": [1, 2, 3],
             "channel_name": ["foo", "biz", "bar"],
             "duplicate_name": ["foo", "biz", "bar"],
+            "some_time": [
+                datetime.datetime(2020, 1, 1, tzinfo=datetime.UTC),
+                datetime.datetime(2021, 1, 1, tzinfo=datetime.UTC),
+                datetime.datetime(2022, 1, 1, tzinfo=datetime.UTC),
+            ],
         }
     )
     print(data)

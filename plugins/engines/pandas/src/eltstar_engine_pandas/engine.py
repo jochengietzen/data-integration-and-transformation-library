@@ -56,12 +56,19 @@ class PandasEngine(Engine):
         value_mappings = {
             "integer": "int",
             "string": "str",
+            "boolean": "bool",
+            "number": "float",
         }
-        return {
-            field["name"]: value_mappings.get(field["type"], field["type"])
-            for field in build_table_schema(data_frame_wrapper.data_frame)["fields"]
-            if field["name"] != "index"
-        }
+        data_frame = data_frame_wrapper.data_frame
+        schema = {}
+        for field in build_table_schema(data_frame)["fields"]:
+            if field["name"] == "index":
+                continue
+            if field["type"] == "datetime":
+                schema[field["name"]] = str(data_frame[field["name"]].dtype)
+            else:
+                schema[field["name"]] = value_mappings.get(field["type"], field["type"])
+        return schema
 
     @classmethod
     def cast(cls, schema: Schema, data_frame_wrapper: DataFrameWrapper) -> DataFrameWrapper:
