@@ -24,7 +24,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-            uv sync --all-groups
+            uv sync --all-groups --all-packages
 
       - name: Run style & code checks
         run: |
@@ -33,7 +33,7 @@ jobs:
       - name: Run all examples
         run: |
           python scripts/run_examples.py
-  
+
   unit-tests:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -63,8 +63,10 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-            uv sync --all-groups
+            uv sync --all-groups --all-packages
 
-      - name: Run unit-tests
+      - name: Run all unit-tests
         run: |
-            just unit-tests
+            shopt -s globstar
+            export TZ="UTC"
+            uv run pytest --cov=eltstar --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail ./tests/ ./plugins/**/tests/ ./examples/**/tests/

@@ -37,7 +37,7 @@ repos:
         language: python
         types: [ python ]
         pass_filenames: false
-        entry: just run_all_tests
+        entry: just unit-tests
         verbose: true
 
       # - id: mypy
