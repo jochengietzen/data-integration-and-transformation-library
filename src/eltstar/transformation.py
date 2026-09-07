@@ -265,5 +265,22 @@ class TransformationManager:
                 logger.info("Loading entry point: %s", ep)
                 ep.load()
 
+    def execute_all_transformations(self) -> None:
+        """aigen_start
+        Execute every registered transformation and write its output table.
+        aigen_end"""
+        self._check_initialization_state()
+        runtime_config: RuntimeConfig = self._runtime_config  # type: ignore
+        environment_config: EnvironmentConfig = self._environment_config  # type: ignore
+        for t_name, transformation in self._registered_transformations.items():
+            logger.info("Executing function %s", t_name)
+            result = transformation.execute()
+            result_model = transformation.output_table_model
+            result_model.write(
+                runtime_config=runtime_config,
+                environment_config=environment_config,
+                data_frame_wrapper=result,
+            )
+
 
 manager = TransformationManager()
