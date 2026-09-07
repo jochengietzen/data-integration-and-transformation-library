@@ -38,5 +38,23 @@ unit-tests:
     export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=0 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
     # export TZ="UTC"; uv run pytest --cov=eltstar --cov-fail-under=90 --cov-report term-missing:skip-covered --no-cov-on-fail tests/
 
+run_all_tests:
+    #!/bin/zsh
+    #aigen_start
+    set -uxo pipefail
+    failed=()
+    for f in $(find examples plugins -mindepth 2 -maxdepth 4 -name pyproject.toml); do
+        dir=$(dirname "$f")
+        [ -d "$dir/tests" ] || continue
+        name=$(grep -m1 '^name' "$f" | sed -E 's/name\s*=\s*"(.*)"/\1/')
+        echo "== $name =="
+        uv run --package "$name" pytest "$dir/tests" || failed+=("$name")
+    done
+    if [ ${#failed[@]} -gt 0 ]; then
+        echo "Failed packages: ${failed[@]}"
+        exit 1
+    fi
+    #aigen_end
+
 docs:
     uv run zensical serve
