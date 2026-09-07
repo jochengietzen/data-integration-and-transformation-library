@@ -54,7 +54,7 @@ class DateType(DataType):
 
 class BinaryType(DataType):
     identifier: str = "binary"
-    example_python_value: int = bin(1)
+    example_python_value: bytes = b"example"
     length: int = -1
 
 

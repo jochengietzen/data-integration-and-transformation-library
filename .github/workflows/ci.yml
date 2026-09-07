@@ -32,7 +32,6 @@ jobs:
       
       - name: Run all examples
         run: |
-          just create_sub_venvs
           python scripts/run_examples.py
   
   unit-tests:

@@ -1,5 +1,5 @@
 # pylint: disable=invalid-name
-from collections.abc import Iterable
+from collections.abc import ItemsView, KeysView, ValuesView
 from os import PathLike
 
 import yaml
@@ -26,14 +26,14 @@ class BaseModel(_BaseModel):
 class DictRootModel[KeyType, ValueType](RootModel[dict[KeyType, ValueType]]):
     root: dict[KeyType, ValueType]
 
-    def items(self) -> tuple[KeyType, ValueType]:
+    def items(self) -> ItemsView[KeyType, ValueType]:
         """Root's items method"""
         return self.root.items()
 
-    def keys(self) -> Iterable[KeyType]:
+    def keys(self) -> KeysView[KeyType]:
         return self.root.keys()
 
-    def values(self) -> Iterable[ValueType]:
+    def values(self) -> ValuesView[ValueType]:
         return self.root.values()
 
 
